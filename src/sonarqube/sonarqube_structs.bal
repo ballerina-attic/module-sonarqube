@@ -23,9 +23,7 @@ public struct Project {
     string name;
     string key;
     string id;
-    string uuid;
     string |version|;
-    string creationDate;
     string description;
 }
 

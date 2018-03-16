@@ -22,10 +22,6 @@ transformer <json projectDetails, Project project> getProjectDetails() {
     project.name = (projectDetails[NAME] != null) ? projectDetails[NAME].toString() : null;
     project.key = (projectDetails[KEY] != null) ? projectDetails[KEY].toString() : null;
     project.id = (projectDetails[ID] != null) ? projectDetails[ID].toString() : null;
-    project.uuid = (projectDetails[UUID] != null) ? projectDetails[UUID].toString() : null;
-    project.|version| = (projectDetails[VERSION] != null) ? projectDetails[VERSION].toString() : null;
-    project.description = (projectDetails[DESCRIPTION] != null) ? projectDetails[DESCRIPTION].toString() : null;
-    project.creationDate = (projectDetails[CREATION_DATE] != null) ? projectDetails[CREATION_DATE].toString() : null;
 }
 
 transformer <json commentDetails, Comment comment> getComment() {

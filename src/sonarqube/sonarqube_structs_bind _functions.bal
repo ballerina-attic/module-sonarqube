@@ -170,6 +170,19 @@ public function <Project project> getLinesOfCode () (int, error) {
     return loc, err;
 }
 
+@Description {value:"Get number of lines which are not covered by unit tests."}
+@Return {value:"loc: returns number of lines which are not covered by unit tests."}
+@Return {value:"err: returns error if an exception raised in getting number of uncovered lines."}
+public function <Project project> getUncoveredLinesCount () (int, error) {
+    var initVal, err = getMetricValue(project.key, UNCOVERED_LINES_COUNT);
+    if (err != null) {
+        return 0, err;
+    }
+    var uncoveredLineCount, err = <int>initVal;
+    return uncoveredLineCount, err;
+}
+
+
 @Description {value:"Get line coverage of a project."}
 @Return {value:"lineCoverage:returns line coverage of a project."}
 @Return {value:"err: returns error if an exception raised in getting line coverage."}
@@ -353,64 +366,65 @@ public function <Project project> getIssues () (Issue[], error) {
     return issues, err;
 }
 
-@Description {value:"Add a comment on issue."}
-@Param {value:"comment: Comment to add."}
-@Return {value:"err: returns error if an exception raised in adding comment."}
-public function <Issue issue> addComment (string comment) (error) {
-    json payLoad = {issue:issue.key, text:comment};
-    error err = doOpertion(ADDING_COMMENT, API_ADD_COMMENT, payLoad);
-    return err;
-}
-
-@Description {value:"Assign issue."}
-@Param {value:"assignee: user name of the person to be assigned."}
-@Return {value:"err: returns error if an exception raised in assigning issue."}
-public function <Issue issue> assign (string assignee) (error) {
-    json payLoad = {issue:issue.key, assignee:assignee};
-    error err = doOpertion(ASSIGN, API_ASSIGN_ISSUE, payLoad);
-    return err;
-}
-
-@Description {value:"Set type of an issue."}
-@Param {value:"issueType: type of the issue."}
-@Return {value:"operation: returns Operation struct containing operation details."}
-@Return {value:"err: returns error if an exception raised in setting type of the project."}
-public function <Issue issue> setType (string issueType) (error) {
-    json payLoad = {issue:issue.key, |type|:issueType};
-    error err = doOpertion(SET_TYPE, API_SET_ISSUE_TYPE, payLoad);
-    return err;
-}
-
-@Description {value:"Set severity of an issue."}
-@Param {value:"severityValue: new severity value."}
-@Return {value:"err: returns error if an exception raised in setting severity of the project."}
-public function <Issue issue> setSeverity (string severity) (error) {
-    json payLoad = {issue:issue.key, severity:severity};
-    error err = doOpertion(SET_SEVERITY, API_SET_ISSUE_SEVERITY, payLoad);
-    return err;
-}
-
-@Description {value:"Do workflow transition on an issue."}
-@Param {value:"status: transition type to be added."}
-@Return {value:"err: returns error if an exception raised in setting up project status."}
-public function <Issue issue> setStatus (string status) (error) {
-    json payLoad = {issue:issue.key, transition:status};
-    error err = doOpertion(SET_STATUS, API_SET_ISSUE_TYPE, payLoad);
-    return err;
-}
-
-@Description {value:"Delete a comment."}
-@Return {value:"err: Returns error if an exception raised in deleting comment."}
-public function <Comment comment> delete () (error) {
-    json payLoad = {key:comment.key};
-    error err = doOpertion(DELETE_COMMENT, API_DELETE_COMMENT, payLoad);
-    return err;
-}
-
-@Description {value:"Update a comment."}
-@Return {value:"err: returns error if an exception raised in updating comment."}
-public function <Comment comment> edit (string newComment) (error) {
-    json payLoad = {key:comment.key, text:newComment};
-    error err = doOpertion(EDIT_COMMENT, API_EDIT_COMMENT, payLoad);
-    return err;
-}
+//TODO:Issue in endpoint has to be fixed.
+//@Description {value:"Add a comment on issue."}
+//@Param {value:"comment: Comment to add."}
+//@Return {value:"err: returns error if an exception raised in adding comment."}
+//public function <Issue issue> addComment (string comment) (error) {
+//    json payLoad = {issue:issue.key, text:comment};
+//    error err = doOpertion(ADDING_COMMENT, API_ADD_COMMENT, payLoad);
+//    return err;
+//}
+//
+//@Description {value:"Assign issue."}
+//@Param {value:"assignee: user name of the person to be assigned."}
+//@Return {value:"err: returns error if an exception raised in assigning issue."}
+//public function <Issue issue> assign (string assignee) (error) {
+//    json payLoad = {issue:issue.key, assignee:assignee};
+//    error err = doOpertion(ASSIGN, API_ASSIGN_ISSUE, payLoad);
+//    return err;
+//}
+//
+//@Description {value:"Set type of an issue."}
+//@Param {value:"issueType: type of the issue."}
+//@Return {value:"operation: returns Operation struct containing operation details."}
+//@Return {value:"err: returns error if an exception raised in setting type of the project."}
+//public function <Issue issue> setType (string issueType) (error) {
+//    json payLoad = {issue:issue.key, |type|:issueType};
+//    error err = doOpertion(SET_TYPE, API_SET_ISSUE_TYPE, payLoad);
+//    return err;
+//}
+//
+//@Description {value:"Set severity of an issue."}
+//@Param {value:"severityValue: new severity value."}
+//@Return {value:"err: returns error if an exception raised in setting severity of the project."}
+//public function <Issue issue> setSeverity (string severity) (error) {
+//    json payLoad = {issue:issue.key, severity:severity};
+//    error err = doOpertion(SET_SEVERITY, API_SET_ISSUE_SEVERITY, payLoad);
+//    return err;
+//}
+//
+//@Description {value:"Do workflow transition on an issue."}
+//@Param {value:"status: transition type to be added."}
+//@Return {value:"err: returns error if an exception raised in setting up project status."}
+//public function <Issue issue> setStatus (string status) (error) {
+//    json payLoad = {issue:issue.key, transition:status};
+//    error err = doOpertion(SET_STATUS, API_SET_ISSUE_TYPE, payLoad);
+//    return err;
+//}
+//
+//@Description {value:"Delete a comment."}
+//@Return {value:"err: Returns error if an exception raised in deleting comment."}
+//public function <Comment comment> delete () (error) {
+//    json payLoad = {key:comment.key};
+//    error err = doOpertion(DELETE_COMMENT, API_DELETE_COMMENT, payLoad);
+//    return err;
+//}
+//
+//@Description {value:"Update a comment."}
+//@Return {value:"err: returns error if an exception raised in updating comment."}
+//public function <Comment comment> edit (string newComment) (error) {
+//    json payLoad = {key:comment.key, text:newComment};
+//    error err = doOpertion(EDIT_COMMENT, API_EDIT_COMMENT, payLoad);
+//    return err;
+//}

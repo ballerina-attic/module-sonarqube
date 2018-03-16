@@ -137,7 +137,7 @@ function doOpertion (string name, string requestPath, json payload) (error) {
     return err;
 }
 
-@Description {value:"Get all the projects from SonarQube server."}
+@Description {value:"Get project specified by name from SonarQube server."}
 @Param {value:"projectName:Name of the project."}
 @Return {value:"project:Details of the project specified by name."}
 function getProjectDetails (string projectName) (Project) {
@@ -171,33 +171,32 @@ function getProjectDetails (string projectName) (Project) {
             throw err;
         }
         return project;
-    } else {
-        json allProducts = getContentByKey(response, COMPONENTS);
-        Project project = getProjectFromList(projectName, allProducts);
+    }
+    json allProducts = getContentByKey(response, COMPONENTS);
+    Project project = getProjectFromList(projectName, allProducts);
+    if (project != null) {
+        return project;
+    }
+    int totalPages = (value % PAGE_SIZE > 0) ? (value / PAGE_SIZE + 1) : value / PAGE_SIZE;
+    int count = 0;
+    while (count < totalPages - 1) {
+        request = {};
+        response = {};
+        constructAuthenticationHeaders(request);
+        response, connectionError = sonarqubeEP.get(API_RESOURCES + PAGE_SIZE + "&" + PAGE_NUMBER + "=" + (count + 1), request);
+        if (connectionError != null) {
+            if (connectionError != null) {
+                err = {message:connectionError.message};
+                throw err;
+            }
+        }
+        checkResponse(response);
+        allProducts = getContentByKey(response, COMPONENTS);
+        project = getProjectFromList(projectName, allProducts);
         if (project != null) {
             return project;
         }
-        int totalPages = (value % PAGE_SIZE > 0) ? (value / PAGE_SIZE + 1) : value / PAGE_SIZE;
-        int count = 0;
-        while (count < totalPages - 1) {
-            request = {};
-            response = {};
-            constructAuthenticationHeaders(request);
-            response, connectionError = sonarqubeEP.get(API_RESOURCES + PAGE_SIZE + "&" + PAGE_NUMBER + "=" + (count + 1), request);
-            if (connectionError != null) {
-                if (connectionError != null) {
-                    err = {message:connectionError.message};
-                    throw err;
-                }
-            }
-            checkResponse(response);
-            allProducts = getContentByKey(response, COMPONENTS);
-            project = getProjectFromList(projectName, allProducts);
-            if (project != null) {
-                return project;
-            }
-            count = count + 1;
-        }
+        count = count + 1;
     }
     return null;
 }
@@ -210,8 +209,43 @@ function getProjectFromList (string projectName, json projectList) (Project) {
     foreach projectData in projectList {
         Project project = <Project, getProjectDetails()>projectData;
         if (project.name == projectName) {
+            var projectVersion, description = getProjectVersionAndDescription(project.key);
+            project.|version| = projectVersion;
+            project.description = description;
             return project;
         }
     }
     return null;
+}
+
+@Description {value:"Get project version and description."}
+@Param {value:"projectKey:Key of the project."}
+@Return {value:"projectVersion:Version of the project."}
+function getProjectVersionAndDescription (string projectKey) (string, string) {
+    endpoint<http:HttpClient> sonarqubeEP {
+        getHTTPClient();
+    }
+    http:OutRequest request = {};
+    http:InResponse response = {};
+    http:HttpConnectorError connectionError;
+    constructAuthenticationHeaders(request);
+    response, connectionError = sonarqubeEP.get(API_SHOW_COMPONENT + projectKey, request);
+    if (connectionError != null) {
+        if (connectionError != null) {
+            return null, null;
+        }
+    }
+    json component;
+    json |version|;
+    json description;
+    try {
+        component = getContentByKey(response, COMPONENT);
+        if (component != null) {
+            |version| = component[VERSION];
+            description = component[DESCRIPTION];
+        }
+    } catch (error getVersionError) {
+        return null, null;
+    }
+    return (|version| != null) ? |version|.toString() : null, (description != null) ? description.toString() : null;
 }

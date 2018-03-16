@@ -31,8 +31,9 @@ function main (string[] serverArgs) {
     //get project details
     var project, err = sonarqubueConnector.getProject(projectName);
     if (err != null) {
-        io:println(err.message);
         return;
+    } else {
+        io:println(project);
     }
 
     //Get project line coverage
@@ -139,6 +140,14 @@ function main (string[] serverArgs) {
         io:println(err.message);
     }
 
+    //Get uncovered lines count
+    var uncoveredLinesCount, err = project.getUncoveredLinesCount();
+    if (err == null) {
+        io:println("Uncovered Lines Count - " + uncoveredLinesCount);
+    } else {
+        io:println(err.message);
+    }
+
     //Get code smells count of the project
     var codeSmellsCount, err = project.getCodeSmellsCount();
     if (err == null) {
@@ -212,11 +221,11 @@ function main (string[] serverArgs) {
         io:println(err.message);
     }
 
-    //Operations on issues
+    ////Operations on issues
     //sonarqube:Issue issue = projectIssues[0];
-
+    //
     ////Add a comment on issues
-    //err = issue.addComment("This is a critical issue");
+    //err = issue.addComment("This is a test comment from SonarQube connector.");
     //if (err == null) {
     //    io:println("Adding comment successful.");
     //} else {
@@ -251,7 +260,7 @@ function main (string[] serverArgs) {
     //sonarqube:Comment comment = issue.comments[0];
     //
     ////Edit comment
-    //err = comment.edit("This is a blocker issue");
+    //err = comment.edit("This is a test comment from SonarQube connector.");
     //if (err == null) {
     //    io:println("Editing comment successful.");
     //} else {
