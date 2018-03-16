@@ -213,57 +213,57 @@ function main (string[] serverArgs) {
     }
 
     //Operations on issues
-    sonarqube:Issue issue = projectIssues[0];
+    //sonarqube:Issue issue = projectIssues[0];
 
-    //Add a comment on issues
-    err = issue.addComment("This is a critical issue");
-    if (err == null) {
-        io:println("Adding comment successful.");
-    } else {
-        io:println(err);
-    }
-
-    //Assign issue
-    err = issue.assign("admin");
-    if (err == null) {
-        io:println("Assigning user to a issue successful.");
-    } else {
-        io:println(err);
-    }
-
-    //Set issue severity
-    err = issue.setSeverity("CRITICAL");
-    if (err == null) {
-        io:println("Setting issue severity successful.");
-    } else {
-        io:println(err);
-    }
-
-    //Set issue type
-    err = issue.setType("CODE_SMELL");
-    if (err == null) {
-        io:println("Setting issue type successful.");
-    } else {
-        io:println(err);
-    }
-
-    //Operations on issue comments
-    sonarqube:Comment comment = issue.comments[0];
-
-    //Edit comment
-    err = comment.edit("This is a blocker issue");
-    if (err == null) {
-        io:println("Editing comment successful.");
-    } else {
-        io:println(err);
-    }
-
-    //Delete comment
-    err = comment.delete();
-    if (err == null) {
-        io:println("Deleting comment successful.");
-    } else {
-        io:println(err);
-    }
+    ////Add a comment on issues
+    //err = issue.addComment("This is a critical issue");
+    //if (err == null) {
+    //    io:println("Adding comment successful.");
+    //} else {
+    //    io:println(err);
+    //}
+    //
+    ////Assign issue
+    //err = issue.assign("admin");
+    //if (err == null) {
+    //    io:println("Assigning user to a issue successful.");
+    //} else {
+    //    io:println(err);
+    //}
+    //
+    ////Set issue severity
+    //err = issue.setSeverity("CRITICAL");
+    //if (err == null) {
+    //    io:println("Setting issue severity successful.");
+    //} else {
+    //    io:println(err);
+    //}
+    //
+    ////Set issue type
+    //err = issue.setType("CODE_SMELL");
+    //if (err == null) {
+    //    io:println("Setting issue type successful.");
+    //} else {
+    //    io:println(err);
+    //}
+    //
+    ////Operations on issue comments
+    //sonarqube:Comment comment = issue.comments[0];
+    //
+    ////Edit comment
+    //err = comment.edit("This is a blocker issue");
+    //if (err == null) {
+    //    io:println("Editing comment successful.");
+    //} else {
+    //    io:println(err);
+    //}
+    //
+    ////Delete comment
+    //err = comment.delete();
+    //if (err == null) {
+    //    io:println("Deleting comment successful.");
+    //} else {
+    //    io:println(err);
+    //}
 }
 

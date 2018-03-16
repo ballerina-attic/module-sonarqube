@@ -18,40 +18,24 @@
 
 package src.sonarqube;
 
-import ballerina.net.http;
-import ballerina.log;
 import ballerina.config;
+import ballerina.net.http;
 
 @Description {value:"SonarQube client connector."}
 public connector SonarqubeConnector () {
-
     endpoint<http:HttpClient> sonarqubeEP {
         create http:HttpClient(config:getGlobalValue(SERVER_URL), {chunking:"never"});
     }
-
     @Description {value:"Get project details."}
     @Param {value:"projectName: Name of the project."}
     @Return {value:"project: Returns project struct with projects's key,id,uuid,version and description."}
     @Return {value:"err: returns error if an exception raised in getting project details."}
     action getProject (string projectName) (Project, error) {
-        http:OutRequest request = {};
-        http:InResponse response = {};
-        http:HttpConnectorError connectionError;
-        constructAuthenticationHeaders(request);
-        response, connectionError = sonarqubeEP.get(API_RESOURCES, request);
         error err = null;
         try {
-            if (connectionError != null) {
-                err = {message:connectionError.message};
-                throw err;
-            }
-            checkResponse(response);
-            json allProducts = getContent(response);
-            foreach product in allProducts {
-                Project project = <Project, getProjectDetails()>product;
-                if (project.name == projectName) {
-                    return project, err;
-                }
+            Project project = getProjectDetails(projectName);
+            if (project != null) {
+                return project, err;
             }
         } catch (error getProjectError) {
             return null, err;
@@ -60,4 +44,3 @@ public connector SonarqubeConnector () {
         return null, err;
     }
 }
-

@@ -18,6 +18,7 @@
 
 package src.sonarqube;
 
+import ballerina.config;
 import ballerina.net.http;
 import ballerina.util;
 
@@ -35,19 +36,34 @@ public function getHTTPClient () (http:HttpClient) {
 @Description {value:"Add authentication headers to the HTTP request."}
 @Param {value:"request: http OutRequest."}
 public function constructAuthenticationHeaders (http:OutRequest request) {
-    string username = config:getGlobalValue(USERNAME);
-    string password = config:getGlobalValue(PASSWORD);
-    if (username == null || password == null) {
-        error err = {};
-        if (username == null) {
-            err = {message:"Username should be provided."};
-            throw err;
+    string authType = config:getGlobalValue(AUTH_TYPE);
+    error err = {};
+    if (authType == USER) {
+        string username = config:getGlobalValue(USERNAME);
+        string password = config:getGlobalValue(PASSWORD);
+        if (username == null || password == null) {
+            if (username == null) {
+                err = {message:"Username should be provided."};
+                throw err;
+            }
+            if (password != null) {
+                err = {message:"Password should be provided."};
+                throw err;
+            }
+        } else {
+            request.addHeader("Authorization", "Basic " + util:base64Encode(username + ":" + password));
         }
-        if (password != null) {
-            err = {message:"Password should be provided."};
+    } else if (authType == TOKEN) {
+        string token = config:getGlobalValue(TOKEN);
+        if (token == null) {
+            err = {message:"Token should be provided."};
             throw err;
+        } else {
+            request.addHeader("Authorization", "Basic " + util:base64Encode(token + ":"));
         }
     } else {
-        request.addHeader("Authorization", "Basic " + util:base64Encode(username + ":" + username));
+        err = {message:"AuthType should be user or token."};
+        throw err;
     }
 }
+
