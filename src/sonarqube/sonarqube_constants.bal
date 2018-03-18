@@ -60,6 +60,7 @@ public const string COMPLEXITY = "complexity";
 public const string COMPONENT_KEY = "componentKey";
 public const string PROJECT_KEYS = "projectKeys";
 public const string SEVERITY = "severity";
+public const string LINES_TO_COVER = "lines_to_cover";
 public const string DESCRIPTION = "description";
 public const string MESSAGE = "message";
 public const string VERSION = "version";

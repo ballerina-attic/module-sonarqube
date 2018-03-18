@@ -148,6 +148,14 @@ function main (string[] serverArgs) {
         io:println(err.message);
     }
 
+    //Get number of lines should be covered by unit tests
+    var linesToCover, err = project.getNumberOfLinesToCover();
+    if (err == null) {
+        io:println("Lines to cover - " + linesToCover);
+    } else {
+        io:println(err.message);
+    }
+
     //Get code smells count of the project
     var codeSmellsCount, err = project.getCodeSmellsCount();
     if (err == null) {

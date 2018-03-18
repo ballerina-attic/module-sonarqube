@@ -182,6 +182,17 @@ public function <Project project> getUncoveredLinesCount () (int, error) {
     return uncoveredLineCount, err;
 }
 
+@Description {value:"Get number of lines should be covered by unit tests."}
+@Return {value:"linesToCover: returns number of lines should be covered by unit tests."}
+@Return {value:"err: returns error if an exception raised in getting number of uncovered lines."}
+public function <Project project> getNumberOfLinesToCover () (int, error) {
+    var initVal, err = getMetricValue(project.key, LINES_TO_COVER);
+    if (err != null) {
+        return 0, err;
+    }
+    var linesToCover, err = <int>initVal;
+    return linesToCover, err;
+}
 
 @Description {value:"Get line coverage of a project."}
 @Return {value:"lineCoverage:returns line coverage of a project."}
