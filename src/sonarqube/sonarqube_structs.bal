@@ -16,15 +16,21 @@
 // under the License.
 //
 
-package src.sonarqube;
+
+package src/sonarqube;
+
+import ballerina/net/http;
+
+@Description {value:"Struct to initialize the connection."}
+public struct Connector {
+    http:ClientEndpoint clientEp;
+}
 
 @Description {value:"Struct to get the details of a project."}
 public struct Project {
     string name;
     string key;
     string id;
-    string |version|;
-    string description;
 }
 
 @Description {value:"Struct to get the details of an issue in a project."}
@@ -36,7 +42,7 @@ public struct Issue {
     string author;
     string creationDate;
     string assignee;
-    string |type|;
+    string issueType;
     Position position;
     string[] tags;
     Comment[] comments;

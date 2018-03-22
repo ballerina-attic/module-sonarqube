@@ -19,44 +19,46 @@
 package src.sonarqube;
 
 transformer <json projectDetails, Project project> getProjectDetails() {
-    project.name = (projectDetails[NAME] != null) ? projectDetails[NAME].toString() : null;
-    project.key = (projectDetails[KEY] != null) ? projectDetails[KEY].toString() : null;
-    project.id = (projectDetails[ID] != null) ? projectDetails[ID].toString() : null;
+    project.name = !isAnEmptyJson(projectDetails[NAME]) ? projectDetails[NAME].toString() : "";
+    project.key = !isAnEmptyJson(projectDetails[KEY]) ? projectDetails[KEY].toString() : "";
+    project.id = !isAnEmptyJson(projectDetails[ID]) ? projectDetails[ID].toString() : "";
 }
 
 transformer <json commentDetails, Comment comment> getComment() {
-    comment.text = (commentDetails[HTML_TEXT] != null) ? commentDetails[HTML_TEXT].toString() : null;
-    comment.key = (commentDetails[KEY] != null) ? commentDetails[KEY].toString() : null;
-    comment.commenter = (commentDetails[LOGIN] != null) ? commentDetails[LOGIN].toString() : null;
-    comment.createdDate = (commentDetails[CREATED_DATE] != null) ? commentDetails[CREATED_DATE].toString() : null;
+    comment.text = !isAnEmptyJson(commentDetails[HTML_TEXT]) ? commentDetails[HTML_TEXT].toString() : "";
+    comment.key = !isAnEmptyJson(commentDetails[KEY]) ? commentDetails[KEY].toString() : "";
+    comment.commenter = !isAnEmptyJson(commentDetails[LOGIN]) ? commentDetails[LOGIN].toString() : "";
+    comment.createdDate = !isAnEmptyJson(commentDetails[CREATED_DATE]) ? commentDetails[CREATED_DATE].toString() : "";
 }
 
 transformer <json issueDetails, Issue issue> getIssue() {
-    issue.key = (issueDetails[KEY] != null) ? issueDetails[KEY].toString() : null;
-    issue.severity = (issueDetails[SEVERITY] != null) ? issueDetails[SEVERITY].toString() : null;
-    issue.status = (issueDetails[STATUS] != null) ? issueDetails[STATUS].toString() : null;
-    issue.|type| = (issueDetails[TYPE] != null) ? issueDetails[TYPE].toString() : null;
-    issue.description = (issueDetails[MESSAGE] != null) ? issueDetails[MESSAGE].toString() : null;
-    issue.author = (issueDetails[AUTHOR] != null) ? issueDetails[AUTHOR].toString() : null;
-    issue.creationDate = (issueDetails[CREATION_DATE] != null) ? issueDetails[CREATION_DATE].toString() : null;
-    issue.assignee = (issueDetails[ASSIGNEE] != null) ? issueDetails[ASSIGNEE].toString() : null;
+    issue.key = !isAnEmptyJson(issueDetails[KEY]) ? issueDetails[KEY].toString() : "";
+    issue.severity = !isAnEmptyJson(issueDetails[SEVERITY]) ? issueDetails[SEVERITY].toString() : "";
+    issue.status = !isAnEmptyJson(issueDetails[STATUS]) ? issueDetails[STATUS].toString() : "";
+    issue.issueType = !isAnEmptyJson(issueDetails[TYPE]) ? issueDetails[TYPE].toString() : "";
+    issue.description = !isAnEmptyJson(issueDetails[MESSAGE]) ? issueDetails[MESSAGE].toString() : "";
+    issue.author = !isAnEmptyJson(issueDetails[AUTHOR]) ? issueDetails[AUTHOR].toString() : "";
+    issue.creationDate = !isAnEmptyJson(issueDetails[CREATION_DATE]) ? issueDetails[CREATION_DATE].toString() : "";
+    issue.assignee = !isAnEmptyJson(issueDetails[ASSIGNEE]) ? issueDetails[ASSIGNEE].toString() : "";
     json positionInfo = issueDetails[ISSUE_RANGE];
     issue.position = {};
-    issue.position.startLine = (positionInfo != null) ? ((positionInfo[START_LINE] != null) ?
-                                                         positionInfo[START_LINE].toString() : null) : null;
-    issue.position.endLine = (positionInfo != null) ? ((positionInfo[END_LINE] != null) ? positionInfo[END_LINE]
-                                                                                          .toString() : null) : null;
+    issue.position.startLine = (!isAnEmptyJson(positionInfo)) ? (!isAnEmptyJson(positionInfo[START_LINE]) ?
+                                                                  positionInfo[START_LINE].toString() : "") : "";
+    issue.position.endLine = (!isAnEmptyJson(positionInfo)) ? (!isAnEmptyJson(positionInfo[END_LINE]) ? positionInfo[END_LINE]
+                                                                                                        .toString() : "") : "";
     json tags = issueDetails[TAGS];
-    issue.tags = (tags != null) ? tags.map(function (json tag) (string) {
-                                               return tag.toString();
-                                           }) : [];
+    issue.tags = !isAnEmptyJson(tags) ? tags.map(function (json tag) returns (string) {
+                                                     return tag.toString();
+                                                 }) : [];
     json transitions = issueDetails[TRANSITIONS];
-    issue.workflowTransitions = (transitions != null) ? transitions.map(function (json transition) (string) {
-                                                                            return transition.toString();
-                                                                        }) : [];
+    issue.workflowTransitions = !isAnEmptyJson(transitions) ? transitions.map(function (json transition) returns (string) {
+                                                                                  return transition.toString();
+                                                                              }) : [];
     json comments = issueDetails[COMMENTS];
-    issue.comments = (comments != null) ? comments.map(function (json comment) (Comment) {
-                                                           Comment commentStruct = <Comment, getComment()>comment;
-                                                           return commentStruct;
-                                                       }) : [];
+    issue.comments = !isAnEmptyJson(comments) ? comments.map(function (json comment) returns (Comment) {
+                                                                 Comment commentStruct = <Comment, getComment()>comment;
+                                                                 return commentStruct;
+                                                             }) : [];
 }
+
+

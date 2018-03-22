@@ -16,54 +16,32 @@
 // under the License.
 //
 
-package src.sonarqube;
+package src/sonarqube;
 
-import ballerina.config;
-import ballerina.net.http;
-import ballerina.util;
+import ballerina/config;
+import ballerina/net/http;
+import ballerina/log;
+import ballerina/util;
+import ballerina/io;
 
-http:HttpClient sonarqubeHTTPClient;
 
-@Description {value:"get sonarqube http client object."}
-@Return {value:"sonarqubeHTTPClient: sonarqube http client object."}
-public function getHTTPClient () (http:HttpClient) {
-    if (sonarqubeHTTPClient == null) {
-        sonarqubeHTTPClient = create http:HttpClient(config:getGlobalValue(SERVER_URL), {chunking:"never"});
-    }
-    return sonarqubeHTTPClient;
+public endpoint http:ClientEndpoint clientEP {targets:[{uri:DEFAULT_URL}]};
+@Description {value:"Setup SonarQue environment."}
+public function setCredentials (string serverURL, string username, string password) {
+    endpoint http:ClientEndpoint sonarqubeEP {targets:[{uri:serverURL}]};
+    clientEP = sonarqubeEP;
+    SERVER_URL = serverURL;
+    USERNAME = username;
+    PASSWORD = password;
 }
 
 @Description {value:"Add authentication headers to the HTTP request."}
 @Param {value:"request: http OutRequest."}
-public function constructAuthenticationHeaders (http:OutRequest request) {
-    string authType = config:getGlobalValue(AUTH_TYPE);
-    error err = {};
-    if (authType == USER) {
-        string username = config:getGlobalValue(USERNAME);
-        string password = config:getGlobalValue(PASSWORD);
-        if (username == null || password == null) {
-            if (username == null) {
-                err = {message:"Username should be provided."};
-                throw err;
-            }
-            if (password != null) {
-                err = {message:"Password should be provided."};
-                throw err;
-            }
-        } else {
-            request.addHeader("Authorization", "Basic " + util:base64Encode(username + ":" + password));
-        }
-    } else if (authType == TOKEN) {
-        string token = config:getGlobalValue(TOKEN);
-        if (token == null) {
-            err = {message:"Token should be provided."};
-            throw err;
-        } else {
-            request.addHeader("Authorization", "Basic " + util:base64Encode(token + ":"));
-        }
-    } else {
-        err = {message:"AuthType should be user or token."};
+public function constructAuthenticationHeaders (http:Request request) {
+    if (USERNAME != "" && PASSWORD != "") {
+        request.addHeader("Authorization", "Basic " + util:base64Encode(USERNAME + ":" + PASSWORD));
+    }else{
+        error err = {message:"Username and password should be provided."};
         throw err;
     }
 }
-

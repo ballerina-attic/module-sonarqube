@@ -16,11 +16,12 @@
 // under the License.
 //
 
-package src.sonarqube;
+package src/sonarqube;
 
 public const string SERVER_URL = "Server_URL";
 public const string USERNAME = "username";
 public const string PASSWORD = "password";
+public const string DEFAULT_URL = "http://localhost:8080";
 public const int PAGE_SIZE = 100;
 public const string API_RESOURCES = "/api/components/search?qualifiers=TRK&ps=";
 public const string API_VALIDATE_USER = "/api/authentication/validate";
