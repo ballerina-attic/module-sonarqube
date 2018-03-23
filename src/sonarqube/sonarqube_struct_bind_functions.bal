@@ -462,37 +462,40 @@ public function <Project project> getReliabilityRating () returns (string)|error
     return reliabilityRating;
 }
 
-//@Description {value:"Get details of project issues."}
-//@Return {value:"issues: returns array of project issues."}
-//@Return {value:"err: returns error if an exception raised in getting project issues."}
-//public function <Project project> getIssues () returns (Issue[])|error {
-//    http:Request request = {};
-//    http:Response response = {};
-//    http:HttpConnectorError connectionError = {};
-//    error err = {};
-//    constructAuthenticationHeaders(request);
-//    string requestPath = API_ISSUES_SEARCH + "?" + PROJECT_KEYS + "=" + project.key + "&" + EXTRA_CONTENT;
-//    var endpointResponse = clientEP -> get(requestPath, request);
-//    match endpointResponse {
-//        http:Response res => response = res;
-//        http:HttpConnectorError connectErr => connectionError = connectErr;
-//    }
-//    if (connectionError.message != "") {
-//        err = {message:connectionError.message};
-//        throw err;
-//    }
-//    Issue[] issues = [];
-//    try {
-//        checkResponse(response);
-//        json issueList = getContentByKey(response, ISSUES);
-//        int i = 0;
-//        foreach issue in issueList {
-//            Issue issueStruct = <Issue, getIssue()>issue;
-//            issues[i] = issueStruct;
-//            i = i + 1;
-//        }
-//    } catch (error blockError) {
-//        return blockError;
-//    }
-//    return issues;
-//}
+@Description {value:"Get details of project issues."}
+@Return {value:"issues: returns array of project issues."}
+@Return {value:"err: returns error if an exception raised in getting project issues."}
+public function <Project project> getIssues () returns (Issue[])|error {
+    endpoint http:ClientEndpoint clientEP = project.getConnectionFactory().sonarqubeEP;
+    string username = project.getConnectionFactory().username;
+    string password = project.getConnectionFactory().password;
+    http:Request request = {};
+    http:Response response = {};
+    http:HttpConnectorError connectionError = {};
+    error err = {};
+    constructAuthenticationHeaders(request,username,password);
+    string requestPath = API_ISSUES_SEARCH + "?" + PROJECT_KEYS + "=" + project.key + "&" + EXTRA_CONTENT;
+    var endpointResponse = clientEP -> get(requestPath, request);
+    match endpointResponse {
+        http:Response res => response = res;
+        http:HttpConnectorError connectErr => connectionError = connectErr;
+    }
+    if (connectionError.message != "") {
+        err = {message:connectionError.message};
+        throw err;
+    }
+    Issue[] issues = [];
+    try {
+        checkResponse(response);
+        json issueList = getContentByKey(response, ISSUES);
+        int i = 0;
+        foreach issue in issueList {
+            Issue issueStruct = <Issue, getIssue()>issue;
+            issues[i] = issueStruct;
+            i = i + 1;
+        }
+    } catch (error blockError) {
+        return blockError;
+    }
+    return issues;
+}

@@ -157,10 +157,10 @@ public function main (string[] args) {
         error err => io:println(err);
     }
 
-    ////Get project issues
-    //var projectIssues = project.getIssues();
-    //match projectIssues {
-    //    src:Issue[] issueList => io:println(issueList);
-    //    error err => io:println(err);
-    //}
+    //Get project issues
+    var projectIssues = project.getIssues();
+    match projectIssues {
+        src:Issue[] issueList => io:println(issueList);
+        error err => io:println(err);
+    }
 }
