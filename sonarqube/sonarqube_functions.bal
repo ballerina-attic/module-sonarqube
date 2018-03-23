@@ -16,7 +16,7 @@
 // under the License.
 //
 
-package src;
+package sonarqube;
 
 import ballerina/mime;
 import ballerina/net.http;

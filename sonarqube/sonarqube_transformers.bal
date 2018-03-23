@@ -16,7 +16,7 @@
 // under the License.
 //
 
-package src;
+package sonarqube;
 
 transformer <json projectDetails, Project project> getProjectDetails() {
     project.name = !isAnEmptyJson(projectDetails[NAME]) ? projectDetails[NAME].toString() : "";

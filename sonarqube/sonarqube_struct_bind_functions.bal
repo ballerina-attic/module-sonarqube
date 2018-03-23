@@ -16,7 +16,7 @@
 // under the License.
 //
 
-package src;
+package sonarqube;
 
 import ballerina/math;
 

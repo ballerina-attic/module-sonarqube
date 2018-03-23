@@ -17,7 +17,7 @@
 //
 
 
-package src;
+package sonarqube;
 
 import ballerina/net.http;
 

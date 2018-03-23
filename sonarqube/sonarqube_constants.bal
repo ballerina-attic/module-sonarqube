@@ -16,7 +16,7 @@
 // under the License.
 //
 
-package src;
+package sonarqube;
 
 public const string DEFAULT_URL = "https://wso2.org/sonar/";
 public const int PAGE_SIZE = 100;
