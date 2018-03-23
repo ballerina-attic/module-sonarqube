@@ -6,7 +6,7 @@
 
 Using Ballerina SonarQube connector you can easily get important code quality measurements of a project.Following diagram gives an overview of Ballerina SonarQube connector.
 
-![Ballerina -SonarQube Connector Overview](sonarqube-connector.png)
+![Ballerina -SonarQube Connector Overview](../sonarqube-connector.png)
 
 ## Compatibility
 | Language Version        | Connector Version          | SonarQube server Versions  |
