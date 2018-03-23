@@ -17,13 +17,16 @@
 //
 
 
-package src/sonarqube;
+package src;
 
-import ballerina/net/http;
+import ballerina/net.http;
 
 @Description {value:"Struct to initialize the connection."}
 public struct Connector {
-    http:ClientEndpoint clientEp;
+    http:ClientEndpoint sonarqubeEP;
+    private:
+        string username;
+        string password;
 }
 
 @Description {value:"Struct to get the details of a project."}
@@ -31,6 +34,8 @@ public struct Project {
     string name;
     string key;
     string id;
+    private:
+        ConnectionFactory connectionFactory;
 }
 
 @Description {value:"Struct to get the details of an issue in a project."}
@@ -61,4 +66,47 @@ public struct Comment {
     string key;
     string commenter;
     string createdDate;
+}
+
+@Description {value:"Connection factory struct."}
+public struct ConnectionFactory {
+    http:ClientEndpoint sonarqubeEP;
+    string username;
+    string password;
+}
+
+@Description {value:"Set username."}
+public function <Connector connector> setUser (string value) {
+    connector.username = value;
+}
+
+@Description {value:"Get username."}
+@Return {value:"Returns username."}
+public function <Connector connector> getUser () returns string {
+    return connector.username;
+}
+
+@Description {value:"Set password."}
+public function <Connector connector> setPassword (string value) {
+    connector.password = value;
+}
+
+@Description {value:"Get password."}
+@Return {value:"Returns password."}
+public function <Connector connector> getPassword () returns string {
+    return connector.password;
+}
+
+@Description {value:"Set connection factory."}
+public function <Project project> setConnectionFactory (http:ClientEndpoint sonarqubeEP,string username,string password) {
+    project.connectionFactory = {};
+    project.connectionFactory.sonarqubeEP = sonarqubeEP;
+    project.connectionFactory.username = username;
+    project.connectionFactory.password =password;
+}
+
+@Description {value:"Get connection factory."}
+@Return {value:"Returns connection factory for project struct."}
+public function <Project project> getConnectionFactory () returns ConnectionFactory {
+    return project.connectionFactory;
 }

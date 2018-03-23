@@ -1,16 +1,19 @@
+package test;
+
 import ballerina/io;
-import src/sonarqube;
+import src;
 
 public function main (string[] args) {
 
     //setup SonarQube server environment URL,username,password
-    sonarqube:setCredentials(args[0], args[1], args[2]);
+    src:Connector connector = {};
+    connector.initConnection(args[0], args[1], args[2]);
 
     //Get project
-    var projectDetails = sonarqube:getProject(args[3]);
-    sonarqube:Project project = {};
+    var projectDetails = connector.getProject(args[3]);
+    src:Project project = {};
     match projectDetails {
-        sonarqube:Project projectInfo => project = projectInfo;
+        src:Project projectInfo => project = projectInfo;
         error err => io:println(err);
     }
 
@@ -94,7 +97,7 @@ public function main (string[] args) {
     //Get number of lines should be covered by unit tests
     var linesToCover = project.getNumberOfLinesToCover();
     match linesToCover {
-        int value => io:println("Lines should be cocered by unit tests - " + value);
+        int value => io:println("Lines should be covered by unit tests - " + value);
         error err => io:println(err);
     }
 
@@ -154,11 +157,10 @@ public function main (string[] args) {
         error err => io:println(err);
     }
 
-    //Get project issues
-    var projectIssues = project.getIssues();
-    match projectIssues {
-        sonarqube:Issue[] issueList => io:println(issueList);
-        error err => io:println(err);
-    }
-
+    ////Get project issues
+    //var projectIssues = project.getIssues();
+    //match projectIssues {
+    //    src:Issue[] issueList => io:println(issueList);
+    //    error err => io:println(err);
+    //}
 }

@@ -16,31 +16,25 @@
 // under the License.
 //
 
-package src/sonarqube;
+package src;
 
-import ballerina/config;
-import ballerina/net/http;
-import ballerina/log;
+import ballerina/net.http;
 import ballerina/util;
-import ballerina/io;
 
-
-public endpoint http:ClientEndpoint clientEP {targets:[{uri:DEFAULT_URL}]};
 @Description {value:"Setup SonarQue environment."}
-public function setCredentials (string serverURL, string username, string password) {
-    endpoint http:ClientEndpoint sonarqubeEP {targets:[{uri:serverURL}]};
-    clientEP = sonarqubeEP;
-    SERVER_URL = serverURL;
-    USERNAME = username;
-    PASSWORD = password;
+public function <Connector connector> initConnection (string serverURL, string username, string password) {
+    endpoint http:ClientEndpoint clientEP {targets:[{uri:DEFAULT_URL}]};
+    connector.sonarqubeEP = clientEP;
+    connector.setUser(username);
+    connector.setPassword(password);
 }
 
 @Description {value:"Add authentication headers to the HTTP request."}
 @Param {value:"request: http OutRequest."}
-public function constructAuthenticationHeaders (http:Request request) {
-    if (USERNAME != "" && PASSWORD != "") {
-        request.addHeader("Authorization", "Basic " + util:base64Encode(USERNAME + ":" + PASSWORD));
-    }else{
+public function constructAuthenticationHeaders (http:Request request,string username,string password) {
+    if (username != "" && password != "") {
+        request.addHeader("Authorization", "Basic " + util:base64Encode(username + ":" + password));
+    } else {
         error err = {message:"Username and password should be provided."};
         throw err;
     }

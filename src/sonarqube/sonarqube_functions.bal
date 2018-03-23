@@ -16,16 +16,22 @@
 // under the License.
 //
 
-package src/sonarqube;
+package src;
+
+import ballerina/mime;
+import ballerina/net.http;
 
 @Description {value:"Get project specified by name from SonarQube server."}
 @Param {value:"projectName:Name of the project."}
 @Return {value:"project:Details of the project specified by name."}
-function getProjectDetails (string projectName) returns (Project) {
+function getProjectDetails (string projectName, Connector connector) returns (Project) {
+    endpoint http:ClientEndpoint clientEP = connector.sonarqubeEP;
     http:Request request = {};
     http:Response response = {};
     http:HttpConnectorError connectionError = {};
-    constructAuthenticationHeaders(request);
+    string username = connector.getUser();
+    string password = connector.getPassword();
+    constructAuthenticationHeaders(request, username, password);
     var endpointResponse = clientEP -> get(API_RESOURCES + PAGE_SIZE, request);
     match endpointResponse {
         http:Response res => response = res;
@@ -41,7 +47,7 @@ function getProjectDetails (string projectName) returns (Project) {
     string pagingTotal = !isAnEmptyJson(paging[TOTAL]) ? paging[TOTAL].toString() : "0";
     var convertedValue = <int>pagingTotal;
     int value = 0;
-    match convertedValue{
+    match convertedValue {
         int val => value = val;
         error castError => throw castError;
     }
@@ -52,18 +58,20 @@ function getProjectDetails (string projectName) returns (Project) {
             err = {message:"Project specified by " + projectName + " cannot be found in the SonarQube server."};
             throw err;
         }
+        project.setConnectionFactory(clientEP,username,password);
         return project;
     }
     json allProducts = getContentByKey(response, COMPONENTS);
     Project project = getProjectFromList(projectName, allProducts);
     if (project.key != "") {
+        project.setConnectionFactory(clientEP,username,password);
         return project;
     }
     int totalPages = (value % PAGE_SIZE > 0) ? (value / PAGE_SIZE + 1) : value / PAGE_SIZE;
     int count = 0;
     while (count < totalPages - 1) {
         request = {};
-        constructAuthenticationHeaders(request);
+        constructAuthenticationHeaders(request, username, password);
         endpointResponse = clientEP -> get(API_RESOURCES + PAGE_SIZE + "&" + PAGE_NUMBER + "=" + (count + 1), request);
         match endpointResponse {
             http:Response res => response = res;
@@ -77,12 +85,14 @@ function getProjectDetails (string projectName) returns (Project) {
         allProducts = getContentByKey(response, COMPONENTS);
         project = getProjectFromList(projectName, allProducts);
         if (project.key != "") {
+            project.setConnectionFactory(clientEP,username,password);
             return project;
         }
         count = count + 1;
     }
     return {};
 }
+
 @Description {value:"Check whether the response from sonarqube server has an error field."}
 @Param {value:"response: http Response."}
 function checkResponse (http:Response response) {
@@ -103,10 +113,10 @@ function checkResponse (http:Response response) {
 function getContentByKey (http:Response response, string key) returns (json) {
     var getContent = response.getJsonPayload();
     json jsonPayload = {};
-    error jsonErr = {};
+    mime:EntityError jsonErr = {};
     match getContent {
+        mime:EntityError endpointErr => jsonErr = endpointErr;
         json content => jsonPayload = content;
-        error endpointErr => jsonErr = endpointErr;
     }
     if (isAnEmptyJson(jsonPayload)) {
         error err = {};
@@ -117,7 +127,8 @@ function getContentByKey (http:Response response, string key) returns (json) {
         err = {message:"Server response payload is null."};
         throw err;
     } else if (jsonErr.message != "") {
-        throw jsonErr;
+        error err = {message:"Error in retrieving json payload."};
+        throw err;
     }
     return jsonPayload[key];
 }
@@ -143,13 +154,9 @@ function isAnEmptyJson (json jsonValue) returns (boolean) {
 @Return {value:"project:Details of the project specified by name."}
 function getProjectFromList (string projectName, json projectList) returns (Project) {
     foreach projectData in projectList {
-        var projectData = <Project, getProjectDetails()>projectData;
-        match projectData {
-            Project project => {if (project.name == projectName) {
-                                    return project;
-                                }
-            }
-            error conversionError => throw conversionError;
+        Project project = <Project, getProjectDetails()>projectData;
+        if (projectName == project.name) {
+            return project;
         }
     }
     return {};
@@ -159,12 +166,15 @@ function getProjectFromList (string projectName, json projectList) returns (Proj
 @Param {value:"response: http Response."}
 @Return {value:"value: Value of the metric field in json."}
 @Return {value:"err: if error occured in getting value of the measures field in the json."}
-function getMetricValue (string projectKey, string metricName) returns (string) {
+function getMetricValue (Project project, string metricName) returns (string) {
+    endpoint http:ClientEndpoint clientEP = project.getConnectionFactory().sonarqubeEP;
+    string username = project.getConnectionFactory().username;
+    string password = project.getConnectionFactory().password;
     http:Response response = {};
     http:Request request = {};
     http:HttpConnectorError connectionError = {};
-    constructAuthenticationHeaders(request);
-    string requestPath = API_MEASURES + "?" + COMPONENT_KEY + "=" + projectKey + "&" + METRIC_KEY + "=" + metricName;
+    constructAuthenticationHeaders(request,username,password);
+    string requestPath = API_MEASURES + "?" + COMPONENT_KEY + "=" + project.key + "&" + METRIC_KEY + "=" + metricName;
     var endpointResponse = clientEP -> get(requestPath, request);
     match endpointResponse {
         http:Response res => response = res;

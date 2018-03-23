@@ -16,15 +16,17 @@
 // under the License.
 //
 
-package src/sonarqube;
+package src;
+
+import ballerina/math;
 
 @Description {value:"Get project details."}
 @Param {value:"projetName:Name of the project."}
 @Return {value:"project:Project struct with project details."}
 @Return {value:"err: Returns error if an exception raised in getting project details."}
-public function getProject (string projectName) returns (Project)|error {
+public function <Connector connector>getProject (string projectName) returns (Project)|error {
     try {
-        Project project = getProjectDetails(projectName);
+        Project project = getProjectDetails(projectName,connector);
         if (project.key != "") {
             return project;
         }
@@ -42,7 +44,7 @@ public function getProject (string projectName) returns (Project)|error {
 public function <Project project> getComplexity () returns (string)|error {
     string value = "";
     try {
-        value = getMetricValue(project.key, COMPLEXITY);
+        value = getMetricValue(project, COMPLEXITY);
         return value;
     } catch (error dataError) {
         return dataError;
@@ -56,12 +58,12 @@ public function <Project project> getComplexity () returns (string)|error {
 public function <Project project> getDuplicatedCodeBlocksCount () returns (int)|error {
     string value = "";
     try {
-        value = getMetricValue(project.key, DUPLICATED_BLOCKS);
+        value = getMetricValue(project, DUPLICATED_BLOCKS);
     } catch (error dataError) {
         return dataError;
     }
     var convertedValue = <int>value;
-    match convertedValue{
+    match convertedValue {
         int val => return val;
         error castError => return castError;
     }
@@ -73,12 +75,12 @@ public function <Project project> getDuplicatedCodeBlocksCount () returns (int)|
 public function <Project project> getDuplicatedFilesCount () returns (int)|error {
     string value = "";
     try {
-        value = getMetricValue(project.key, DUPLICATED_FILES);
+        value = getMetricValue(project, DUPLICATED_FILES);
     } catch (error dataError) {
         return dataError;
     }
     var convertedValue = <int>value;
-    match convertedValue{
+    match convertedValue {
         int val => return val;
         error castError => return castError;
     }
@@ -90,12 +92,12 @@ public function <Project project> getDuplicatedFilesCount () returns (int)|error
 public function <Project project> getDuplicatedLinesCount () returns (int)|error {
     string value = "";
     try {
-        value = getMetricValue(project.key, DUPLICATED_LINES);
+        value = getMetricValue(project, DUPLICATED_LINES);
     } catch (error dataError) {
         return dataError;
     }
     var convertedValue = <int>value;
-    match convertedValue{
+    match convertedValue {
         int val => return val;
         error castError => return castError;
     }
@@ -109,12 +111,12 @@ fixed."}
 public function <Project project> getBlockerIssuesCount () returns (int)|error {
     string value = "";
     try {
-        value = getMetricValue(project.key, ISSUE_BLOCKER);
+        value = getMetricValue(project, ISSUE_BLOCKER);
     } catch (error dataError) {
         return dataError;
     }
     var convertedValue = <int>value;
-    match convertedValue{
+    match convertedValue {
         int val => return val;
         error castError => return castError;
     }
@@ -128,12 +130,12 @@ The code MUST be immediately reviewed. "}
 public function <Project project> getCriticalIssuesCount () returns (int)|error {
     string value = "";
     try {
-        value = getMetricValue(project.key, ISSUE_CRITICAL);
+        value = getMetricValue(project, ISSUE_CRITICAL);
     } catch (error dataError) {
         return dataError;
     }
     var convertedValue = <int>value;
-    match convertedValue{
+    match convertedValue {
         int val => return val;
         error castError => return castError;
     }
@@ -146,12 +148,12 @@ public function <Project project> getCriticalIssuesCount () returns (int)|error 
 public function <Project project> getMajorIssuesCount () returns (int)|error {
     string value = "";
     try {
-        value = getMetricValue(project.key, ISSUE_MAJOR);
+        value = getMetricValue(project, ISSUE_MAJOR);
     } catch (error dataError) {
         return dataError;
     }
     var convertedValue = <int>value;
-    match convertedValue{
+    match convertedValue {
         int val => return val;
         error castError => return castError;
     }
@@ -164,12 +166,12 @@ productivity: lines should not be too long, switch statements should have at lea
 public function <Project project> getMinorIssuesCount () returns (int)|error {
     string value = "";
     try {
-        value = getMetricValue(project.key, ISSUE_MINOR);
+        value = getMetricValue(project, ISSUE_MINOR);
     } catch (error dataError) {
         return dataError;
     }
     var convertedValue = <int>value;
-    match convertedValue{
+    match convertedValue {
         int val => return val;
         error castError => return castError;
     }
@@ -181,12 +183,12 @@ public function <Project project> getMinorIssuesCount () returns (int)|error {
 public function <Project project> getOpenIssuesCount () returns (int)|error {
     string value = "";
     try {
-        value = getMetricValue(project.key, ISSUE_OPEN);
+        value = getMetricValue(project, ISSUE_OPEN);
     } catch (error dataError) {
         return dataError;
     }
     var convertedValue = <int>value;
-    match convertedValue{
+    match convertedValue {
         int val => return val;
         error castError => return castError;
     }
@@ -198,12 +200,12 @@ public function <Project project> getOpenIssuesCount () returns (int)|error {
 public function <Project project> getConfirmedIssuesCount () returns (int)|error {
     string value = "";
     try {
-        value = getMetricValue(project.key, ISSUE_CONFIRMED);
+        value = getMetricValue(project, ISSUE_CONFIRMED);
     } catch (error dataError) {
         return dataError;
     }
     var convertedValue = <int>value;
-    match convertedValue{
+    match convertedValue {
         int val => return val;
         error castError => return castError;
     }
@@ -215,12 +217,12 @@ public function <Project project> getConfirmedIssuesCount () returns (int)|error
 public function <Project project> getReopenedIssuesCount () returns (int)|error {
     string value = "";
     try {
-        value = getMetricValue(project.key, ISSUE_REOPENED);
+        value = getMetricValue(project, ISSUE_REOPENED);
     } catch (error dataError) {
         return dataError;
     }
     var convertedValue = <int>value;
-    match convertedValue{
+    match convertedValue {
         int val => return val;
         error castError => return castError;
     }
@@ -232,12 +234,12 @@ public function <Project project> getReopenedIssuesCount () returns (int)|error 
 public function <Project project> getLinesOfCode () returns (int)|error {
     string value = "";
     try {
-        value = getMetricValue(project.key, LOC);
+        value = getMetricValue(project, LOC);
     } catch (error dataError) {
         return dataError;
     }
     var convertedValue = <int>value;
-    match convertedValue{
+    match convertedValue {
         int val => return val;
         error castError => return castError;
     }
@@ -249,12 +251,12 @@ public function <Project project> getLinesOfCode () returns (int)|error {
 public function <Project project> getUncoveredLinesCount () returns (int)|error {
     string value = "";
     try {
-        value = getMetricValue(project.key, UNCOVERED_LINES_COUNT);
+        value = getMetricValue(project, UNCOVERED_LINES_COUNT);
     } catch (error dataError) {
         return dataError;
     }
     var convertedValue = <int>value;
-    match convertedValue{
+    match convertedValue {
         int val => return val;
         error castError => return castError;
     }
@@ -266,12 +268,12 @@ public function <Project project> getUncoveredLinesCount () returns (int)|error 
 public function <Project project> getNumberOfLinesToCover () returns (int)|error {
     string value = "";
     try {
-        value = getMetricValue(project.key, LINES_TO_COVER);
+        value = getMetricValue(project, LINES_TO_COVER);
     } catch (error dataError) {
         return dataError;
     }
     var convertedValue = <int>value;
-    match convertedValue{
+    match convertedValue {
         int val => return val;
         error castError => return castError;
     }
@@ -283,7 +285,7 @@ public function <Project project> getNumberOfLinesToCover () returns (int)|error
 public function <Project project> getLineCoverage () returns (string)|error {
     string value = "";
     try {
-        value = getMetricValue(project.key, LINE_COVERAGE);
+        value = getMetricValue(project, LINE_COVERAGE);
     } catch (error dataError) {
         return dataError;
     }
@@ -296,7 +298,7 @@ public function <Project project> getLineCoverage () returns (string)|error {
 public function <Project project> getBranchCoverage () returns (string)|error {
     string value = "";
     try {
-        value = getMetricValue(project.key, BRANCH_COVERAGE);
+        value = getMetricValue(project, BRANCH_COVERAGE);
     } catch (error dataError) {
         return dataError;
     }
@@ -310,12 +312,12 @@ public function <Project project> getBranchCoverage () returns (string)|error {
 public function <Project project> getCodeSmellsCount () returns (int)|error {
     string value = "";
     try {
-        value = getMetricValue(project.key, CODE_SMELLS);
+        value = getMetricValue(project, CODE_SMELLS);
     } catch (error dataError) {
         return dataError;
     }
     var convertedValue = <int>value;
-    match convertedValue{
+    match convertedValue {
         int val => return val;
         error castError => return castError;
     }
@@ -328,21 +330,26 @@ public function <Project project> getCodeSmellsCount () returns (int)|error {
 public function <Project project> getSQALERating () returns (string)|error {
     string sqaleRating = "";
     try {
-        sqaleRating = getMetricValue(project.key, SQALE_RATING);
+        int value = 0;
+        sqaleRating = getMetricValue(project, SQALE_RATING);
+        var convertedValue = <float>sqaleRating;
+        match convertedValue {
+            float val => value = math:round(val);
+            error castError => return castError;
+        }
+        if (value <= 5) {
+            sqaleRating = "A";
+        } else if (value <= 10) {
+            sqaleRating = "B";
+        } else if (value <= 20) {
+            sqaleRating = "C";
+        } else if (value <= 50) {
+            sqaleRating = "D";
+        } else {
+            sqaleRating = "E";
+        }
     } catch (error dataError) {
         return dataError;
-    }
-    var val,err = <int>sqaleRating;
-    if (val <= 5) {
-        sqaleRating = "A";
-    } else if (val <= 10) {
-        sqaleRating = "B";
-    } else if (val <= 20) {
-        sqaleRating = "C";
-    } else if (val <= 50) {
-        sqaleRating = "D";
-    } else {
-        sqaleRating = "E";
     }
     return sqaleRating;
 }
@@ -353,7 +360,7 @@ public function <Project project> getSQALERating () returns (string)|error {
 public function <Project project> getTechnicalDebt () returns (string)|error {
     string value = "";
     try {
-        value = getMetricValue(project.key, TECHNICAL_DEBT);
+        value = getMetricValue(project, TECHNICAL_DEBT);
     } catch (error dataError) {
         return dataError;
     }
@@ -366,7 +373,7 @@ public function <Project project> getTechnicalDebt () returns (string)|error {
 public function <Project project> getTechnicalDebtRatio () returns (string)|error {
     string value = "";
     try {
-        value = getMetricValue(project.key, TECHNICAL_DEBT_RATIO);
+        value = getMetricValue(project, TECHNICAL_DEBT_RATIO);
     } catch (error dataError) {
         return dataError;
     }
@@ -379,12 +386,12 @@ public function <Project project> getTechnicalDebtRatio () returns (string)|erro
 public function <Project project> getVulnerabilitiesCount () returns (int)|error {
     string value = "";
     try {
-        value = getMetricValue(project.key, VULNERABILITIES);
+        value = getMetricValue(project, VULNERABILITIES);
     } catch (error dataError) {
         return dataError;
     }
     var convertedValue = <int>value;
-    match convertedValue{
+    match convertedValue {
         int val => return val;
         error castError => return castError;
     }
@@ -396,7 +403,7 @@ public function <Project project> getVulnerabilitiesCount () returns (int)|error
 public function <Project project> getSecurityRating () returns (string)|error {
     string securityRating = "";
     try {
-        securityRating = getMetricValue(project.key, SECURITY_RATING);
+        securityRating = getMetricValue(project, SECURITY_RATING);
     } catch (error dataError) {
         return dataError;
     }
@@ -420,12 +427,12 @@ public function <Project project> getSecurityRating () returns (string)|error {
 public function <Project project> getBugsCount () returns (int)|error {
     string value = "";
     try {
-        value = getMetricValue(project.key, BUGS);
+        value = getMetricValue(project, BUGS);
     } catch (error dataError) {
         return dataError;
     }
     var convertedValue = <int>value;
-    match convertedValue{
+    match convertedValue {
         int val => return val;
         error castError => return castError;
     }
@@ -437,7 +444,7 @@ public function <Project project> getBugsCount () returns (int)|error {
 public function <Project project> getReliabilityRating () returns (string)|error {
     string reliabilityRating = "";
     try {
-        reliabilityRating = getMetricValue(project.key, RELIABILITY_RATING);
+        reliabilityRating = getMetricValue(project, RELIABILITY_RATING);
     } catch (error dataError) {
         return dataError;
     }
@@ -455,42 +462,37 @@ public function <Project project> getReliabilityRating () returns (string)|error
     return reliabilityRating;
 }
 
-@Description {value:"Get details of project issues."}
-@Return {value:"issues: returns array of project issues."}
-@Return {value:"err: returns error if an exception raised in getting project issues."}
-public function <Project project> getIssues () returns (Issue[])|error {
-    http:Request request = {};
-    http:Response response = {};
-    http:HttpConnectorError connectionError = {};
-    error err = {};
-    constructAuthenticationHeaders(request);
-    string requestPath = API_ISSUES_SEARCH + "?" + PROJECT_KEYS + "=" + project.key + "&" + EXTRA_CONTENT;
-    var endpointResponse = clientEP -> get(requestPath, request);
-    match endpointResponse {
-        http:Response res => response = res;
-        http:HttpConnectorError connectErr => connectionError = connectErr;
-    }
-    if (connectionError.message != "") {
-        err = {message:connectionError.message};
-        throw err;
-    }
-    Issue[] issues = [];
-    try {
-        checkResponse(response);
-        json issueList = getContentByKey(response, ISSUES);
-        int i = 0;
-        foreach issue in issueList {
-            var convertedVal = <Issue, getIssue()>issue;
-            Issue issue = {};
-            match convertedVal{
-                Issue issueStruct => issue = issueStruct;
-                error transformError => throw transformError;
-            }
-            issues[i] = issue;
-            i = i + 1;
-        }
-    } catch (error blockError) {
-        return blockError;
-    }
-    return issues;
-}
+//@Description {value:"Get details of project issues."}
+//@Return {value:"issues: returns array of project issues."}
+//@Return {value:"err: returns error if an exception raised in getting project issues."}
+//public function <Project project> getIssues () returns (Issue[])|error {
+//    http:Request request = {};
+//    http:Response response = {};
+//    http:HttpConnectorError connectionError = {};
+//    error err = {};
+//    constructAuthenticationHeaders(request);
+//    string requestPath = API_ISSUES_SEARCH + "?" + PROJECT_KEYS + "=" + project.key + "&" + EXTRA_CONTENT;
+//    var endpointResponse = clientEP -> get(requestPath, request);
+//    match endpointResponse {
+//        http:Response res => response = res;
+//        http:HttpConnectorError connectErr => connectionError = connectErr;
+//    }
+//    if (connectionError.message != "") {
+//        err = {message:connectionError.message};
+//        throw err;
+//    }
+//    Issue[] issues = [];
+//    try {
+//        checkResponse(response);
+//        json issueList = getContentByKey(response, ISSUES);
+//        int i = 0;
+//        foreach issue in issueList {
+//            Issue issueStruct = <Issue, getIssue()>issue;
+//            issues[i] = issueStruct;
+//            i = i + 1;
+//        }
+//    } catch (error blockError) {
+//        return blockError;
+//    }
+//    return issues;
+//}
