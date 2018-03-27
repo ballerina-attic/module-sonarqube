@@ -25,13 +25,10 @@ import ballerina/net.http;
 @Param {value:"projectName:Name of the project."}
 @Return {value:"project:Details of the project specified by name."}
 function getProjectDetails (string projectName, Connector connector) returns (Project) {
-    endpoint http:ClientEndpoint clientEP = connector.sonarqubeEP;
     http:Request request = {};
     http:Response response = {};
     http:HttpConnectorError connectionError = {};
-    string username = connector.getUser();
-    string password = connector.getPassword();
-    constructAuthenticationHeaders(request, username, password);
+    constructAuthenticationHeaders(request);
     var endpointResponse = clientEP -> get(API_RESOURCES + PAGE_SIZE, request);
     match endpointResponse {
         http:Response res => response = res;
@@ -58,20 +55,18 @@ function getProjectDetails (string projectName, Connector connector) returns (Pr
             err = {message:"Project specified by " + projectName + " cannot be found in the SonarQube server."};
             throw err;
         }
-        project.setConnectionFactory(clientEP,username,password);
         return project;
     }
     json allProducts = getContentByKey(response, COMPONENTS);
     Project project = getProjectFromList(projectName, allProducts);
     if (project.key != "") {
-        project.setConnectionFactory(clientEP,username,password);
         return project;
     }
     int totalPages = (value % PAGE_SIZE > 0) ? (value / PAGE_SIZE + 1) : value / PAGE_SIZE;
     int count = 0;
     while (count < totalPages - 1) {
         request = {};
-        constructAuthenticationHeaders(request, username, password);
+        constructAuthenticationHeaders(request);
         endpointResponse = clientEP -> get(API_RESOURCES + PAGE_SIZE + "&" + PAGE_NUMBER + "=" + (count + 1), request);
         match endpointResponse {
             http:Response res => response = res;
@@ -85,7 +80,6 @@ function getProjectDetails (string projectName, Connector connector) returns (Pr
         allProducts = getContentByKey(response, COMPONENTS);
         project = getProjectFromList(projectName, allProducts);
         if (project.key != "") {
-            project.setConnectionFactory(clientEP,username,password);
             return project;
         }
         count = count + 1;
@@ -167,13 +161,10 @@ function getProjectFromList (string projectName, json projectList) returns (Proj
 @Return {value:"value: Value of the metric field in json."}
 @Return {value:"err: if error occured in getting value of the measures field in the json."}
 function getMetricValue (Project project, string metricName) returns (string) {
-    endpoint http:ClientEndpoint clientEP = project.getConnectionFactory().sonarqubeEP;
-    string username = project.getConnectionFactory().username;
-    string password = project.getConnectionFactory().password;
     http:Response response = {};
     http:Request request = {};
     http:HttpConnectorError connectionError = {};
-    constructAuthenticationHeaders(request,username,password);
+    constructAuthenticationHeaders(request);
     string requestPath = API_MEASURES + "?" + COMPONENT_KEY + "=" + project.key + "&" + METRIC_KEY + "=" + metricName;
     var endpointResponse = clientEP -> get(requestPath, request);
     match endpointResponse {

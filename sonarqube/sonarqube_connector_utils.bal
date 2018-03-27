@@ -21,21 +21,18 @@ package sonarqube;
 import ballerina/net.http;
 import ballerina/util;
 
-@Description {value:"Setup SonarQue environment."}
+endpoint http:ClientEndpoint clientEP {targets:[{uri:DEFAULT_URL}]};
+string ENCODED_AUTH_PARAMETERS = "";
+
+@Description {value:"Setup SonarQube environment."}
 public function <Connector connector> initConnection (string serverURL, string username, string password) {
-    endpoint http:ClientEndpoint clientEP {targets:[{uri:DEFAULT_URL}]};
-    connector.sonarqubeEP = clientEP;
-    connector.setUser(username);
-    connector.setPassword(password);
+    endpoint http:ClientEndpoint sonarqubeEP {targets:[{uri:serverURL}]};
+    clientEP = sonarqubeEP;
+    ENCODED_AUTH_PARAMETERS = util:base64Encode(username+":"+password);
 }
 
 @Description {value:"Add authentication headers to the HTTP request."}
 @Param {value:"request: http OutRequest."}
-public function constructAuthenticationHeaders (http:Request request,string username,string password) {
-    if (username != "" && password != "") {
-        request.addHeader("Authorization", "Basic " + util:base64Encode(username + ":" + password));
-    } else {
-        error err = {message:"Username and password should be provided."};
-        throw err;
-    }
+public function constructAuthenticationHeaders (http:Request request) {
+    request.addHeader("Authorization", "Basic " + ENCODED_AUTH_PARAMETERS);
 }

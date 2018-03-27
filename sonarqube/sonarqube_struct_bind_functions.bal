@@ -466,14 +466,11 @@ public function <Project project> getReliabilityRating () returns (string)|error
 @Return {value:"issues: returns array of project issues."}
 @Return {value:"err: returns error if an exception raised in getting project issues."}
 public function <Project project> getIssues () returns (Issue[])|error {
-    endpoint http:ClientEndpoint clientEP = project.getConnectionFactory().sonarqubeEP;
-    string username = project.getConnectionFactory().username;
-    string password = project.getConnectionFactory().password;
     http:Request request = {};
     http:Response response = {};
     http:HttpConnectorError connectionError = {};
     error err = {};
-    constructAuthenticationHeaders(request,username,password);
+    constructAuthenticationHeaders(request);
     string requestPath = API_ISSUES_SEARCH + "?" + PROJECT_KEYS + "=" + project.key + "&" + EXTRA_CONTENT;
     var endpointResponse = clientEP -> get(requestPath, request);
     match endpointResponse {
