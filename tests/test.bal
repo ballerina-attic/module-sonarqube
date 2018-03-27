@@ -6,12 +6,12 @@ import sonarqube;
 public function main (string[] args) {
 
     //setup SonarQube server environment URL,username,password
-    sonarqube:Connector connector = {};
-    connector.initConnection(args[0], args[1], args[2]);
+    sonarqube:Connector sonarqubeConnector = {};
+    sonarqubeConnector.initConnection(args[0], args[1], args[2]);
 
     //Get project
-    var projectDetails = connector.getProject(args[3]);
     sonarqube:Project project = {};
+    var projectDetails = sonarqubeConnector.getProject(args[3]);
     match projectDetails {
         sonarqube:Project projectInfo => project = projectInfo;
         error err => io:println(err);
@@ -90,7 +90,7 @@ public function main (string[] args) {
     //Get uncovered lines count
     var uncoveredLinesCount = project.getUncoveredLinesCount();
     match uncoveredLinesCount {
-        int value => io:println("Number of lines not cocered by unit tests - " + value);
+        int value => io:println("Number of lines not covered by unit tests - " + value);
         error err => io:println(err);
     }
 

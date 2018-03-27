@@ -490,7 +490,7 @@ public function <Project project> getIssues () returns (Issue[])|error {
         json issueList = getContentByKey(response, ISSUES);
         int i = 0;
         foreach issue in issueList {
-            Issue issueStruct = <Issue, getIssue()>issue;
+            Issue issueStruct = convertToIssue(issue);
             issues[i] = issueStruct;
             i = i + 1;
         }

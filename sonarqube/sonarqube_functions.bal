@@ -195,3 +195,55 @@ function getMetricValue (Project project, string metricName) returns (string) {
     return metricValue.toString();
 }
 
+@Description {value:"Convert a given json to Issue."}
+@Param {value:"issueDetails:Json to convert."}
+@Return {value:"issue:convereted ."}
+function convertToIssue(json issueDetails) returns Issue {
+    Issue issue = {};
+    issue.key = !isAnEmptyJson(issueDetails[KEY]) ? issueDetails[KEY].toString() : "";
+    issue.severity = !isAnEmptyJson(issueDetails[SEVERITY]) ? issueDetails[SEVERITY].toString() : "";
+    issue.status = !isAnEmptyJson(issueDetails[STATUS]) ? issueDetails[STATUS].toString() : "";
+    issue.issueType = !isAnEmptyJson(issueDetails[TYPE]) ? issueDetails[TYPE].toString() : "";
+    issue.description = !isAnEmptyJson(issueDetails[MESSAGE]) ? issueDetails[MESSAGE].toString() : "";
+    issue.author = !isAnEmptyJson(issueDetails[AUTHOR]) ? issueDetails[AUTHOR].toString() : "";
+    issue.creationDate = !isAnEmptyJson(issueDetails[CREATION_DATE]) ? issueDetails[CREATION_DATE].toString() : "";
+    issue.assignee = !isAnEmptyJson(issueDetails[ASSIGNEE]) ? issueDetails[ASSIGNEE].toString() : "";
+    json positionInfo = issueDetails[ISSUE_RANGE];
+    issue.position = {};
+    issue.position.startLine = (!isAnEmptyJson(positionInfo)) ? (!isAnEmptyJson(positionInfo[START_LINE]) ?
+                                                                  positionInfo[START_LINE].toString() : "") : "";
+    issue.position.endLine = (!isAnEmptyJson(positionInfo)) ? (!isAnEmptyJson(positionInfo[END_LINE]) ? positionInfo[END_LINE]
+                                                                                                        .toString() : "") : "";
+    json tags = issueDetails[TAGS];
+    int count = 0;
+    if(!isAnEmptyJson(tags)) {
+        string[] tagList = [];
+        foreach tag in tags {
+            tagList[count] = tag.toString();
+            count = count + 1;
+        }
+        issue.tags = tagList;
+        count = 0;
+    }
+    json transitions = issueDetails[TRANSITIONS];
+    if(!isAnEmptyJson(transitions)) {
+        string []workflowTransitions = [];
+        foreach transition in transitions {
+            workflowTransitions[count] = transition.toString();
+            count = count + 1;
+        }
+        issue.workflowTransitions = workflowTransitions;
+        count = 0;
+    }
+    json comments = issueDetails[COMMENTS];
+    if(!isAnEmptyJson(comments)) {
+        Comment[] commentList = [];
+        foreach comment in comments {
+            commentList[count] = <Comment, getComment()>comment;
+            count = count + 1;
+        }
+        issue.comments = commentList;
+    }
+    return issue;
+}
+

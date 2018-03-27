@@ -49,9 +49,9 @@ public struct Issue {
     string assignee;
     string issueType;
     Position position;
-    string[] tags;
-    Comment[] comments;
-    string[] workflowTransitions;
+    string[] tags = [];
+    Comment[] comments = [];
+    string[] workflowTransitions = [];
 }
 
 @Description {value:"Struct to get the start line and the end line of an issue."}
