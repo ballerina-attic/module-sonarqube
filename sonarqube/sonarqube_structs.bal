@@ -16,7 +16,6 @@
 // under the License.
 //
 
-
 package sonarqube;
 
 import ballerina/net.http;
