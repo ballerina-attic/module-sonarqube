@@ -26,3 +26,4 @@ import ballerina/util;
 public function <SonarQubeConnector sonarqubeConnector> constructAuthenticationHeaders (http:Request request) {
     request.addHeader("Authorization", "Basic " + util:base64Encode(sonarqubeConnector.token + ":"));
 }
+

@@ -31,5 +31,3 @@ transformer <json commentDetails, Comment comment> getComment() {
     comment.createdDate = !isAnEmptyJson(commentDetails[CREATED_DATE]) ? commentDetails[CREATED_DATE].toString() : "";
 }
 
-
-
