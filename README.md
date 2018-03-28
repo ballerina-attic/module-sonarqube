@@ -28,7 +28,7 @@ The following sections provide you with information on how to use the Ballerina 
 ## Quick Testing
 
 You can easily test the following actions using the `test.bal` file.
-- Run `ballerina run tests <server_url> <username> <password> <project_name>` from you sonarqube connector directory.
+- Run `ballerina run tests <server_url> <token> <project_name>` from you sonarqube connector directory.
 
 
 ## Working with SonarQube connector actions

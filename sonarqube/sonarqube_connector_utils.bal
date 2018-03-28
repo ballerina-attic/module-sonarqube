@@ -21,18 +21,8 @@ package sonarqube;
 import ballerina/net.http;
 import ballerina/util;
 
-endpoint http:ClientEndpoint clientEP {targets:[{uri:DEFAULT_URL}]};
-string ENCODED_AUTH_PARAMETERS = "";
-
-@Description {value:"Setup SonarQube environment."}
-public function <Connector connector> initConnection (string serverURL, string username, string password) {
-    endpoint http:ClientEndpoint sonarqubeEP {targets:[{uri:serverURL}]};
-    clientEP = sonarqubeEP;
-    ENCODED_AUTH_PARAMETERS = util:base64Encode(username+":"+password);
-}
-
 @Description {value:"Add authentication headers to the HTTP request."}
 @Param {value:"request: http OutRequest."}
-public function constructAuthenticationHeaders (http:Request request) {
-    request.addHeader("Authorization", "Basic " + ENCODED_AUTH_PARAMETERS);
+public function <SonarQubeConnector sonarqubeConnector> constructAuthenticationHeaders (http:Request request) {
+    request.addHeader("Authorization", "Basic " + util:base64Encode(sonarqubeConnector.token + ":"));
 }
