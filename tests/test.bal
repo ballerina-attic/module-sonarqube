@@ -33,10 +33,7 @@ public function main (string[] args) {
     sonarqube:Project project = {};
     var projectDetails = sonarqubeEP -> getProject(args[2]);
     match projectDetails {
-        sonarqube:Project projectInfo => {
-            project = projectInfo;
-            io:println(project);
-        }
+        sonarqube:Project projectInfo => project = projectInfo;
         error err => io:println(err);
     }
 
