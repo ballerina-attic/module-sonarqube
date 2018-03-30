@@ -21,72 +21,6 @@ package sonarqube;
 import ballerina/mime;
 import ballerina/net.http;
 
-@Description {value:"Get project specified by name from SonarQube server."}
-@Param {value:"projectName:Name of the project."}
-@Return {value:"project:Details of the project specified by name."}
-function getProjectDetails (string projectName, Connector connector) returns (Project) {
-    http:Request request = {};
-    http:Response response = {};
-    http:HttpConnectorError connectionError = {};
-    constructAuthenticationHeaders(request);
-    var endpointResponse = clientEP -> get(API_RESOURCES + PAGE_SIZE, request);
-    match endpointResponse {
-        http:Response res => response = res;
-        http:HttpConnectorError connectErr => connectionError = connectErr;
-    }
-    error err = {};
-    if (connectionError.message != "") {
-        err = {message:connectionError.message};
-        throw err;
-    }
-    checkResponse(response);
-    json paging = getContentByKey(response, PAGING);
-    string pagingTotal = !isAnEmptyJson(paging[TOTAL]) ? paging[TOTAL].toString() : "0";
-    var convertedValue = <int>pagingTotal;
-    int value = 0;
-    match convertedValue {
-        int val => value = val;
-        error castError => throw castError;
-    }
-    if (value <= PAGE_SIZE) {
-        json allProducts = getContentByKey(response, COMPONENTS);
-        Project project = getProjectFromList(projectName, allProducts);
-        if (project.key != "") {
-            err = {message:"Project specified by " + projectName + " cannot be found in the SonarQube server."};
-            throw err;
-        }
-        return project;
-    }
-    json allProducts = getContentByKey(response, COMPONENTS);
-    Project project = getProjectFromList(projectName, allProducts);
-    if (project.key != "") {
-        return project;
-    }
-    int totalPages = (value % PAGE_SIZE > 0) ? (value / PAGE_SIZE + 1) : value / PAGE_SIZE;
-    int count = 0;
-    while (count < totalPages - 1) {
-        request = {};
-        constructAuthenticationHeaders(request);
-        endpointResponse = clientEP -> get(API_RESOURCES + PAGE_SIZE + "&" + PAGE_NUMBER + "=" + (count + 1), request);
-        match endpointResponse {
-            http:Response res => response = res;
-            http:HttpConnectorError connectErr => connectionError = connectErr;
-        }
-        if (connectionError.message != "") {
-            err = {message:connectionError.message};
-            throw err;
-        }
-        checkResponse(response);
-        allProducts = getContentByKey(response, COMPONENTS);
-        project = getProjectFromList(projectName, allProducts);
-        if (project.key != "") {
-            return project;
-        }
-        count = count + 1;
-    }
-    return {};
-}
-
 @Description {value:"Check whether the response from sonarqube server has an error field."}
 @Param {value:"response: http Response."}
 function checkResponse (http:Response response) {
@@ -160,14 +94,13 @@ function getProjectFromList (string projectName, json projectList) returns (Proj
 @Param {value:"response: http Response."}
 @Return {value:"value: Value of the metric field in json."}
 @Return {value:"err: if error occured in getting value of the measures field in the json."}
-function getMetricValue (Project project, string metricName) returns (string) {
+function getMetricValue (string projectKey, SonarQubeConnector sonarqubeConnector, string metricName) returns (string) {
     http:Response response = {};
     http:Request request = {};
     http:HttpConnectorError connectionError = {};
-    constructAuthenticationHeaders(request);
-    string requestPath = API_MEASURES + "?" + COMPONENT_KEY + "=" + project.key + "&" + METRIC_KEY + "=" + metricName;
-    var endpointResponse = clientEP -> get(requestPath, request);
-    match endpointResponse {
+    sonarqubeConnector.constructAuthenticationHeaders(request);
+    string requestPath = API_MEASURES + "?" + COMPONENT_KEY + "=" + projectKey + "&" + METRIC_KEY + "=" + metricName;
+    match sonarqubeConnector.httpClient.get(requestPath, request) {
         http:Response res => response = res;
         http:HttpConnectorError connectErr => connectionError = connectErr;
     }
@@ -189,7 +122,7 @@ function getMetricValue (Project project, string metricName) returns (string) {
 @Description {value:"Convert a given json to Issue."}
 @Param {value:"issueDetails:Json to convert."}
 @Return {value:"issue:convereted ."}
-function convertToIssue(json issueDetails) returns Issue {
+function convertToIssue (json issueDetails) returns Issue {
     Issue issue = {};
     issue.key = !isAnEmptyJson(issueDetails[KEY]) ? issueDetails[KEY].toString() : "";
     issue.severity = !isAnEmptyJson(issueDetails[SEVERITY]) ? issueDetails[SEVERITY].toString() : "";
@@ -207,7 +140,7 @@ function convertToIssue(json issueDetails) returns Issue {
                                                                                                         .toString() : "") : "";
     json tags = issueDetails[TAGS];
     int count = 0;
-    if(!isAnEmptyJson(tags)) {
+    if (!isAnEmptyJson(tags)) {
         string[] tagList = [];
         foreach tag in tags {
             tagList[count] = tag.toString();
@@ -217,8 +150,8 @@ function convertToIssue(json issueDetails) returns Issue {
         count = 0;
     }
     json transitions = issueDetails[TRANSITIONS];
-    if(!isAnEmptyJson(transitions)) {
-        string []workflowTransitions = [];
+    if (!isAnEmptyJson(transitions)) {
+        string[] workflowTransitions = [];
         foreach transition in transitions {
             workflowTransitions[count] = transition.toString();
             count = count + 1;
@@ -227,7 +160,7 @@ function convertToIssue(json issueDetails) returns Issue {
         count = 0;
     }
     json comments = issueDetails[COMMENTS];
-    if(!isAnEmptyJson(comments)) {
+    if (!isAnEmptyJson(comments)) {
         Comment[] commentList = [];
         foreach comment in comments {
             commentList[count] = <Comment, getComment()>comment;

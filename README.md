@@ -24,15 +24,44 @@ The following sections provide you with information on how to use the Ballerina 
 1. Clone Ballerina (https://github.com/ballerina-lang/ballerina) repository and run the Maven command ``mvn clean install`` from the ``ballerina`` root directory.
 2. Extract the Ballerina distribution created at `distribution/zip/ballerina/target/ballerina-<version>-SNAPSHOT.zip`  and set the PATH environment variable to the bin directory .
 
-
 ## Quick Testing
 
 You can easily test the following actions using the `test.bal` file.
-- Run `ballerina run tests <server_url> <username> <password> <project_name>` from you sonarqube connector directory.
+- Run `ballerina run tests <server_url> <token> <project_name>` from you sonarqube connector directory.
 
 
 ## Working with SonarQube connector actions
 
+1.Create a SonarQube endpoint.
+
+```ballerina
+   endpoint sonarqube:SonarQubeEndpoint sonarqubeEP {
+        token:"sonarqube_token",
+        uri:"sonarqube_uri",
+        clientConfig:{}
+    };
+```
+2.Get a project from SonarQube server.
+
+```ballerina
+    Project project = {};
+    var projectDetails = sonarqubeEP -> getProject("project_name");
+    match projectDetails {
+       sonarqube:Project projectDetails => project = projectDetails;
+       error err => io:println(err);
+    }
+```
+
+3.Using the project you can call the set of functions defined below.
+
+```ballerina
+    //Get project complexity
+    var complexity = sonarqubeEP -> getComplexity(project);
+    match complexity {
+        string value => io:println("Complexity - " + value);
+        error err => io:println(err);
+    }
+```
 
 ### getProject
 
@@ -56,7 +85,7 @@ Get complexity of a project.This calculated based on the number of paths through
 - returns complexity of a project.
 
 
-### getdDuplicatedCodeBlocksCount
+### gedDuplicatedCodeBlocksCount
 
 Get the duplicated code blocks count of a project.
 
