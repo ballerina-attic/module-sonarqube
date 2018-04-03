@@ -18,7 +18,6 @@
 
 package sonarqube67;
 
-import ballerina/log;
 import ballerina/net.http;
 import ballerina/util;
 
@@ -84,7 +83,7 @@ function isAnEmptyJson (json jsonValue) returns (boolean) {
 @Return {value:"project:Details of the project specified by name."}
 function getProjectFromList (string projectName, json projectList) returns (Project) {
     foreach projectData in projectList {
-        Project project = <Project, getProjectDetails()>projectData;
+        Project project = convertJsonToProject(projectData);
         if (projectName == project.name) {
             return project;
         }
@@ -94,37 +93,48 @@ function getProjectFromList (string projectName, json projectList) returns (Proj
 
 @Description {value:"Returns value of the metric in measures field of a json."}
 @Param {value:"response: http Response."}
-@Return {value:"value: Value of the metric field in json."}
-@Return {value:"err: if error occured in getting value of the measures field in the json."}
+@Return {value:"Value of the metric field in json."}
 function getMetricValue (string projectKey, SonarQubeConnector sonarqubeConnector, string metricName) returns string {
     endpoint http:ClientEndpoint clientEndpoint = sonarqubeConnector.clientEndpoint;
     string value = "";
-    try {
-        http:Request request = {};
-        http:HttpConnectorError connectionError = {};
-        sonarqubeConnector.constructAuthenticationHeaders(request);
-        string requestPath = API_MEASURES + "?" + COMPONENT_KEY + "=" + projectKey + "&" + METRIC_KEY + "=" + metricName;
-        var response =? clientEndpoint -> get(requestPath, request);
-        checkResponse(response);
-        json component = getContentByKey(response, COMPONENT);
-        json metricValue = component[MEASURES][0][VALUE];
-        value = metricValue.toString();
-    } catch (http:HttpConnectorError connectionError) {
-        error err = {message:connectionError.message};
-        log:printError(err.message);
-        throw err;
-    } catch (error err) {
-        err = {message:"Cannot find " + metricName.replace("_", " ") + " for this project."};
-        log:printError(err.message);
-        throw err;
-    }
-    return value;
+    http:Request request = {};
+    http:HttpConnectorError connectionError = {};
+    sonarqubeConnector.constructAuthenticationHeaders(request);
+    string requestPath = API_MEASURES + "?" + COMPONENT_KEY + "=" + projectKey + "&" + METRIC_KEY + "=" + metricName;
+    var response =? clientEndpoint -> get(requestPath, request);
+    checkResponse(response);
+    json component = getContentByKey(response, COMPONENT);
+    json metricValue = component[MEASURES][0][VALUE];
+    return metricValue.toString();
+}
+
+@Description {value:"Convert a given json to Comment."}
+@Param {value:"projectDetails:JSON containing comment details."}
+@Return {value:"project:Comment struct."}
+function convertJsonToComment (json commentDetails) returns Comment {
+    Comment comment = {};
+    comment.text = !isAnEmptyJson(commentDetails[HTML_TEXT]) ? commentDetails[HTML_TEXT].toString() : "";
+    comment.key = !isAnEmptyJson(commentDetails[KEY]) ? commentDetails[KEY].toString() : "";
+    comment.commenter = !isAnEmptyJson(commentDetails[LOGIN]) ? commentDetails[LOGIN].toString() : "";
+    comment.createdDate = !isAnEmptyJson(commentDetails[CREATED_DATE]) ? commentDetails[CREATED_DATE].toString() : "";
+    return comment;
+}
+
+@Description {value:"Convert a given json to Project."}
+@Param {value:"projectDetails:JSON containing project details."}
+@Return {value:"project:Project struct.."}
+function convertJsonToProject (json projectDetails) returns Project {
+    Project project = {};
+    project.name = !isAnEmptyJson(projectDetails[NAME]) ? projectDetails[NAME].toString() : "";
+    project.key = !isAnEmptyJson(projectDetails[KEY]) ? projectDetails[KEY].toString() : "";
+    project.id = !isAnEmptyJson(projectDetails[ID]) ? projectDetails[ID].toString() : "";
+    return project;
 }
 
 @Description {value:"Convert a given json to Issue."}
-@Param {value:"issueDetails:Json to convert."}
-@Return {value:"issue:convereted ."}
-function convertToIssue (json issueDetails) returns Issue {
+@Param {value:"issueDetails:Json containing issue details."}
+@Return {value:"issue:Issue struct."}
+function convertJsonToIssue (json issueDetails) returns Issue {
     Issue issue = {};
     issue.key = !isAnEmptyJson(issueDetails[KEY]) ? issueDetails[KEY].toString() : "";
     issue.severity = !isAnEmptyJson(issueDetails[SEVERITY]) ? issueDetails[SEVERITY].toString() : "";
@@ -165,7 +175,7 @@ function convertToIssue (json issueDetails) returns Issue {
     if (!isAnEmptyJson(comments)) {
         Comment[] commentList = [];
         foreach comment in comments {
-            commentList[count] = <Comment, getComment()>comment;
+            commentList[count] = convertJsonToComment(comment);
             count = count + 1;
         }
         issue.comments = commentList;

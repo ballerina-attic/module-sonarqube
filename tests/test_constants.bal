@@ -18,6 +18,6 @@
 
 package tests;
 
-public const string URI = "https://wso2.org/sonar" ;
-public const string TOKEN = "0efb88b0f9ddbe2d46dc58249525e412d2993aa7";
-public const string PROJECT_KEY = "org.wso2.siddhi:siddhi";
+public const string URI = "" ;
+public const string TOKEN = "";
+public const string PROJECT_KEY = "";
