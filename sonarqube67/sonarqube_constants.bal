@@ -16,10 +16,9 @@
 // under the License.
 //
 
-package sonarqube;
+package sonarqube67;
 
-public const string DEFAULT_URL = "http://localhost:8080";
-public const int PAGE_SIZE = 100;
+//SonarQube API
 public const string API_RESOURCES = "/api/components/search?qualifiers=TRK&ps=";
 public const string API_VALIDATE_USER = "/api/authentication/validate";
 public const string API_MEASURES = "/api/measures/component";
@@ -35,6 +34,8 @@ public const string DUPLICATED_FILES = "duplicated_files";
 public const string DUPLICATED_LINES = "duplicated_lines";
 public const string API_EDIT_COMMENT = "/api/issues/edit_comment";
 public const string API_SET_STATUS = "/api/issues/do_transition";
+
+//string constants
 public const string CODE_SMELLS = "code_smells";
 public const string COMPONENT = "component";
 public const string COMPONENTS = "components";
@@ -117,4 +118,4 @@ public const string TAGS = "tags";
 public const string HTML_TEXT = "htmlText";
 public const string TRANSITIONS = "transitions";
 public const string LOGIN = "login";
-public const string APPLICATION_JSON = "application/json";
+public const int PROJECTS_PER_PAGE = 100;

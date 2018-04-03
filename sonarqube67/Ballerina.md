@@ -6,12 +6,12 @@
 
 Using Ballerina SonarQube connector you can easily get important code quality measurements of a project.Following diagram gives an overview of Ballerina SonarQube connector.
 
-![Ballerina -SonarQube Connector Overview](sonarqube-connector.png)
+![Ballerina -SonarQube Connector Overview](../sonarqube-connector.png)
 
 ## Compatibility
 | Language Version        | Connector Version          | SonarQube server Versions  |
 | ------------- |:-------------:| -----:|
-| ballerina-tools-0.970.0-alpha0    | 0.1 | 6.7.2 |
+| ballerina-tools-0.970.0-alpha0    | 0.8 | 6.7.2 |
 
 The following sections provide you with information on how to use the Ballerina SonarQube connector.
 
@@ -24,12 +24,6 @@ The following sections provide you with information on how to use the Ballerina 
 1. Clone Ballerina (https://github.com/ballerina-lang/ballerina) repository and run the Maven command ``mvn clean install`` from the ``ballerina`` root directory.
 2. Extract the Ballerina distribution created at `distribution/zip/ballerina/target/ballerina-<version>-SNAPSHOT.zip`  and set the PATH environment variable to the bin directory .
 
-## Quick Testing
-
-You can easily test the following actions using the `test.bal` file.
-- Run `ballerina run tests <server_url> <token> <project_name>` from you sonarqube connector directory.
-
-
 ## Working with SonarQube connector actions
 
 1.Create a SonarQube endpoint.
@@ -38,7 +32,6 @@ You can easily test the following actions using the `test.bal` file.
    endpoint sonarqube:SonarQubeEndpoint sonarqubeEP {
         token:"sonarqube_token",
         uri:"sonarqube_uri",
-        clientConfig:{}
     };
 ```
 2.Get a project from SonarQube server.
@@ -56,7 +49,7 @@ You can easily test the following actions using the `test.bal` file.
 
 ```ballerina
     //Get project complexity
-    var complexity = sonarqubeEP -> getComplexity(project);
+    var complexity = sonarqubeEP -> getComplexity(project.key);
     match complexity {
         string value => io:println("Complexity - " + value);
         error err => io:println(err);
@@ -72,7 +65,7 @@ Get the  details of a project in SonarQube server.
 
 ##### Returns
 
-- returns key,id,uuid,version and description of a project.
+- returns a struct containing name,key and id of a project.
 
 
 ### getComplexity

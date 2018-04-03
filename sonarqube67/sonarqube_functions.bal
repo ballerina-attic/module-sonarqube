@@ -16,10 +16,17 @@
 // under the License.
 //
 
-package sonarqube;
+package sonarqube67;
 
-import ballerina/mime;
+import ballerina/log;
 import ballerina/net.http;
+import ballerina/util;
+
+@Description {value:"Add authentication headers to the HTTP request."}
+@Param {value:"request: http OutRequest."}
+public function <SonarQubeConnector sonarqubeConnector> constructAuthenticationHeaders (http:Request request) {
+    request.addHeader("Authorization", "Basic " + util:base64Encode(sonarqubeConnector.token + ":"));
+}
 
 @Description {value:"Check whether the response from sonarqube server has an error field."}
 @Param {value:"response: http Response."}
@@ -39,12 +46,10 @@ function checkResponse (http:Response response) {
 @Param {value:"key: String key."}
 @Return {value:"jsonPayload: Content (of type json) specified by the key."}
 function getContentByKey (http:Response response, string key) returns (json) {
-    var getContent = response.getJsonPayload();
     json jsonPayload = {};
-    mime:EntityError jsonErr = {};
-    match getContent {
-        mime:EntityError endpointErr => jsonErr = endpointErr;
+    match response.getJsonPayload() {
         json content => jsonPayload = content;
+        error err => throw err;
     }
     if (isAnEmptyJson(jsonPayload)) {
         error err = {};
@@ -53,9 +58,6 @@ function getContentByKey (http:Response response, string key) returns (json) {
             throw err;
         }
         err = {message:"Server response payload is null."};
-        throw err;
-    } else if (jsonErr.message != "") {
-        error err = {message:"Error in retrieving json payload."};
         throw err;
     }
     return jsonPayload[key];
@@ -94,29 +96,29 @@ function getProjectFromList (string projectName, json projectList) returns (Proj
 @Param {value:"response: http Response."}
 @Return {value:"value: Value of the metric field in json."}
 @Return {value:"err: if error occured in getting value of the measures field in the json."}
-function getMetricValue (string projectKey, SonarQubeConnector sonarqubeConnector, string metricName) returns (string) {
-    http:Response response = {};
-    http:Request request = {};
-    http:HttpConnectorError connectionError = {};
-    sonarqubeConnector.constructAuthenticationHeaders(request);
-    string requestPath = API_MEASURES + "?" + COMPONENT_KEY + "=" + projectKey + "&" + METRIC_KEY + "=" + metricName;
-    match sonarqubeConnector.httpClient.get(requestPath, request) {
-        http:Response res => response = res;
-        http:HttpConnectorError connectErr => connectionError = connectErr;
-    }
-    error err = {};
-    if (connectionError.message != "") {
-        err = {message:connectionError.message};
+function getMetricValue (string projectKey, SonarQubeConnector sonarqubeConnector, string metricName) returns string {
+    endpoint http:ClientEndpoint clientEndpoint = sonarqubeConnector.clientEndpoint;
+    string value = "";
+    try {
+        http:Request request = {};
+        http:HttpConnectorError connectionError = {};
+        sonarqubeConnector.constructAuthenticationHeaders(request);
+        string requestPath = API_MEASURES + "?" + COMPONENT_KEY + "=" + projectKey + "&" + METRIC_KEY + "=" + metricName;
+        var response =? clientEndpoint -> get(requestPath, request);
+        checkResponse(response);
+        json component = getContentByKey(response, COMPONENT);
+        json metricValue = component[MEASURES][0][VALUE];
+        value = metricValue.toString();
+    } catch (http:HttpConnectorError connectionError) {
+        error err = {message:connectionError.message};
+        log:printError(err.message);
         throw err;
-    }
-    checkResponse(response);
-    json component = getContentByKey(response, COMPONENT);
-    json metricValue = component[MEASURES][0][VALUE];
-    if (isAnEmptyJson(metricValue)) {
+    } catch (error err) {
         err = {message:"Cannot find " + metricName.replace("_", " ") + " for this project."};
+        log:printError(err.message);
         throw err;
     }
-    return metricValue.toString();
+    return value;
 }
 
 @Description {value:"Convert a given json to Issue."}
@@ -170,4 +172,3 @@ function convertToIssue (json issueDetails) returns Issue {
     }
     return issue;
 }
-

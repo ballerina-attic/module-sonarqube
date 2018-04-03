@@ -16,14 +16,8 @@
 // under the License.
 //
 
-package sonarqube;
+package tests;
 
-import ballerina/net.http;
-import ballerina/util;
-
-@Description {value:"Add authentication headers to the HTTP request."}
-@Param {value:"request: http OutRequest."}
-public function <SonarQubeConnector sonarqubeConnector> constructAuthenticationHeaders (http:Request request) {
-    request.addHeader("Authorization", "Basic " + util:base64Encode(sonarqubeConnector.token + ":"));
-}
-
+public const string URI = "https://wso2.org/sonar" ;
+public const string TOKEN = "0efb88b0f9ddbe2d46dc58249525e412d2993aa7";
+public const string PROJECT_KEY = "org.wso2.siddhi:siddhi";
