@@ -109,7 +109,7 @@ public function <SonarQubeConnector sonarqubeConnector> getDuplicatedCodeBlocksC
 @Description {value:"Get Number of duplicated files."}
 @Return {value:"duplicatedFiles:returns number of duplicated files in a project."}
 @Return {value:"err: returns error if an exception raised in getting duplicated files count."}
-public function <SonarQubeConnector sonarqubeConnector> getDuplicatedFilesCount (string projectKey) returns (int)|error {
+public function <SonarQubeConnector sonarqubeConnector> getDuplicatedFilesCount (string projectKey) returns (int|error) {
     int convertedValue = 0;
     try {
         string value = getMetricValue(projectKey, sonarqubeConnector, DUPLICATED_FILES);
@@ -150,7 +150,7 @@ the behavior of the application in production: memory leak, unclosed JDBC connec
 fixed."}
 @Return {value:"blockerIssue:returns number of blocker issues in a project."}
 @Return {value:"err: returns error if an exception raised in getting blocker issues count."}
-public function <SonarQubeConnector sonarqubeConnector> getBlockerIssuesCount (string projectKey) returns (int)|error {
+public function <SonarQubeConnector sonarqubeConnector> getBlockerIssuesCount (string projectKey) returns (int|error) {
     int convertedValue = 0;
     try {
         string value = getMetricValue(projectKey, sonarqubeConnector, ISSUE_BLOCKER);
@@ -171,7 +171,7 @@ of the application in production or an issue which represents a security flaw: e
 The code MUST be immediately reviewed. "}
 @Return {value:"criticalIssue:returns number of critical issues in a project."}
 @Return {value:"err: returns error if an exception raised in getting critical issues count."}
-public function <SonarQubeConnector sonarqubeConnector> getCriticalIssuesCount (string projectKey) returns (int)|error {
+public function <SonarQubeConnector sonarqubeConnector> getCriticalIssuesCount (string projectKey) returns (int|error) {
     int convertedValue = 0;
     try {
         string value = getMetricValue(projectKey, sonarqubeConnector, ISSUE_CRITICAL);
@@ -191,7 +191,7 @@ public function <SonarQubeConnector sonarqubeConnector> getCriticalIssuesCount (
  productivity: uncovered piece of code, duplicated blocks, unused parameters, ..."}
 @Return {value:"minorIssue:returns number of minor issues in a project."}
 @Return {value:"err: returns error if an exception raised in getting major issues count."}
-public function <SonarQubeConnector sonarqubeConnector> getMajorIssuesCount (string projectKey) returns (int)|error {
+public function <SonarQubeConnector sonarqubeConnector> getMajorIssuesCount (string projectKey) returns (int|error) {
     int convertedValue = 0;
     try {
         string value = getMetricValue(projectKey, sonarqubeConnector, ISSUE_MAJOR);
@@ -211,7 +211,7 @@ public function <SonarQubeConnector sonarqubeConnector> getMajorIssuesCount (str
 productivity: lines should not be too long, switch statements should have at least 3 cases, ..."}
 @Return {value:"majorIssue:returns number of major issues in a project."}
 @Return {value:"err: returns error if an exception raised in getting minor issues count."}
-public function <SonarQubeConnector sonarqubeConnector> getMinorIssuesCount (string projectKey) returns (int)|error {
+public function <SonarQubeConnector sonarqubeConnector> getMinorIssuesCount (string projectKey) returns (int|error) {
     int convertedValue = 0;
     try {
         string value = getMetricValue(projectKey, sonarqubeConnector, ISSUE_MINOR);
@@ -230,7 +230,7 @@ public function <SonarQubeConnector sonarqubeConnector> getMinorIssuesCount (str
 @Description {value:"Number of open issues in a project."}
 @Return {value:"issuesCount:returns number of open issues in a project."}
 @Return {value:"err: returns error if an exception raised in getting open issues count."}
-public function <SonarQubeConnector sonarqubeConnector> getOpenIssuesCount (string projectKey) returns (int)|error {
+public function <SonarQubeConnector sonarqubeConnector> getOpenIssuesCount (string projectKey) returns (int|error) {
     int convertedValue = 0;
     try {
         string value = getMetricValue(projectKey, sonarqubeConnector, ISSUE_OPEN);
@@ -249,7 +249,7 @@ public function <SonarQubeConnector sonarqubeConnector> getOpenIssuesCount (stri
 @Description {value:"Number of confirmed issues in a project."}
 @Return {value:"confirmedIssues:returns number of confirmed issues in a project"}
 @Return {value:"err: returns error if an exception raised in getting confirmed issue count."}
-public function <SonarQubeConnector sonarqubeConnector> getConfirmedIssuesCount (string projectKey) returns (int)|error {
+public function <SonarQubeConnector sonarqubeConnector> getConfirmedIssuesCount (string projectKey) returns (int|error) {
     int convertedValue = 0;
     try {
         string value = getMetricValue(projectKey, sonarqubeConnector, ISSUE_CONFIRMED);
@@ -268,7 +268,7 @@ public function <SonarQubeConnector sonarqubeConnector> getConfirmedIssuesCount 
 @Description {value:"Number of reopened issues in a project."}
 @Return {value:"reopenedIssues:returns number of reopened issues in a project."}
 @Return {value:"err: returns error if an exception raised in getting re-opened issue count."}
-public function <SonarQubeConnector sonarqubeConnector> getReopenedIssuesCount (string projectKey) returns (int)|error {
+public function <SonarQubeConnector sonarqubeConnector> getReopenedIssuesCount (string projectKey) returns (int|error) {
     int convertedValue = 0;
     try {
         string value = getMetricValue(projectKey, sonarqubeConnector, ISSUE_REOPENED);
@@ -287,7 +287,7 @@ public function <SonarQubeConnector sonarqubeConnector> getReopenedIssuesCount (
 @Description {value:"Get lines of code of a project."}
 @Return {value:"loc: returns project LOC."}
 @Return {value:"err: returns error if an exception raised in getting project LOC."}
-public function <SonarQubeConnector sonarqubeConnector> getLinesOfCode (string projectKey) returns (int)|error {
+public function <SonarQubeConnector sonarqubeConnector> getLinesOfCode (string projectKey) returns (int|error) {
     int convertedValue = 0;
     try {
         string value = getMetricValue(projectKey, sonarqubeConnector, LOC);
@@ -324,7 +324,7 @@ public function <SonarQubeConnector sonarqubeConnector> getLineCoverage (string 
 @Description {value:"Get branch coverage of a project."}
 @Return {value:"branchCoverage:returns branch Coverage of a project."}
 @Return {value:"err: returns error if an exception raised in getting branch coverage."}
-public function <SonarQubeConnector sonarqubeConnector> getBranchCoverage (string projectKey) returns (string)|error {
+public function <SonarQubeConnector sonarqubeConnector> getBranchCoverage (string projectKey) returns (string|error) {
     string value = "";
     try {
         value = getMetricValue(projectKey, sonarqubeConnector, BRANCH_COVERAGE);
@@ -343,7 +343,7 @@ public function <SonarQubeConnector sonarqubeConnector> getBranchCoverage (strin
  of a program that possibly indicates a deeper problem."}
 @Return {value:"codeSmells: returns number of code smells in a project."}
 @Return {value:"err: returns error if an exception raised in getting code smells count."}
-public function <SonarQubeConnector sonarqubeConnector> getCodeSmellsCount (string projectKey) returns (int)|error {
+public function <SonarQubeConnector sonarqubeConnector> getCodeSmellsCount (string projectKey) returns (int|error) {
     int convertedValue = 0;
     try {
         string value = getMetricValue(projectKey, sonarqubeConnector, CODE_SMELLS);
@@ -428,7 +428,7 @@ public function <SonarQubeConnector sonarqubeConnector> getTechnicalDebtRatio (s
 @Description {value:"Get number of vulnerablities of a project."}
 @Return {value:"vulnerabilities: returns number of vulnerabilities of  project."}
 @Return {value:"err: returns error if an exception raised in getting vulnerabilities count."}
-public function <SonarQubeConnector sonarqubeConnector> getVulnerabilitiesCount (string projectKey) returns (int)|error {
+public function <SonarQubeConnector sonarqubeConnector> getVulnerabilitiesCount (string projectKey) returns (int|error) {
     int convertedValue = 0;
     try {
         string value = getMetricValue(projectKey, sonarqubeConnector, VULNERABILITIES);
@@ -476,7 +476,7 @@ public function <SonarQubeConnector sonarqubeConnector> getSecurityRating (strin
 @Description {value:"Get number of bugs in a project."}
 @Return {value:"bugs: returns number of bugs of  project."}
 @Return {value:"err: returns error if an exception raised in getting bugs count."}
-public function <SonarQubeConnector sonarqubeConnector> getBugsCount (string projectKey) returns (int)|error {
+public function <SonarQubeConnector sonarqubeConnector> getBugsCount (string projectKey) returns (int|error) {
     int convertedValue = 0;
     try {
         string value = getMetricValue(projectKey, sonarqubeConnector, BUGS);

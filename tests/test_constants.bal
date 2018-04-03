@@ -18,6 +18,6 @@
 
 package tests;
 
-public const string URI = "" ;
+public const string URI = "";
 public const string TOKEN = "";
 public const string PROJECT_KEY = "";
