@@ -18,7 +18,7 @@
 
 package sonarqube67;
 
-import ballerina/net.http;
+import ballerina/http;
 
 @Description {value:"Set the client configuration."}
 public function <SonarQubeConfiguration sonarqubeConfig> SonarQubeConfiguration () {

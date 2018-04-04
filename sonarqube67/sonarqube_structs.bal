@@ -18,11 +18,10 @@
 
 package sonarqube67;
 
-import ballerina/net.http;
+import ballerina/http;
 
 @Description {value:"Sonarqube Endpoint struct."}
 public struct SonarQubeEndpoint {
-    @Description {value:"Sonarqube Endpoint struct."}
     SonarQubeConfiguration sonarqubeConfig;
     SonarQubeConnector sonarqubeConnector;
 }

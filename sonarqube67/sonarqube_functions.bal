@@ -18,7 +18,7 @@
 
 package sonarqube67;
 
-import ballerina/net.http;
+import ballerina/http;
 import ballerina/util;
 
 @Description {value:"Add authentication headers to the HTTP request."}
@@ -98,7 +98,6 @@ function getMetricValue (string projectKey, SonarQubeConnector sonarqubeConnecto
     endpoint http:ClientEndpoint clientEndpoint = sonarqubeConnector.clientEndpoint;
     string value = "";
     http:Request request = {};
-    http:HttpConnectorError connectionError = {};
     sonarqubeConnector.constructAuthenticationHeaders(request);
     string requestPath = API_MEASURES + "?" + COMPONENT_KEY + "=" + projectKey + "&" + METRIC_KEY + "=" + metricName;
     var response =? clientEndpoint -> get(requestPath, request);
