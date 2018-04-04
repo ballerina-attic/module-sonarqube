@@ -18,9 +18,9 @@
 
 package sonarqube67;
 
+import ballerina/http;
 import ballerina/log;
 import ballerina/math;
-import ballerina/http;
 
 @Description {value:"Get project details."}
 @Param {value:"projetName:Name of the project."}
@@ -66,6 +66,86 @@ public function <SonarQubeConnector sonarqubeConnector> getProject (string proje
     return project;
 }
 
+
+@Description {value:"Get all projects details."}
+@Param {value:"projetName:Name of the project."}
+@Return {value:"projects:Project struct array with project details."}
+@Return {value:"err: Returns error if an exception raised in getting project details."}
+public function <SonarQubeConnector sonarqubeConnector> getAllProjects () returns (Project[]|error) {
+    endpoint http:ClientEndpoint clientEndpoint = sonarqubeConnector.clientEndpoint;
+    Project[] projects = [];
+    string requestPath = API_RESOURCES + PROJECTS_PER_PAGE;
+    http:Request request = {};
+    http:Response response = {};
+    sonarqubeConnector.constructAuthenticationHeaders(request);
+    try {
+        response =? clientEndpoint -> get(API_RESOURCES + PROJECTS_PER_PAGE, request);
+        checkResponse(response);
+        json allProjects = getContentByKey(response, COMPONENTS);
+        int projectCount = 0;
+        foreach project in allProjects {
+            projects[projectCount] = convertJsonToProject(project);
+            projectCount = projectCount + 1;
+        }
+        json paging = getContentByKey(response, PAGING);
+        int totalProjectsCount =? <int>(!isAnEmptyJson(paging[TOTAL]) ? paging[TOTAL].toString() : "0");
+        int totalPages = <int>math:ceil(totalProjectsCount / PROJECTS_PER_PAGE);
+        int count = 0;
+        while (count < totalPages - 1) {
+            request = {};
+            sonarqubeConnector.constructAuthenticationHeaders(request);
+            response =? clientEndpoint -> get(API_RESOURCES + PROJECTS_PER_PAGE + "&" + PAGE_NUMBER + "=" + (count + 2), request);
+            checkResponse(response);
+            allProjects = getContentByKey(response, COMPONENTS);
+            foreach project in allProjects {
+                projects[projectCount] = convertJsonToProject(project);
+                projectCount = projectCount + 1;
+            }
+            count = count + 1;
+        }
+    } catch (http:HttpConnectorError connectionError) {
+        error err = {message:connectionError.message};
+        log:printError(err.message);
+    } catch (error err) {
+        log:printError(err.message);
+        return err;
+    }
+    return projects;
+}
+
+@Description {value:"Get values for provided metrics."}
+@Return {value:"Returns a mapping  of metric name "}
+@Return {value:"err: Returns error if an exception raised in getting project complexity."}
+public function <SonarQubeConnector sonarqubeConnector> getMeasures (string projectKey, string[] metricKeys) returns (map|error) {
+    endpoint http:ClientEndpoint clientEndpoint = sonarqubeConnector.clientEndpoint;
+    string keyList = "";
+    foreach key in metricKeys {
+        keyList = keyList + key + ",";
+    }
+    http:Request request = {};
+    sonarqubeConnector.constructAuthenticationHeaders(request);
+    map values = {};
+    try {
+        string requestPath = API_MEASURES + projectKey + "&" + METRIC_KEYS + "=" + keyList;
+        var response =? clientEndpoint -> get(requestPath, request);
+        checkResponse(response);
+        json component = getContentByKey(response, COMPONENT);
+        json measureList = component[MEASURES];
+        foreach measure in measureList {
+            values[measure[METRIC].toString()] = measure[VALUE].toString();
+        }
+    } catch (http:HttpConnectorError connectionError) {
+        error err = {message:connectionError.message};
+        log:printError(err.message);
+        return err;
+    } catch (error err) {
+        log:printError(err.message);
+        return err;
+    }
+    return values;
+}
+
+
 @Description {value:"Get complexity of a project."}
 @Return {value:"complexity:Returns complexity of a project.Complexity calculated based on the number of paths through
  the code."}
@@ -73,7 +153,7 @@ public function <SonarQubeConnector sonarqubeConnector> getProject (string proje
 public function <SonarQubeConnector sonarqubeConnector> getComplexity (string projectKey) returns (int|error) {
     int convertedValue = 0;
     try {
-        string value = getMetricValue(projectKey, sonarqubeConnector, COMPLEXITY);
+        string value = getMeasure(projectKey, sonarqubeConnector, COMPLEXITY);
         convertedValue =? <int>value;
     } catch (http:HttpConnectorError connectionError) {
         error err = {message:connectionError.message};
@@ -92,7 +172,7 @@ public function <SonarQubeConnector sonarqubeConnector> getComplexity (string pr
 public function <SonarQubeConnector sonarqubeConnector> getDuplicatedCodeBlocksCount (string projectKey) returns (int|error) {
     int convertedValue = 0;
     try {
-        string value = getMetricValue(projectKey, sonarqubeConnector, DUPLICATED_BLOCKS);
+        string value = getMeasure(projectKey, sonarqubeConnector, DUPLICATED_BLOCKS);
         convertedValue =? <int>value;
     } catch (http:HttpConnectorError connectionError) {
         error err = {message:connectionError.message};
@@ -112,7 +192,7 @@ public function <SonarQubeConnector sonarqubeConnector> getDuplicatedCodeBlocksC
 public function <SonarQubeConnector sonarqubeConnector> getDuplicatedFilesCount (string projectKey) returns (int|error) {
     int convertedValue = 0;
     try {
-        string value = getMetricValue(projectKey, sonarqubeConnector, DUPLICATED_FILES);
+        string value = getMeasure(projectKey, sonarqubeConnector, DUPLICATED_FILES);
         convertedValue =? <int>value;
     } catch (http:HttpConnectorError connectionError) {
         error err = {message:connectionError.message};
@@ -132,7 +212,7 @@ public function <SonarQubeConnector sonarqubeConnector> getDuplicatedFilesCount 
 public function <SonarQubeConnector sonarqubeConnector> getDuplicatedLinesCount (string projectKey) returns (int|error) {
     int convertedValue = 0;
     try {
-        string value = getMetricValue(projectKey, sonarqubeConnector, DUPLICATED_LINES);
+        string value = getMeasure(projectKey, sonarqubeConnector, DUPLICATED_LINES);
         convertedValue =? <int>value;
     } catch (http:HttpConnectorError connectionError) {
         error err = {message:connectionError.message};
@@ -153,7 +233,7 @@ fixed."}
 public function <SonarQubeConnector sonarqubeConnector> getBlockerIssuesCount (string projectKey) returns (int|error) {
     int convertedValue = 0;
     try {
-        string value = getMetricValue(projectKey, sonarqubeConnector, ISSUE_BLOCKER);
+        string value = getMeasure(projectKey, sonarqubeConnector, ISSUE_BLOCKER);
         convertedValue =? <int>value;
     } catch (http:HttpConnectorError connectionError) {
         error err = {message:connectionError.message};
@@ -174,7 +254,7 @@ The code MUST be immediately reviewed. "}
 public function <SonarQubeConnector sonarqubeConnector> getCriticalIssuesCount (string projectKey) returns (int|error) {
     int convertedValue = 0;
     try {
-        string value = getMetricValue(projectKey, sonarqubeConnector, ISSUE_CRITICAL);
+        string value = getMeasure(projectKey, sonarqubeConnector, ISSUE_CRITICAL);
         convertedValue =? <int>value;
     } catch (http:HttpConnectorError connectionError) {
         error err = {message:connectionError.message};
@@ -194,7 +274,7 @@ public function <SonarQubeConnector sonarqubeConnector> getCriticalIssuesCount (
 public function <SonarQubeConnector sonarqubeConnector> getMajorIssuesCount (string projectKey) returns (int|error) {
     int convertedValue = 0;
     try {
-        string value = getMetricValue(projectKey, sonarqubeConnector, ISSUE_MAJOR);
+        string value = getMeasure(projectKey, sonarqubeConnector, ISSUE_MAJOR);
         convertedValue =? <int>value;
     } catch (http:HttpConnectorError connectionError) {
         error err = {message:connectionError.message};
@@ -214,7 +294,7 @@ productivity: lines should not be too long, switch statements should have at lea
 public function <SonarQubeConnector sonarqubeConnector> getMinorIssuesCount (string projectKey) returns (int|error) {
     int convertedValue = 0;
     try {
-        string value = getMetricValue(projectKey, sonarqubeConnector, ISSUE_MINOR);
+        string value = getMeasure(projectKey, sonarqubeConnector, ISSUE_MINOR);
         convertedValue =? <int>value;
     } catch (http:HttpConnectorError connectionError) {
         error err = {message:connectionError.message};
@@ -233,7 +313,7 @@ public function <SonarQubeConnector sonarqubeConnector> getMinorIssuesCount (str
 public function <SonarQubeConnector sonarqubeConnector> getOpenIssuesCount (string projectKey) returns (int|error) {
     int convertedValue = 0;
     try {
-        string value = getMetricValue(projectKey, sonarqubeConnector, ISSUE_OPEN);
+        string value = getMeasure(projectKey, sonarqubeConnector, ISSUE_OPEN);
         convertedValue =? <int>value;
     } catch (http:HttpConnectorError connectionError) {
         error err = {message:connectionError.message};
@@ -252,7 +332,7 @@ public function <SonarQubeConnector sonarqubeConnector> getOpenIssuesCount (stri
 public function <SonarQubeConnector sonarqubeConnector> getConfirmedIssuesCount (string projectKey) returns (int|error) {
     int convertedValue = 0;
     try {
-        string value = getMetricValue(projectKey, sonarqubeConnector, ISSUE_CONFIRMED);
+        string value = getMeasure(projectKey, sonarqubeConnector, ISSUE_CONFIRMED);
         convertedValue =? <int>value;
     } catch (http:HttpConnectorError connectionError) {
         error err = {message:connectionError.message};
@@ -271,7 +351,7 @@ public function <SonarQubeConnector sonarqubeConnector> getConfirmedIssuesCount 
 public function <SonarQubeConnector sonarqubeConnector> getReopenedIssuesCount (string projectKey) returns (int|error) {
     int convertedValue = 0;
     try {
-        string value = getMetricValue(projectKey, sonarqubeConnector, ISSUE_REOPENED);
+        string value = getMeasure(projectKey, sonarqubeConnector, ISSUE_REOPENED);
         convertedValue =? <int>value;
     } catch (http:HttpConnectorError connectionError) {
         error err = {message:connectionError.message};
@@ -290,7 +370,7 @@ public function <SonarQubeConnector sonarqubeConnector> getReopenedIssuesCount (
 public function <SonarQubeConnector sonarqubeConnector> getLinesOfCode (string projectKey) returns (int|error) {
     int convertedValue = 0;
     try {
-        string value = getMetricValue(projectKey, sonarqubeConnector, LOC);
+        string value = getMeasure(projectKey, sonarqubeConnector, LOC);
         convertedValue =? <int>value;
     } catch (http:HttpConnectorError connectionError) {
         error err = {message:connectionError.message};
@@ -309,7 +389,7 @@ public function <SonarQubeConnector sonarqubeConnector> getLinesOfCode (string p
 public function <SonarQubeConnector sonarqubeConnector> getLineCoverage (string projectKey) returns (string)|error {
     string value = "";
     try {
-        value = getMetricValue(projectKey, sonarqubeConnector, LINE_COVERAGE);
+        value = getMeasure(projectKey, sonarqubeConnector, LINE_COVERAGE);
     } catch (http:HttpConnectorError connectionError) {
         error err = {message:connectionError.message};
         log:printError(err.message);
@@ -321,13 +401,34 @@ public function <SonarQubeConnector sonarqubeConnector> getLineCoverage (string 
     return value + "%";
 }
 
+@Description {value:"Get number of lines covered by unit tests."}
+@Return {value:"coveredLinesCount:returns number of covered lines."}
+@Return {value:"err: returns error if an exception raised in getting covered lines count."}
+public function <SonarQubeConnector sonarqubeConnector> getCoveredLinesCount (string projectKey) returns (int|error) {
+    int coveredLinesCount = 0;
+    try {
+        int linesToCover =? <int>getMeasure(projectKey, sonarqubeConnector, LINES_TO_COVER);
+        int uncoveredLines =? <int>getMeasure(projectKey, sonarqubeConnector, UNCOVERED_LINES_);
+        coveredLinesCount = linesToCover - uncoveredLines;
+    } catch (http:HttpConnectorError connectionError) {
+        error err = {message:connectionError.message};
+        log:printError(err.message);
+        throw err;
+    } catch (error err) {
+        err = {message:"Cannot find duplicated blocks count for this project."};
+        log:printError(err.message);
+        throw err;
+    }
+    return coveredLinesCount;
+}
+
 @Description {value:"Get branch coverage of a project."}
 @Return {value:"branchCoverage:returns branch Coverage of a project."}
 @Return {value:"err: returns error if an exception raised in getting branch coverage."}
 public function <SonarQubeConnector sonarqubeConnector> getBranchCoverage (string projectKey) returns (string|error) {
     string value = "";
     try {
-        value = getMetricValue(projectKey, sonarqubeConnector, BRANCH_COVERAGE);
+        value = getMeasure(projectKey, sonarqubeConnector, BRANCH_COVERAGE);
     } catch (http:HttpConnectorError connectionError) {
         error err = {message:connectionError.message};
         log:printError(err.message);
@@ -346,7 +447,7 @@ public function <SonarQubeConnector sonarqubeConnector> getBranchCoverage (strin
 public function <SonarQubeConnector sonarqubeConnector> getCodeSmellsCount (string projectKey) returns (int|error) {
     int convertedValue = 0;
     try {
-        string value = getMetricValue(projectKey, sonarqubeConnector, CODE_SMELLS);
+        string value = getMeasure(projectKey, sonarqubeConnector, CODE_SMELLS);
         convertedValue =? <int>value;
     } catch (http:HttpConnectorError connectionError) {
         error err = {message:connectionError.message};
@@ -366,7 +467,7 @@ public function <SonarQubeConnector sonarqubeConnector> getCodeSmellsCount (stri
 public function <SonarQubeConnector sonarqubeConnector> getSQALERating (string projectKey) returns (string)|error {
     string sqaleRating = "";
     try {
-        float floatValue =? <float>getMetricValue(projectKey, sonarqubeConnector, SQALE_RATING);
+        float floatValue =? <float>getMeasure(projectKey, sonarqubeConnector, SQALE_RATING);
         int value = math:round(floatValue);
         if (value <= 5) {
             sqaleRating = "A";
@@ -395,7 +496,7 @@ public function <SonarQubeConnector sonarqubeConnector> getSQALERating (string p
 public function <SonarQubeConnector sonarqubeConnector> getTechnicalDebt (string projectKey) returns (string)|error {
     string value = "";
     try {
-        value = getMetricValue(projectKey, sonarqubeConnector, TECHNICAL_DEBT);
+        value = getMeasure(projectKey, sonarqubeConnector, TECHNICAL_DEBT);
     } catch (http:HttpConnectorError connectionError) {
         error err = {message:connectionError.message};
         log:printError(err.message);
@@ -413,7 +514,7 @@ public function <SonarQubeConnector sonarqubeConnector> getTechnicalDebt (string
 public function <SonarQubeConnector sonarqubeConnector> getTechnicalDebtRatio (string projectKey) returns (string)|error {
     string value = "";
     try {
-        value = getMetricValue(projectKey, sonarqubeConnector, TECHNICAL_DEBT_RATIO);
+        value = getMeasure(projectKey, sonarqubeConnector, TECHNICAL_DEBT_RATIO);
     } catch (http:HttpConnectorError connectionError) {
         error err = {message:connectionError.message};
         log:printError(err.message);
@@ -431,7 +532,7 @@ public function <SonarQubeConnector sonarqubeConnector> getTechnicalDebtRatio (s
 public function <SonarQubeConnector sonarqubeConnector> getVulnerabilitiesCount (string projectKey) returns (int|error) {
     int convertedValue = 0;
     try {
-        string value = getMetricValue(projectKey, sonarqubeConnector, VULNERABILITIES);
+        string value = getMeasure(projectKey, sonarqubeConnector, VULNERABILITIES);
         convertedValue =? <int>value;
     } catch (http:HttpConnectorError connectionError) {
         error err = {message:connectionError.message};
@@ -450,7 +551,7 @@ public function <SonarQubeConnector sonarqubeConnector> getVulnerabilitiesCount 
 public function <SonarQubeConnector sonarqubeConnector> getSecurityRating (string projectKey) returns (string)|error {
     string securityRating = "";
     try {
-        string value = getMetricValue(projectKey, sonarqubeConnector, SECURITY_RATING);
+        string value = getMeasure(projectKey, sonarqubeConnector, SECURITY_RATING);
         if (value == NO_VULNERABILITY) {
             securityRating = "A";
         } else if (value == MINOR_VULNERABILITY) {
@@ -479,7 +580,7 @@ public function <SonarQubeConnector sonarqubeConnector> getSecurityRating (strin
 public function <SonarQubeConnector sonarqubeConnector> getBugsCount (string projectKey) returns (int|error) {
     int convertedValue = 0;
     try {
-        string value = getMetricValue(projectKey, sonarqubeConnector, BUGS);
+        string value = getMeasure(projectKey, sonarqubeConnector, BUGS);
         convertedValue =? <int>value;
     } catch (http:HttpConnectorError connectionError) {
         error err = {message:connectionError.message};
@@ -498,7 +599,7 @@ public function <SonarQubeConnector sonarqubeConnector> getBugsCount (string pro
 public function <SonarQubeConnector sonarqubeConnector> getReliabilityRating (string projectKey) returns (string)|error {
     string reliabilityRating = "";
     try {
-        string value = getMetricValue(projectKey, sonarqubeConnector, RELIABILITY_RATING);
+        string value = getMeasure(projectKey, sonarqubeConnector, RELIABILITY_RATING);
         if (value == NO_BUGS) {
             reliabilityRating = "A";
         } else if (value == MINOR_BUGS) {

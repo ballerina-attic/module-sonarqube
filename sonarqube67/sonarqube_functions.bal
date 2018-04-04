@@ -94,12 +94,12 @@ function getProjectFromList (string projectName, json projectList) returns (Proj
 @Description {value:"Returns value of the metric in measures field of a json."}
 @Param {value:"response: http Response."}
 @Return {value:"Value of the metric field in json."}
-function getMetricValue (string projectKey, SonarQubeConnector sonarqubeConnector, string metricName) returns string {
+function getMeasure (string projectKey, SonarQubeConnector sonarqubeConnector, string metricName) returns string {
     endpoint http:ClientEndpoint clientEndpoint = sonarqubeConnector.clientEndpoint;
     string value = "";
     http:Request request = {};
     sonarqubeConnector.constructAuthenticationHeaders(request);
-    string requestPath = API_MEASURES + "?" + COMPONENT_KEY + "=" + projectKey + "&" + METRIC_KEY + "=" + metricName;
+    string requestPath = API_MEASURES + projectKey + "&" + METRIC_KEYS + "=" + metricName;
     var response =? clientEndpoint -> get(requestPath, request);
     checkResponse(response);
     json component = getContentByKey(response, COMPONENT);

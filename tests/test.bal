@@ -32,14 +32,30 @@ endpoint sonarqube67:SonarQubeEndpoint sonarqube {
 }
 function testGetProject () {
     log:printInfo("sonarqubeEndpoint -> getProject()");
-    sonarqube67:Project project = {};
     var projectDetails = sonarqube -> getProject("siddhi");
     match projectDetails {
-        sonarqube67:Project projectInfo => project = projectInfo;
+        sonarqube67:Project project => {
+            boolean hasParameter = (project.name == "") ? false : true;
+            test:assertEquals(hasParameter, true, msg = "Failed getProject()");
+        }
         error err => test:assertFail(msg = err.message);
     }
-    boolean hasParameter = (project.name == "") ? false : true;
-    test:assertEquals(hasParameter, true, msg = "Failed getProject()");
+}
+
+@test:Config {
+    groups:["network-calls"]
+}
+function testGetAllProjects () {
+    log:printInfo("sonarqubeEndpoint -> getAllProjects()");
+    sonarqube67:Project project = {};
+    var projectDetails = sonarqube -> getAllProjects();
+    match projectDetails {
+        sonarqube67:Project[] projects => {
+            boolean hasProjects = (lengthof projects == 0) ? false : true;
+            test:assertEquals(hasProjects, true, msg = "Failed getAllProjects()");
+        }
+        error err => test:assertFail(msg = err.message);
+    }
 }
 
 @test:Config {
@@ -94,6 +110,20 @@ function testGetDuplicatedLinesCount () {
     match value {
         int val => {boolean hasParameter = (val >= 0) ? true : false;
                     test:assertEquals(hasParameter, true, msg = "Failed getDuplicatedLinesCount(projectKey)");}
+        error err => test:assertFail(msg = err.message);
+    }
+}
+
+@test:Config {
+    groups:["network-calls"]
+}
+function testGetCoveredLinesCount () {
+    log:printInfo("sonarqubeEndpoint -> getCoveredLinesCount(projectKey)");
+    sonarqube67:Project project = {key:PROJECT_KEY};
+    var value = sonarqube -> getCoveredLinesCount(project.key);
+    match value {
+        int val => {boolean hasParameter = (val >= 0) ? true : false;
+                    test:assertEquals(hasParameter, true, msg = "Failed getCoveredLinesCount(projectKey)");}
         error err => test:assertFail(msg = err.message);
     }
 }
