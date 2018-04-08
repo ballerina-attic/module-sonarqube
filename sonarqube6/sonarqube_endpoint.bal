@@ -16,25 +16,29 @@
 // under the License.
 //
 
-package sonarqube67;
-
 import ballerina/http;
-
-@Description {value:"Set the client configuration."}
-public function <SonarQubeConfiguration sonarqubeConfig> SonarQubeConfiguration () {
-    sonarqubeConfig.clientConfig = {};
-}
+import ballerina/io;
 
 @Description {value:"Initialize SonarQube endpoint."}
 @Param {value:"sonarqubeConfig:Configuration from SonarQube."}
-public function <SonarQubeEndpoint sonarqubeEndpoint> init (SonarQubeConfiguration sonarqubeConfig) {
+public function SonarQubeClient::init(SonarQubeConfiguration sonarqubeConfig) {
     http:HttpClient httpClient = http:createHttpClient(sonarqubeConfig.uri, sonarqubeConfig.clientConfig);
-    sonarqubeEndpoint.sonarqubeConnector = {token:sonarqubeConfig.token};
-    sonarqubeEndpoint.sonarqubeConnector.clientEndpoint.httpClient = httpClient;
+    sonarqubeConnector.token = sonarqubeConfig.token;
+    sonarqubeConnector.clientEndpoint.httpClient = httpClient;
 }
 
 @Description {value:"Returns the connector that client code uses"}
 @Return {value:"The connector that client code uses"}
-public function <SonarQubeEndpoint sonarqubeEndpoint> getClient () returns SonarQubeConnector {
-    return sonarqubeEndpoint.sonarqubeConnector;
+function SonarQubeClient::getClient() returns SonarQubeConnector {
+    return sonarqubeConnector;
 }
+
+@Description {value:"Start SonarQube connector endpoint."}
+public function SonarQubeClient::start() {}
+
+@Description {value:"Stop SonarQube connector endpoint."}
+public function SonarQubeClient::stop() {}
+
+@Description {value:"Register SonarQube connector endpoint."}
+@Param {value:"typedesc: Accepts types of data (int, float, string, boolean, etc)"}
+public function SonarQubeClient::register(typedesc serviceType) {}

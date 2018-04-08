@@ -16,25 +16,22 @@
 // under the License.
 //
 
-package tests;
-
 import ballerina/log;
 import ballerina/test;
-import sonarqube67;
 
-endpoint sonarqube67:SonarQubeEndpoint sonarqube {
-    token:TOKEN,
-    uri:URI
+endpoint SonarQubeClient sonarqube {
+    token:getToken(),
+    uri:getURI()
 };
 
 @test:Config {
     groups:["network-calls"]
 }
-function testGetProject () {
+function testGetProject() {
     log:printInfo("sonarqubeEndpoint -> getProject()");
-    var projectDetails = sonarqube -> getProject("siddhi");
+    var projectDetails = sonarqube -> getProject(getProjectName());
     match projectDetails {
-        sonarqube67:Project project => {
+        Project project => {
             boolean hasParameter = (project.name == "") ? false : true;
             test:assertEquals(hasParameter, true, msg = "Failed getProject()");
         }
@@ -45,26 +42,10 @@ function testGetProject () {
 @test:Config {
     groups:["network-calls"]
 }
-function testGetAllProjects () {
-    log:printInfo("sonarqubeEndpoint -> getAllProjects()");
-    sonarqube67:Project project = {};
-    var projectDetails = sonarqube -> getAllProjects();
-    match projectDetails {
-        sonarqube67:Project[] projects => {
-            boolean hasProjects = (lengthof projects == 0) ? false : true;
-            test:assertEquals(hasProjects, true, msg = "Failed getAllProjects()");
-        }
-        error err => test:assertFail(msg = err.message);
-    }
-}
-
-@test:Config {
-    groups:["network-calls"]
-}
 function testGetComplexity () {
     log:printInfo("sonarqubeEndpoint -> getComplexity(projectKey)");
-    sonarqube67:Project project = {key:PROJECT_KEY};
-    var value = sonarqube -> getComplexity(project.key);
+    Project project = {key:"org.wso2.siddhi:siddhi"};
+    var value = sonarqube -> getComplexity(getProjectKey());
     match value {
         int val => {boolean hasParameter = (val >= 0) ? true : false;
                     test:assertEquals(hasParameter, true, msg = "Failed getComplexity(projectKey)");}
@@ -77,8 +58,8 @@ function testGetComplexity () {
 }
 function testGetDuplicatedCodeBlocksCount () {
     log:printInfo("sonarqubeEndpoint -> getDuplicatedCodeBlocksCount((projectKey)");
-    sonarqube67:Project project = {key:PROJECT_KEY};
-    var value = sonarqube -> getDuplicatedCodeBlocksCount(project.key);
+
+    var value = sonarqube -> getDuplicatedCodeBlocksCount(getProjectKey());
     match value {
         int val => {boolean hasParameter = (val >= 0) ? true : false;
                     test:assertEquals(hasParameter, true, msg = "Failed getDuplicatedCodeBlocksCount((projectKey)");}
@@ -91,8 +72,7 @@ function testGetDuplicatedCodeBlocksCount () {
 }
 function testGetDuplicatedFilesCount () {
     log:printInfo("sonarqubeEndpoint -> getDuplicatedFilesCount(projectKey)");
-    sonarqube67:Project project = {key:PROJECT_KEY};
-    var value = sonarqube -> getDuplicatedFilesCount(project.key);
+    var value = sonarqube -> getDuplicatedFilesCount(getProjectKey());
     match value {
         int val => {boolean hasParameter = (val >= 0) ? true : false;
                     test:assertEquals(hasParameter, true, msg = "Failed getDuplicatedFilesCount(projectKey)");}
@@ -105,8 +85,7 @@ function testGetDuplicatedFilesCount () {
 }
 function testGetDuplicatedLinesCount () {
     log:printInfo("sonarqubeEndpoint -> getDuplicatedLinesCount(projectKey)");
-    sonarqube67:Project project = {key:PROJECT_KEY};
-    var value = sonarqube -> getDuplicatedLinesCount(project.key);
+    var value = sonarqube -> getDuplicatedLinesCount(getProjectKey());
     match value {
         int val => {boolean hasParameter = (val >= 0) ? true : false;
                     test:assertEquals(hasParameter, true, msg = "Failed getDuplicatedLinesCount(projectKey)");}
@@ -119,8 +98,7 @@ function testGetDuplicatedLinesCount () {
 }
 function testGetCoveredLinesCount () {
     log:printInfo("sonarqubeEndpoint -> getCoveredLinesCount(projectKey)");
-    sonarqube67:Project project = {key:PROJECT_KEY};
-    var value = sonarqube -> getCoveredLinesCount(project.key);
+    var value = sonarqube -> getCoveredLinesCount(getProjectKey());
     match value {
         int val => {boolean hasParameter = (val >= 0) ? true : false;
                     test:assertEquals(hasParameter, true, msg = "Failed getCoveredLinesCount(projectKey)");}
@@ -133,8 +111,7 @@ function testGetCoveredLinesCount () {
 }
 function testGetBlockerIssuesCount () {
     log:printInfo("sonarqubeEndpoint -> getBlockerIssuesCount(projectKey)");
-    sonarqube67:Project project = {key:PROJECT_KEY};
-    var value = sonarqube -> getBlockerIssuesCount(project.key);
+    var value = sonarqube -> getBlockerIssuesCount(getProjectKey());
     match value {
         int val => {boolean hasParameter = (val >= 0) ? true : false;
                     test:assertEquals(hasParameter, true, msg = "Failed getBlockerIssuesCount(projectKey)");}
@@ -147,8 +124,7 @@ function testGetBlockerIssuesCount () {
 }
 function testGetCriticalIssuesCount () {
     log:printInfo("sonarqubeEndpoint -> getCriticalIssuesCount(projectKey)");
-    sonarqube67:Project project = {key:PROJECT_KEY};
-    var value = sonarqube -> getCriticalIssuesCount(project.key);
+    var value = sonarqube -> getCriticalIssuesCount(getProjectKey());
     match value {
         int val => {boolean hasParameter = (val >= 0) ? true : false;
                     test:assertEquals(hasParameter, true, msg = "Failed getCriticalIssuesCount(projectKey)");}
@@ -161,8 +137,7 @@ function testGetCriticalIssuesCount () {
 }
 function testGetMajorIssuesCount () {
     log:printInfo("sonarqubeEndpoint -> getMajorIssuesCount(projectKey)");
-    sonarqube67:Project project = {key:PROJECT_KEY};
-    var value = sonarqube -> getMajorIssuesCount(project.key);
+    var value = sonarqube -> getMajorIssuesCount(getProjectKey());
     match value {
         int val => {boolean hasParameter = (val >= 0) ? true : false;
                     test:assertEquals(hasParameter, true, msg = "Failed getMajorIssuesCount(projectKey)");}
@@ -175,8 +150,7 @@ function testGetMajorIssuesCount () {
 }
 function testGetOpenIssuesCount () {
     log:printInfo("sonarqubeEndpoint -> getOpenIssuesCount(projectKey)");
-    sonarqube67:Project project = {key:PROJECT_KEY};
-    var value = sonarqube -> getOpenIssuesCount(project.key);
+    var value = sonarqube -> getOpenIssuesCount(getProjectKey());
     match value {
         int val => {boolean hasParameter = (val >= 0) ? true : false;
                     test:assertEquals(hasParameter, true, msg = "Failed getOpenIssuesCount(projectKey)");}
@@ -189,8 +163,7 @@ function testGetOpenIssuesCount () {
 }
 function testGetConfirmedIssuesCount () {
     log:printInfo("sonarqubeEndpoint -> getConfirmedIssuesCount(projectKey)");
-    sonarqube67:Project project = {key:PROJECT_KEY};
-    var value = sonarqube -> getConfirmedIssuesCount(project.key);
+    var value = sonarqube -> getConfirmedIssuesCount(getProjectKey());
     match value {
         int val => {boolean hasParameter = (val >= 0) ? true : false;
                     test:assertEquals(hasParameter, true, msg = "Failed getConfirmedIssuesCount(projectKey)");}
@@ -203,8 +176,7 @@ function testGetConfirmedIssuesCount () {
 }
 function testGetLinesOfCode () {
     log:printInfo("sonarqubeEndpoint -> getLinesOfCode(projectKey)");
-    sonarqube67:Project project = {key:PROJECT_KEY};
-    var value = sonarqube -> getLinesOfCode(project.key);
+    var value = sonarqube -> getLinesOfCode(getProjectKey());
     match value {
         int val => {boolean hasParameter = (val > 0) ? true : false;
                     test:assertEquals(hasParameter, true, msg = "Failed getLinesOfCode(projectKey)");}
@@ -217,8 +189,7 @@ function testGetLinesOfCode () {
 }
 function testGetCodeSmellsCount () {
     log:printInfo("sonarqubeEndpoint -> getCodeSmellsCount(projectKey)");
-    sonarqube67:Project project = {key:PROJECT_KEY};
-    var value = sonarqube -> getCodeSmellsCount(project.key);
+    var value = sonarqube -> getCodeSmellsCount(getProjectKey());
     match value {
         int val => {boolean hasParameter = (val >= 0) ? true : false;
                     test:assertEquals(hasParameter, true, msg = "Failed getCodeSmellsCount(projectKey)");}
@@ -232,8 +203,7 @@ function testGetCodeSmellsCount () {
 }
 function testGetVulnerabilitiesCount () {
     log:printInfo("sonarqubeEndpoint -> getVulnerabilitiesCount(projectKey)");
-    sonarqube67:Project project = {key:PROJECT_KEY};
-    var value = sonarqube -> getVulnerabilitiesCount(project.key);
+    var value = sonarqube -> getVulnerabilitiesCount(getProjectKey());
     match value {
         int val => {boolean hasParameter = (val >= 0) ? true : false;
                     test:assertEquals(hasParameter, true, msg = "Failed getVulnerabilitiesCount(projectKey)");}
@@ -246,8 +216,7 @@ function testGetVulnerabilitiesCount () {
 }
 function testGetBugsCount () {
     log:printInfo("sonarqubeEndpoint -> getBugsCount(projectKey)");
-    sonarqube67:Project project = {key:PROJECT_KEY};
-    var value = sonarqube -> getBugsCount(project.key);
+    var value = sonarqube -> getBugsCount(getProjectKey());
     match value {
         int val => {boolean hasParameter = (val >= 0) ? true : false;
                     test:assertEquals(hasParameter, true, msg = "Failed getBugsCount(projectKey)");}
@@ -260,8 +229,7 @@ function testGetBugsCount () {
 }
 function testGetLineCoverage () {
     log:printInfo("sonarqubeEndpoint -> getLineCoverage(projectKey)");
-    sonarqube67:Project project = {key:PROJECT_KEY};
-    var value = sonarqube -> getLineCoverage(project.key);
+    var value = sonarqube -> getLineCoverage(getProjectKey());
     match value {
         string val => {boolean hasCharacter = (val.indexOf("%") != -1) ? true : false;
                        test:assertEquals(hasCharacter, true, msg = "Failed getLineCoverage(projectKey)");}
@@ -274,8 +242,7 @@ function testGetLineCoverage () {
 }
 function testGetSQALERating () {
     log:printInfo("sonarqubeEndpoint -> getSQALERating(projectKey)");
-    sonarqube67:Project project = {key:PROJECT_KEY};
-    var value = sonarqube -> getSQALERating(project.key);
+    var value = sonarqube -> getSQALERating(getProjectKey());
     match value {
         string val => {
             boolean hasCharacters = false;
@@ -292,8 +259,7 @@ function testGetSQALERating () {
 }
 function testGetTechnicalDebt () {
     log:printInfo("sonarqubeEndpoint -> getTechnicalDebt(projectKey)");
-    sonarqube67:Project project = {key:PROJECT_KEY};
-    var value = sonarqube -> getTechnicalDebt(project.key);
+    var value = sonarqube -> getTechnicalDebt(getProjectKey());
     match value {
         string val => {boolean notEmpty = (val != "") ? true : false;
                        test:assertEquals(notEmpty, true, msg = "Failed getTechnicalDebt(projectKey)");}
@@ -306,8 +272,7 @@ function testGetTechnicalDebt () {
 }
 function testGetTechnicalDebtRatio () {
     log:printInfo("sonarqubeEndpoint -> getTechnicalDebtRatio(projectKey)");
-    sonarqube67:Project project = {key:PROJECT_KEY};
-    var value = sonarqube -> getTechnicalDebtRatio(project.key);
+    var value = sonarqube -> getTechnicalDebtRatio(getProjectKey());
     match value {
         string val => {boolean notEmpty = (val != "") ? true : false;
                        test:assertEquals(notEmpty, true, msg = "Failed getTechnicalDebtRatio(projectKey)");}
@@ -320,8 +285,7 @@ function testGetTechnicalDebtRatio () {
 }
 function testGetSecurityRating () {
     log:printInfo("sonarqubeEndpoint -> getSecurityRating(projectKey)");
-    sonarqube67:Project project = {key:PROJECT_KEY};
-    var value = sonarqube -> getSecurityRating(project.key);
+    var value = sonarqube -> getSecurityRating(getProjectKey());
     match value {
         string val => {boolean hasCharacters = false;
                        if (val == "A" || val == "B" || val == "C" || val == "D" || val == "E") {
@@ -337,8 +301,7 @@ function testGetSecurityRating () {
 }
 function testGetReliability () {
     log:printInfo("sonarqubeEndpoint -> getReliabilityRating(projectKey)");
-    sonarqube67:Project project = {key:PROJECT_KEY};
-    var value = sonarqube -> getReliabilityRating(project.key);
+    var value = sonarqube -> getReliabilityRating(getProjectKey());
     match value {
         string val => {boolean hasCharacters = false;
                        if (val == "A" || val == "B" || val == "C" || val == "D" || val == "E") {
