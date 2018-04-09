@@ -11,7 +11,7 @@ Using Ballerina SonarQube connector you can easily get important code quality me
 ## Compatibility
 | Language Version        | Connector Version          | SonarQube server Versions  |
 | ------------- |:-------------:| -----:|
-| ballerina-tools-0.970.0-alpha0    | 0.8 | 6.7.2 |
+| ballerina-tools-0.970.0-alpha0    | 0.8.0 | 6.7.2 |
 
 The following sections provide you with information on how to use the Ballerina SonarQube connector.
 
@@ -28,7 +28,7 @@ The following sections provide you with information on how to use the Ballerina 
 1.Create a SonarQube endpoint.
 
 ```ballerina
-   endpoint sonarqube:SonarQubeEndpoint sonarqubeEP {
+   endpoint sonarqube:SonarQubeClient sonarqube {
         token:"sonarqube_token",
         uri:"sonarqube_uri",
     };
@@ -37,7 +37,7 @@ The following sections provide you with information on how to use the Ballerina 
 
 ```ballerina
     Project project = {};
-    var projectDetails = sonarqubeEP -> getProject("project_name");
+    var projectDetails = sonarqube -> getProject("project_name");
     match projectDetails {
        sonarqube:Project projectDetails => project = projectDetails;
        error err => io:println(err);
@@ -48,7 +48,7 @@ The following sections provide you with information on how to use the Ballerina 
 
 ```ballerina
     //Get project complexity
-    var complexity = sonarqubeEP -> getComplexity(project.key);
+    var complexity = sonarqube -> getComplexity(project.key);
     match complexity {
         string value => io:println("Complexity - " + value);
         error err => io:println(err);
