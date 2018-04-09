@@ -133,12 +133,12 @@ function SonarQubeConnector::getMeasure(string projectKey, string metricName) re
 @Description {value:"Convert a given json to Comment."}
 @Param {value:"projectDetails:JSON containing comment details."}
 @Return {value:"project:Comment struct."}
-function convertJsonToComment (json commentDetails) returns Comment {
+function convertJsonToComment(json commentDetails) returns Comment {
     Comment comment = {};
     comment.text = commentDetails[HTML_TEXT].toString() but { () => "" };
     comment.key = commentDetails[KEY].toString() but { () => "" };
-    comment.commenter =  commentDetails[LOGIN].toString() but { () => "" };
-    comment.createdDate =  commentDetails[CREATED_DATE].toString() but { () => "" };
+    comment.commenter = commentDetails[LOGIN].toString() but { () => "" };
+    comment.createdDate = commentDetails[CREATED_DATE].toString() but { () => "" };
     return comment;
 }
 
@@ -156,7 +156,7 @@ function convertJsonToProject(json projectDetails) returns Project {
 @Description {value:"Convert a given json to Issue."}
 @Param {value:"issueDetails:Json containing issue details."}
 @Return {value:"issue:Issue struct."}
-function convertJsonToIssue (json issueDetails) returns Issue {
+function convertJsonToIssue(json issueDetails) returns Issue {
     Issue issue = {};
     issue.key = issueDetails[KEY].toString() but { () => "" };
     issue.severity = issueDetails[SEVERITY].toString() but { () => "" };
@@ -167,7 +167,7 @@ function convertJsonToIssue (json issueDetails) returns Issue {
     issue.creationDate = issueDetails[CREATION_DATE].toString() but { () => "" };
     issue.assignee = issueDetails[ASSIGNEE].toString() but { () => "" };
     issue.position = {};
-    issue.position.startLine = issueDetails[ISSUE_RANGE][START_LINE].toString() but { () => "" } ;
+    issue.position.startLine = issueDetails[ISSUE_RANGE][START_LINE].toString() but { () => "" };
     issue.position.endLine = issueDetails[ISSUE_RANGE][END_LINE].toString() but { () => "" };
     json tags = issueDetails[TAGS];
     int count = 0;
@@ -175,7 +175,7 @@ function convertJsonToIssue (json issueDetails) returns Issue {
         string[] tagList = [];
         foreach tag in tags {
             tagList[count] = tag.toString() but { () => "" };
-            count = count + 1;
+            count += 1;
         }
         issue.tags = tagList;
         count = 0;
@@ -185,17 +185,17 @@ function convertJsonToIssue (json issueDetails) returns Issue {
         string[] workflowTransitions = [];
         foreach transition in transitions {
             workflowTransitions[count] = transition.toString() but { () => "" };
-            count = count + 1;
+            count += 1;
         }
         issue.workflowTransitions = workflowTransitions;
         count = 0;
     }
     json comments = issueDetails[COMMENTS];
-    if (comments !=()) {
+    if (comments != ()) {
         Comment[] commentList = [];
         foreach comment in comments {
             commentList[count] = convertJsonToComment(comment);
-            count = count + 1;
+            count += 1;
         }
         issue.comments = commentList;
     }

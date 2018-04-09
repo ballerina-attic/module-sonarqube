@@ -75,7 +75,7 @@ public function SonarQubeConnector::getProject(string projectName) returns Proje
                         }
                         http:HttpConnectorError err => return err;
                     }
-                    count = count + 1;
+                    count += 1;
                 }
                 return project;
             } else {
@@ -87,6 +87,7 @@ public function SonarQubeConnector::getProject(string projectName) returns Proje
 }
 
 @Description {value:"Get complexity of a project."}
+@Param {value:"projectKey:Key of a project in SonarQube server."}
 @Return {value:"complexity:Returns complexity of a project.Complexity calculated based on the number of paths through
  the code."}
 @Return {value:"err: Returns error if an exception raised in getting project complexity."}
@@ -96,6 +97,7 @@ public function SonarQubeConnector::getComplexity(string projectKey) returns (in
 }
 
 @Description {value:"Get number of duplicated code blocks."}
+@Param {value:"projectKey:Key of a project in SonarQube server."}
 @Return {value:"duplicatedCodeBlocks:returns number of duplicated code blocks in a project."}
 @Return {value:"err: returns error if an exception raised in getting duplicated code blocks count."}
 public function SonarQubeConnector::getDuplicatedCodeBlocksCount(string projectKey) returns (int|error) {
@@ -104,6 +106,7 @@ public function SonarQubeConnector::getDuplicatedCodeBlocksCount(string projectK
 }
 
 @Description {value:"Get Number of duplicated files."}
+@Param {value:"projectKey:Key of a project in SonarQube server."}
 @Return {value:"duplicatedFiles:returns number of duplicated files in a project."}
 @Return {value:"err: returns error if an exception raised in getting duplicated files count."}
 public function SonarQubeConnector::getDuplicatedFilesCount(string projectKey) returns (int|error) {
@@ -112,6 +115,7 @@ public function SonarQubeConnector::getDuplicatedFilesCount(string projectKey) r
 }
 
 @Description {value:"Number of duplicated lines."}
+@Param {value:"projectKey:Key of a project in SonarQube server."}
 @Return {value:"duplicatedFiles:returns number of duplicated lines in a project."}
 @Return {value:"err: returns error if an exception raised in getting duplicated lines count."}
 public function SonarQubeConnector::getDuplicatedLinesCount(string projectKey) returns (int|error) {
@@ -122,6 +126,7 @@ public function SonarQubeConnector::getDuplicatedLinesCount(string projectKey) r
 @Description {value:"Number of blocker issues in a project.Blocker issue may be a bug with a high probability to impact
 the behavior of the application in production: memory leak, unclosed JDBC connection, .... The code MUST be immediately
 fixed."}
+@Param {value:"projectKey:Key of a project in SonarQube server."}
 @Return {value:"blockerIssue:returns number of blocker issues in a project."}
 @Return {value:"err: returns error if an exception raised in getting blocker issues count."}
 public function SonarQubeConnector::getBlockerIssuesCount(string projectKey) returns (int|error) {
@@ -132,6 +137,7 @@ public function SonarQubeConnector::getBlockerIssuesCount(string projectKey) ret
 @Description {value:"Number of critical issues in a project.Either a bug with a low probability to impact the behavior
 of the application in production or an issue which represents a security flaw: empty catch block, SQL injection, ...
 The code MUST be immediately reviewed. "}
+@Param {value:"projectKey:Key of a project in SonarQube server."}
 @Return {value:"criticalIssue:returns number of critical issues in a project."}
 @Return {value:"err: returns error if an exception raised in getting critical issues count."}
 public function SonarQubeConnector::getCriticalIssuesCount(string projectKey) returns (int|error) {
@@ -141,6 +147,7 @@ public function SonarQubeConnector::getCriticalIssuesCount(string projectKey) re
 
 @Description {value:"Number of major issues in a project.Quality flaw which can highly impact the developer
  productivity: uncovered piece of code, duplicated blocks, unused parameters, ..."}
+@Param {value:"projectKey:Key of a project in SonarQube server."}
 @Return {value:"minorIssue:returns number of minor issues in a project."}
 @Return {value:"err: returns error if an exception raised in getting major issues count."}
 public function SonarQubeConnector::getMajorIssuesCount(string projectKey) returns (int|error) {
@@ -150,6 +157,7 @@ public function SonarQubeConnector::getMajorIssuesCount(string projectKey) retur
 
 @Description {value:"Number of minor issues in a project.Quality flaw which can slightly impact the developer
 productivity: lines should not be too long, switch statements should have at least 3 cases, ..."}
+@Param {value:"projectKey:Key of a project in SonarQube server."}
 @Return {value:"majorIssue:returns number of major issues in a project."}
 @Return {value:"err: returns error if an exception raised in getting minor issues count."}
 public function SonarQubeConnector::getMinorIssuesCount(string projectKey) returns (int|error) {
@@ -158,6 +166,7 @@ public function SonarQubeConnector::getMinorIssuesCount(string projectKey) retur
 }
 
 @Description {value:"Number of open issues in a project."}
+@Param {value:"projectKey:Key of a project in SonarQube server."}
 @Return {value:"issuesCount:returns number of open issues in a project."}
 @Return {value:"err: returns error if an exception raised in getting open issues count."}
 public function SonarQubeConnector::getOpenIssuesCount(string projectKey) returns (int|error) {
@@ -166,6 +175,7 @@ public function SonarQubeConnector::getOpenIssuesCount(string projectKey) return
 }
 
 @Description {value:"Number of confirmed issues in a project."}
+@Param {value:"projectKey:Key of a project in SonarQube server."}
 @Return {value:"confirmedIssues:returns number of confirmed issues in a project"}
 @Return {value:"err: returns error if an exception raised in getting confirmed issue count."}
 public function SonarQubeConnector::getConfirmedIssuesCount(string projectKey) returns (int|error) {
@@ -174,6 +184,7 @@ public function SonarQubeConnector::getConfirmedIssuesCount(string projectKey) r
 }
 
 @Description {value:"Number of reopened issues in a project."}
+@Param {value:"projectKey:Key of a project in SonarQube server."}
 @Return {value:"reopenedIssues:returns number of reopened issues in a project."}
 @Return {value:"err: returns error if an exception raised in getting re-opened issue count."}
 public function SonarQubeConnector::getReopenedIssuesCount(string projectKey) returns (int|error) {
@@ -182,6 +193,7 @@ public function SonarQubeConnector::getReopenedIssuesCount(string projectKey) re
 }
 
 @Description {value:"Get lines of code of a project."}
+@Param {value:"projectKey:Key of a project in SonarQube server."}
 @Return {value:"loc: returns project LOC."}
 @Return {value:"err: returns error if an exception raised in getting project LOC."}
 public function SonarQubeConnector::getLinesOfCode(string projectKey) returns (int|error) {
@@ -190,6 +202,7 @@ public function SonarQubeConnector::getLinesOfCode(string projectKey) returns (i
 }
 
 @Description {value:"Get line coverage of a project."}
+@Param {value:"projectKey:Key of a project in SonarQube server."}
 @Return {value:"lineCoverage:returns line coverage of a project."}
 @Return {value:"err: returns error if an exception raised in getting line coverage."}
 public function SonarQubeConnector::getLineCoverage(string projectKey) returns (string)|error {
@@ -198,6 +211,7 @@ public function SonarQubeConnector::getLineCoverage(string projectKey) returns (
 }
 
 @Description {value:"Get number of lines covered by unit tests."}
+@Param {value:"projectKey:Key of a project in SonarQube server."}
 @Return {value:"coveredLinesCount:returns number of covered lines."}
 @Return {value:"err: returns error if an exception raised in getting covered lines count."}
 public function SonarQubeConnector::getCoveredLinesCount(string projectKey) returns (int|error) {
@@ -207,6 +221,7 @@ public function SonarQubeConnector::getCoveredLinesCount(string projectKey) retu
 }
 
 @Description {value:"Get branch coverage of a project."}
+@Param {value:"projectKey:Key of a project in SonarQube server."}
 @Return {value:"branchCoverage:returns branch Coverage of a project."}
 @Return {value:"err: returns error if an exception raised in getting branch coverage."}
 public function SonarQubeConnector::getBranchCoverage(string projectKey) returns (string|error) {
@@ -216,6 +231,7 @@ public function SonarQubeConnector::getBranchCoverage(string projectKey) returns
 
 @Description {value:"Get number of code smells in a project.Code smell, (or bad smell) is any symptom in the source code
  of a program that possibly indicates a deeper problem."}
+@Param {value:"projectKey:Key of a project in SonarQube server."}
 @Return {value:"codeSmells: returns number of code smells in a project."}
 @Return {value:"err: returns error if an exception raised in getting code smells count."}
 public function SonarQubeConnector::getCodeSmellsCount(string projectKey) returns (int|error) {
@@ -225,6 +241,7 @@ public function SonarQubeConnector::getCodeSmellsCount(string projectKey) return
 
 @Description {value:"Get SQALE rating of a project.This is the rating given to your project related to the value of your
  Technical Debt Ratio."}
+@Param {value:"projectKey:Key of a project in SonarQube server."}
 @Return {value:"sqaleRating:returns sqale rating of a project."}
 @Return {value:"err: returns error if an exception raised in getting SQALE rating."}
 public function SonarQubeConnector::getSQALERating(string projectKey) returns (string|error) {
@@ -243,6 +260,7 @@ public function SonarQubeConnector::getSQALERating(string projectKey) returns (s
 }
 
 @Description {value:"Get technical debt of a project.Technical debt is the effort to fix all maintainability issues."}
+@Param {value:"projectKey:Key of a project in SonarQube server."}
 @Return {value:"technicalDebt: returns technical debt of a project."}
 @Return {value:"err: returns error if an exception raised in getting technical debt."}
 public function SonarQubeConnector::getTechnicalDebt(string projectKey) returns (string|error) {
@@ -250,6 +268,7 @@ public function SonarQubeConnector::getTechnicalDebt(string projectKey) returns 
 }
 
 @Description {value:"Get technical debt ratio of a project."}
+@Param {value:"projectKey:Key of a project in SonarQube server."}
 @Return {value:"technicalDebtRatio: returns technical debt ratio of a project."}
 @Return {value:"err: returns error if an exception raised in getting technical debt ratio."}
 public function SonarQubeConnector::getTechnicalDebtRatio(string projectKey) returns (string|error) {
@@ -257,6 +276,7 @@ public function SonarQubeConnector::getTechnicalDebtRatio(string projectKey) ret
 }
 
 @Description {value:"Get number of vulnerablities of a project."}
+@Param {value:"projectKey:Key of a project in SonarQube server."}
 @Return {value:"vulnerabilities: returns number of vulnerabilities of  project."}
 @Return {value:"err: returns error if an exception raised in getting vulnerabilities count."}
 public function SonarQubeConnector::getVulnerabilitiesCount(string projectKey) returns (int|error) {
@@ -265,6 +285,7 @@ public function SonarQubeConnector::getVulnerabilitiesCount(string projectKey) r
 }
 
 @Description {value:"Get security rating of a project."}
+@Param {value:"projectKey:Key of a project in SonarQube server."}
 @Return {value:"securityRating:returns 	security rating of a project."}
 @Return {value:"err: returns error if an exception raised in getting security rating."}
 public function SonarQubeConnector::getSecurityRating(string projectKey) returns (string|error) {
@@ -282,6 +303,7 @@ public function SonarQubeConnector::getSecurityRating(string projectKey) returns
 }
 
 @Description {value:"Get number of bugs in a project."}
+@Param {value:"projectKey:Key of a project in SonarQube server."}
 @Return {value:"bugs: returns number of bugs of  project."}
 @Return {value:"err: returns error if an exception raised in getting bugs count."}
 public function SonarQubeConnector::getBugsCount(string projectKey) returns (int|error) {
@@ -290,6 +312,7 @@ public function SonarQubeConnector::getBugsCount(string projectKey) returns (int
 }
 
 @Description {value:"Get reliability rating of a project."}
+@Param {value:"projectKey:Key of a project in SonarQube server."}
 @Return {value:"securityRating:returns reliability rating of a project."}
 @Return {value:"err: returns error if an exception raised in getting reliability rating."}
 public function SonarQubeConnector::getReliabilityRating(string projectKey) returns (string|error) {
@@ -307,6 +330,7 @@ public function SonarQubeConnector::getReliabilityRating(string projectKey) retu
 }
 
 @Description {value:"Get details of project issues."}
+@Param {value:"projectKey:Key of a project in SonarQube server."}
 @Return {value:"issues: returns array of project issues."}
 @Return {value:"err: returns error if an exception raised in getting project issues."}
 public function SonarQubeConnector::getIssues(string projectKey) returns (Issue[]|error) {
