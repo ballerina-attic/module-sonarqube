@@ -18,7 +18,7 @@ In order to run the tests, the user will need to have a SonarQube account and an
 
 - The form at the bottom of the page allows you to generate new tokens. Once you click the generate button, you will see the token value. Copy it immediately; once you dismiss the notification you will not be able to retrieve it.
 
-After that edit the Ballerina.conf file with necessary details.
+After that create a Ballerina.conf file inside package-sonarqube and add following details.
 
 ###### ballerina.conf
 ```.conf
