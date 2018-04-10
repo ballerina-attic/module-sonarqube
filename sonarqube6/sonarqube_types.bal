@@ -42,7 +42,7 @@ public type SonarQubeClient object {
 public type SonarQubeConnector object {
     public {
         string token;
-        http:ClientEndpoint clientEndpoint;
+        http:Client client;
     }
     public function getProject(string projectName) returns (Project|error);
     public function getAllProjects() returns (Project[]|error);

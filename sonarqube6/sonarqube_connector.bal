@@ -25,7 +25,7 @@ import ballerina/math;
 @Return {value:"project:Project struct with project details."}
 @Return {value:"err: Returns error if an exception raised in getting project details."}
 public function SonarQubeConnector::getProject(string projectName) returns Project|error {
-    endpoint http:ClientEndpoint httpEndpoint = clientEndpoint;
+    endpoint http:Client httpEndpoint = client;
 
     // get the first page of the project details
     string requestPath = API_RESOURCES + PROJECTS_PER_PAGE;
@@ -96,7 +96,7 @@ public function SonarQubeConnector::getProject(string projectName) returns Proje
 @Return {value:"projects:Returns array of Projects."}
 @Return {value:"err: Returns error if an exception raised in getting project details."}
 public function SonarQubeConnector::getAllProjects() returns (Project[]|error) {
-    endpoint http:ClientEndpoint httpEndpoint = clientEndpoint;
+    endpoint http:Client httpEndpoint = client;
 
     // get the first page of the project details
     string requestPath = API_RESOURCES + PROJECTS_PER_PAGE;
@@ -167,7 +167,7 @@ public function SonarQubeConnector::getAllProjects() returns (Project[]|error) {
 @Return {value:"Returns a mapping  of metric name "}
 @Return {value:"err: Returns error if an exception raised in getting project complexity."}
 public function SonarQubeConnector::getMetricValues(string projectKey, string[] metricKeys) returns (map|error) {
-    endpoint http:ClientEndpoint httpEndpoint = clientEndpoint;
+    endpoint http:Client httpEndpoint = client;
     string keyList = "";
     foreach key in metricKeys {
         keyList = keyList + key + ",";
@@ -454,7 +454,7 @@ public function SonarQubeConnector::getReliabilityRating(string projectKey) retu
 @Return {value:"issues: returns array of project issues."}
 @Return {value:"err: returns error if an exception raised in getting project issues."}
 public function SonarQubeConnector::getIssues(string projectKey) returns (Issue[]|error) {
-    endpoint http:ClientEndpoint httpEndpoint = clientEndpoint;
+    endpoint http:Client httpEndpoint = client;
     http:Request request = check constructAuthenticatedRequest();
     string requestPath = API_ISSUES_SEARCH + "?" + PROJECT_KEYS + "=" + projectKey + "&" + EXTRA_CONTENT;
     var endpointResponse = httpEndpoint -> get(requestPath, request);

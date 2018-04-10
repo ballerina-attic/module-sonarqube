@@ -93,7 +93,7 @@ function checkResponse(http:Response response) returns error {
 @Param {value:"response: http Response."}
 @Return {value:"Value of the metric field in json."}
 function SonarQubeConnector::getMeasure(string projectKey, string metricName) returns string|error {
-    endpoint http:ClientEndpoint httpEndpoint = clientEndpoint;
+    endpoint http:Client httpEndpoint = client;
     string value = "";
     http:Request request = check constructAuthenticatedRequest();
     string requestPath = API_MEASURES + projectKey + "&" + METRIC_KEYS + "=" + metricName;
