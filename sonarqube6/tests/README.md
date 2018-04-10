@@ -6,7 +6,7 @@ various actions.
 ## Compatibility
 | Language Version                           | Connector Version   | SonarQube API Version |
 | ------------------------------------------ | ------------------- | ------------------ |
-| ballerina-tools-0.970.0-alpha1-SNAPSHOT    | 0.8.0                | 6.7.2         |
+| ballerina-tools-0.970.0-alpha1-SNAPSHOT    | 0.8.1                | 6.7.2         |
 
 ## Running tests
 

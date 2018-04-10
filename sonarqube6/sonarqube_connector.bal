@@ -19,14 +19,13 @@
 import ballerina/http;
 import ballerina/log;
 import ballerina/math;
-import ballerina/io;
 
 @Description {value:"Get project details."}
 @Param {value:"projetName:Name of the project."}
 @Return {value:"project:Project struct with project details."}
 @Return {value:"err: Returns error if an exception raised in getting project details."}
 public function SonarQubeConnector::getProject(string projectName) returns Project|error {
-    endpoint http:ClientEndpoint httpEndpoint = clientEndpoint;
+    endpoint http:Client httpEndpoint = client;
 
     // get the first page of the project details
     string requestPath = API_RESOURCES + PROJECTS_PER_PAGE;
@@ -40,10 +39,12 @@ public function SonarQubeConnector::getProject(string projectName) returns Proje
             error endpointErrors = checkResponse(response);
             if (endpointErrors.message == ""){
                 // check the results in the first page of Project List
-                json[] allComponents = check getJsonArrayByKey(response, COMPONENTS);
-                Project project = getProjectFromList(projectName, allComponents);
-                if (project.key != "") {
-                    return project;
+                json[] allComponentsInPage = check getJsonArrayByKey(response, COMPONENTS);
+                foreach component in allComponentsInPage {
+                    Project project = convertJsonToProject(component);
+                    if (projectName == project.name) {
+                        return project;
+                    }
                 }
                 // Cannot find results in the first page.Iterate through other pages
                 json paging = check getJsonValueByKey(response, PAGING);
@@ -52,7 +53,6 @@ public function SonarQubeConnector::getProject(string projectName) returns Proje
                 // get the total number of projects which have the project details
                 int totalPages = <int>math:ceil(totalProjectsCount / PROJECTS_PER_PAGE);
                 int count = 0;
-                project = {};
 
                 // iterate through pages up-to total pages
                 while (count < totalPages - 1) {
@@ -63,28 +63,148 @@ public function SonarQubeConnector::getProject(string projectName) returns Proje
                         http:Response newResponse => {
                             endpointErrors = checkResponse(newResponse);
                             if (endpointErrors.message == ""){
-                                json[] pageResult = check getJsonArrayByKey(newResponse, COMPONENTS);
-                                Project sonarqubeProject = getProjectFromList(projectName, pageResult);
-                                if (sonarqubeProject.key != "") {
-                                    project = sonarqubeProject;
-                                    break;
+                                allComponentsInPage = check getJsonArrayByKey(newResponse, COMPONENTS);
+                                foreach component in allComponentsInPage {
+                                    Project project = convertJsonToProject(component);
+                                    if (projectName == project.name) {
+                                        return project;
+                                    }
                                 }
                             } else {
                                 return endpointErrors;
                             }
                         }
-                        http:HttpConnectorError err => return err;
+                        http:HttpConnectorError err => {
+                            error connectionError = {message:err.message};
+                            return connectionError;
+                        }
                     }
                     count += 1;
                 }
-                return project;
-            } else {
-                return endpointErrors;
             }
+            return endpointErrors;
         }
-        http:HttpConnectorError err => return err;
+        http:HttpConnectorError err => {
+            error connectionError = {message:err.message};
+            return connectionError;
+        }
     }
 }
+
+@Description {value:"Get all projects details."}
+@Param {value:"projetName:Name of the project."}
+@Return {value:"projects:Returns array of Projects."}
+@Return {value:"err: Returns error if an exception raised in getting project details."}
+public function SonarQubeConnector::getAllProjects() returns (Project[]|error) {
+    endpoint http:Client httpEndpoint = client;
+
+    // get the first page of the project details
+    string requestPath = API_RESOURCES + PROJECTS_PER_PAGE;
+    http:Request request = check constructAuthenticatedRequest();
+    var endpointResponse = httpEndpoint -> get(requestPath, request);
+
+    // match endpointResponse
+    match endpointResponse{
+        http:Response response => {
+            // checking whether the response has errors
+            error endpointErrors = checkResponse(response);
+            if (endpointErrors.message == ""){
+                Project[] projects = [];
+                // check the results in the first page of Project List
+                json[] allComponentsInPage = check getJsonArrayByKey(response, COMPONENTS);
+                int projectCount = 0;
+                foreach component in allComponentsInPage {
+                    Project project = convertJsonToProject(component);
+                    projects[projectCount] = project;
+                    projectCount += 1;
+                }
+                // Cannot find results in the first page.Iterate through other pages
+                json paging = check getJsonValueByKey(response, PAGING);
+                // get the total project count
+                float totalProjectsCount = check <float>(paging[TOTAL].toString() but { () => "0.0" });
+                // get the total number of projects which have the project details
+                int totalPages = <int>math:ceil(totalProjectsCount / PROJECTS_PER_PAGE);
+                int count = 0;
+
+                // iterate through pages up-to total pages
+                while (count < totalPages - 1) {
+                    request = check constructAuthenticatedRequest();
+                    requestPath = API_RESOURCES + PROJECTS_PER_PAGE + "&" + PAGE_NUMBER + "=" + (count + 2);
+                    endpointResponse = httpEndpoint -> get(requestPath, request);
+                    match endpointResponse{
+                        http:Response newResponse => {
+                            endpointErrors = checkResponse(newResponse);
+                            if (endpointErrors.message == ""){
+                                allComponentsInPage = check getJsonArrayByKey(newResponse, COMPONENTS);
+                                foreach component in allComponentsInPage {
+                                    Project project = convertJsonToProject(component);
+                                    projects[projectCount] = project;
+                                    projectCount += 1;
+                                }
+                            } else {
+                                return endpointErrors;
+                            }
+                        }
+                        http:HttpConnectorError err => {
+                            error connectionError = {message:err.message};
+                            return connectionError;
+                        }
+                    }
+                    count += 1;
+                }
+                return projects;
+            }
+            return endpointErrors;
+        }
+        http:HttpConnectorError err => {
+            error connectionError = {message:err.message};
+            return connectionError;
+        }
+    }
+}
+
+@Description {value:"Get values for provided metrics."}
+@Return {value:"Returns a mapping  of metric name "}
+@Return {value:"err: Returns error if an exception raised in getting project complexity."}
+public function SonarQubeConnector::getMetricValues(string projectKey, string[] metricKeys) returns (map|error) {
+    endpoint http:Client httpEndpoint = client;
+    string keyList = "";
+    foreach key in metricKeys {
+        keyList = keyList + key + ",";
+    }
+    http:Request request = check constructAuthenticatedRequest();
+    string requestPath = API_MEASURES + projectKey + "&" + METRIC_KEYS + "=" + keyList;
+    var endpointResponse = httpEndpoint -> get(requestPath, request);
+
+    // match endpointResponse
+    match endpointResponse{
+        http:Response response => {
+            // checking whether the response has errors
+            error endpointErrors = checkResponse(response);
+            if (endpointErrors.message == ""){
+                map values;
+                json component = check getJsonValueByKey(response, COMPONENT);
+                json[] metrics = check < json[]>component[MEASURES];
+                foreach metric in metrics {
+                    string metricKey = metric[METRIC].toString() but { () => "" };
+                    if (metricKey != ""){
+                        string value = metric[VALUE].toString() but { () => "" };
+                        values[metricKey] = value;
+                    } else {
+                        values[metricKey] = "Not defined for the product.";
+                    }
+                }
+                return values;
+            }
+            return endpointErrors;
+        }
+        http:HttpConnectorError err => {
+            error connectionError = {message:err.message};
+            return connectionError;
+        }
+    }
+}
+
 
 @Description {value:"Get complexity of a project."}
 @Param {value:"projectKey:Key of a project in SonarQube server."}
@@ -101,7 +221,7 @@ public function SonarQubeConnector::getComplexity(string projectKey) returns (in
 @Return {value:"duplicatedCodeBlocks:returns number of duplicated code blocks in a project."}
 @Return {value:"err: returns error if an exception raised in getting duplicated code blocks count."}
 public function SonarQubeConnector::getDuplicatedCodeBlocksCount(string projectKey) returns (int|error) {
-    string value = check getMeasure(projectKey, DUPLICATED_BLOCKS);
+    string value = check getMeasure(projectKey, DUPLICATED_BLOCKS_COUNT);
     return <int>value;
 }
 
@@ -110,7 +230,7 @@ public function SonarQubeConnector::getDuplicatedCodeBlocksCount(string projectK
 @Return {value:"duplicatedFiles:returns number of duplicated files in a project."}
 @Return {value:"err: returns error if an exception raised in getting duplicated files count."}
 public function SonarQubeConnector::getDuplicatedFilesCount(string projectKey) returns (int|error) {
-    string value = check getMeasure(projectKey, DUPLICATED_FILES);
+    string value = check getMeasure(projectKey, DUPLICATED_FILES_COUNT);
     return <int>value;
 }
 
@@ -119,7 +239,7 @@ public function SonarQubeConnector::getDuplicatedFilesCount(string projectKey) r
 @Return {value:"duplicatedFiles:returns number of duplicated lines in a project."}
 @Return {value:"err: returns error if an exception raised in getting duplicated lines count."}
 public function SonarQubeConnector::getDuplicatedLinesCount(string projectKey) returns (int|error) {
-    string value = check getMeasure(projectKey, DUPLICATED_LINES);
+    string value = check getMeasure(projectKey, DUPLICATED_LINES_COUNT);
     return <int>value;
 }
 
@@ -130,7 +250,7 @@ fixed."}
 @Return {value:"blockerIssue:returns number of blocker issues in a project."}
 @Return {value:"err: returns error if an exception raised in getting blocker issues count."}
 public function SonarQubeConnector::getBlockerIssuesCount(string projectKey) returns (int|error) {
-    string value = check getMeasure(projectKey, ISSUE_BLOCKER);
+    string value = check getMeasure(projectKey, BLOCKER_ISSUES_COUNT);
     return <int>value;
 }
 
@@ -141,7 +261,7 @@ The code MUST be immediately reviewed. "}
 @Return {value:"criticalIssue:returns number of critical issues in a project."}
 @Return {value:"err: returns error if an exception raised in getting critical issues count."}
 public function SonarQubeConnector::getCriticalIssuesCount(string projectKey) returns (int|error) {
-    string value = check getMeasure(projectKey, ISSUE_CRITICAL);
+    string value = check getMeasure(projectKey, CRITICAL_ISSUES_COUNT);
     return <int>value;
 }
 
@@ -151,7 +271,7 @@ public function SonarQubeConnector::getCriticalIssuesCount(string projectKey) re
 @Return {value:"minorIssue:returns number of minor issues in a project."}
 @Return {value:"err: returns error if an exception raised in getting major issues count."}
 public function SonarQubeConnector::getMajorIssuesCount(string projectKey) returns (int|error) {
-    string value = check getMeasure(projectKey, ISSUE_MAJOR);
+    string value = check getMeasure(projectKey, MAJOR_ISSUES_COUNT);
     return <int>value;
 }
 
@@ -161,7 +281,7 @@ productivity: lines should not be too long, switch statements should have at lea
 @Return {value:"majorIssue:returns number of major issues in a project."}
 @Return {value:"err: returns error if an exception raised in getting minor issues count."}
 public function SonarQubeConnector::getMinorIssuesCount(string projectKey) returns (int|error) {
-    string value = check getMeasure(projectKey, ISSUE_MINOR);
+    string value = check getMeasure(projectKey, MINOR_ISSUES_COUNT);
     return <int>value;
 }
 
@@ -170,7 +290,7 @@ public function SonarQubeConnector::getMinorIssuesCount(string projectKey) retur
 @Return {value:"issuesCount:returns number of open issues in a project."}
 @Return {value:"err: returns error if an exception raised in getting open issues count."}
 public function SonarQubeConnector::getOpenIssuesCount(string projectKey) returns (int|error) {
-    string value = check getMeasure(projectKey, ISSUE_OPEN);
+    string value = check getMeasure(projectKey, OPEN_ISSUES_COUNT);
     return <int>value;
 }
 
@@ -179,7 +299,7 @@ public function SonarQubeConnector::getOpenIssuesCount(string projectKey) return
 @Return {value:"confirmedIssues:returns number of confirmed issues in a project"}
 @Return {value:"err: returns error if an exception raised in getting confirmed issue count."}
 public function SonarQubeConnector::getConfirmedIssuesCount(string projectKey) returns (int|error) {
-    string value = check getMeasure(projectKey, ISSUE_CONFIRMED);
+    string value = check getMeasure(projectKey, CONFIRMED_ISSUES_COUNT);
     return <int>value;
 }
 
@@ -188,7 +308,7 @@ public function SonarQubeConnector::getConfirmedIssuesCount(string projectKey) r
 @Return {value:"reopenedIssues:returns number of reopened issues in a project."}
 @Return {value:"err: returns error if an exception raised in getting re-opened issue count."}
 public function SonarQubeConnector::getReopenedIssuesCount(string projectKey) returns (int|error) {
-    string value = check getMeasure(projectKey, ISSUE_REOPENED);
+    string value = check getMeasure(projectKey, REOPENED_ISSUES_COUNT);
     return <int>value;
 }
 
@@ -197,7 +317,7 @@ public function SonarQubeConnector::getReopenedIssuesCount(string projectKey) re
 @Return {value:"loc: returns project LOC."}
 @Return {value:"err: returns error if an exception raised in getting project LOC."}
 public function SonarQubeConnector::getLinesOfCode(string projectKey) returns (int|error) {
-    string value = check getMeasure(projectKey, LOC);
+    string value = check getMeasure(projectKey, LINES_OF_CODE);
     return <int>value;
 }
 
@@ -307,7 +427,7 @@ public function SonarQubeConnector::getSecurityRating(string projectKey) returns
 @Return {value:"bugs: returns number of bugs of  project."}
 @Return {value:"err: returns error if an exception raised in getting bugs count."}
 public function SonarQubeConnector::getBugsCount(string projectKey) returns (int|error) {
-    string value = check getMeasure(projectKey, BUGS);
+    string value = check getMeasure(projectKey, BUGS_COUNT);
     return <int>value;
 }
 
@@ -334,7 +454,7 @@ public function SonarQubeConnector::getReliabilityRating(string projectKey) retu
 @Return {value:"issues: returns array of project issues."}
 @Return {value:"err: returns error if an exception raised in getting project issues."}
 public function SonarQubeConnector::getIssues(string projectKey) returns (Issue[]|error) {
-    endpoint http:ClientEndpoint httpEndpoint = clientEndpoint;
+    endpoint http:Client httpEndpoint = client;
     http:Request request = check constructAuthenticatedRequest();
     string requestPath = API_ISSUES_SEARCH + "?" + PROJECT_KEYS + "=" + projectKey + "&" + EXTRA_CONTENT;
     var endpointResponse = httpEndpoint -> get(requestPath, request);
@@ -358,6 +478,9 @@ public function SonarQubeConnector::getIssues(string projectKey) returns (Issue[
             }
             return issues;
         }
-        http:HttpConnectorError err => return err;
+        http:HttpConnectorError err => {
+            error connectionError = {message:err.message};
+            return connectionError;
+        }
     }
 }

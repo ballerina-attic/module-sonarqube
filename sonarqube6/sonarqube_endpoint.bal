@@ -17,14 +17,13 @@
 //
 
 import ballerina/http;
-import ballerina/io;
 
 @Description {value:"Initialize SonarQube endpoint."}
 @Param {value:"sonarqubeConfig:Configuration from SonarQube."}
 public function SonarQubeClient::init(SonarQubeConfiguration sonarqubeConfig) {
     http:HttpClient httpClient = http:createHttpClient(sonarqubeConfig.uri, sonarqubeConfig.clientConfig);
     sonarqubeConnector.token = sonarqubeConfig.token;
-    sonarqubeConnector.clientEndpoint.httpClient = httpClient;
+    sonarqubeConnector.client.httpClient = httpClient;
 }
 
 @Description {value:"Returns the connector that client code uses"}
