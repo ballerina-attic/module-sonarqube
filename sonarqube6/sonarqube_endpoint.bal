@@ -17,7 +17,6 @@
 //
 
 import ballerina/http;
-import ballerina/io;
 
 @Description {value:"Initialize SonarQube endpoint."}
 @Param {value:"sonarqubeConfig:Configuration from SonarQube."}

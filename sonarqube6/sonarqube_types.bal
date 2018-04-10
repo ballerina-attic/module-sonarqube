@@ -39,36 +39,38 @@ public type SonarQubeClient object {
 };
 
 @Description {value:"Struct to initialize the connection with SonarQube."}
-type SonarQubeConnector object {
+public type SonarQubeConnector object {
     public {
         string token;
         http:ClientEndpoint clientEndpoint;
     }
-    function getProject(string projectName) returns (Project|error);
-    function getDuplicatedCodeBlocksCount(string projectKey) returns (int|error);
-    function getDuplicatedFilesCount(string projectKey) returns (int|error);
-    function getDuplicatedLinesCount (string projectKey) returns (int|error);
-    function getBlockerIssuesCount (string projectKey) returns (int|error);
-    function getCriticalIssuesCount (string projectKey) returns (int|error);
-    function getMajorIssuesCount (string projectKey) returns (int|error);
-    function getMinorIssuesCount (string projectKey) returns (int|error);
-    function getOpenIssuesCount (string projectKey) returns (int|error);
-    function getConfirmedIssuesCount (string projectKey) returns (int|error);
-    function getReopenedIssuesCount (string projectKey) returns (int|error);
-    function getLinesOfCode (string projectKey) returns (int|error);
-    function getLineCoverage (string projectKey) returns (string)|error;
-    function getComplexity (string projectKey) returns (int|error);
-    function getCoveredLinesCount(string projectKey) returns (int|error);
-    function getBranchCoverage (string projectKey) returns (string|error);
-    function getCodeSmellsCount (string projectKey) returns (int|error);
-    function getSQALERating (string projectKey) returns (string|error);
-    function getTechnicalDebt (string projectKey) returns (string|error);
-    function getTechnicalDebtRatio (string projectKey) returns (string|error);
-    function getVulnerabilitiesCount(string projectKey) returns (int|error);
-    function getSecurityRating(string projectKey) returns (string|error);
-    function getReliabilityRating(string projectKey) returns (string|error);
-    function getBugsCount(string projectKey) returns (int|error);
-    function getIssues (string projectKey) returns (Issue[])|error;
+    public function getProject(string projectName) returns (Project|error);
+    public function getAllProjects() returns (Project[]|error);
+    public function getDuplicatedCodeBlocksCount(string projectKey) returns (int|error);
+    public function getDuplicatedFilesCount(string projectKey) returns (int|error);
+    public function getDuplicatedLinesCount (string projectKey) returns (int|error);
+    public function getBlockerIssuesCount (string projectKey) returns (int|error);
+    public function getCriticalIssuesCount (string projectKey) returns (int|error);
+    public function getMajorIssuesCount (string projectKey) returns (int|error);
+    public function getMinorIssuesCount (string projectKey) returns (int|error);
+    public function getOpenIssuesCount (string projectKey) returns (int|error);
+    public function getConfirmedIssuesCount (string projectKey) returns (int|error);
+    public function getReopenedIssuesCount (string projectKey) returns (int|error);
+    public function getLinesOfCode (string projectKey) returns (int|error);
+    public function getLineCoverage (string projectKey) returns (string)|error;
+    public function getComplexity (string projectKey) returns (int|error);
+    public function getCoveredLinesCount(string projectKey) returns (int|error);
+    public function getBranchCoverage (string projectKey) returns (string|error);
+    public function getCodeSmellsCount (string projectKey) returns (int|error);
+    public function getSQALERating (string projectKey) returns (string|error);
+    public function getTechnicalDebt (string projectKey) returns (string|error);
+    public function getTechnicalDebtRatio (string projectKey) returns (string|error);
+    public function getVulnerabilitiesCount(string projectKey) returns (int|error);
+    public function getSecurityRating(string projectKey) returns (string|error);
+    public function getReliabilityRating(string projectKey) returns (string|error);
+    public function getBugsCount(string projectKey) returns (int|error);
+    public function getIssues (string projectKey) returns (Issue[])|error;
+    public function getMetricValues(string projectKey, string[] metricKeys) returns (map|error);
     function constructAuthenticatedRequest() returns http:Request|error;
     function getMeasure (string projectKey, string metricName) returns string|error;
 };
@@ -81,7 +83,7 @@ public type Project {
 };
 
 @Description {value:"Struct to get the details of an issue in a project."}
-type Issue {
+public type Issue {
     string key;
     string severity;
     string status;
@@ -97,13 +99,13 @@ type Issue {
 };
 
 @Description {value:"Struct to get the start line and the end line of an issue."}
-type Position {
+public type Position {
     string startLine;
     string endLine;
 };
 
 @Description {value:"Struct to get the details of a comment on an issue."}
-type Comment {
+public type Comment {
     string text;
     string key;
     string commenter;

@@ -18,7 +18,6 @@
 
 import ballerina/http;
 import ballerina/util;
-import ballerina/io;
 
 @Description {value:"Add authentication headers to the HTTP request."}
 @Param {value:"request: http OutRequest."}
@@ -74,20 +73,6 @@ function getJsonArrayByKey(http:Response response, string key) returns (json[]|e
     }
 }
 
-@Description {value:"Return the project from a json array of projects."}
-@Param {value:"projectName:Name of the project."}
-@Param {value:"projectList:Project List."}
-@Return {value:"project:Details of the project specified by name."}
-function getProjectFromList(string projectName, json[] projectList) returns Project {
-    foreach projectData in projectList {
-        Project project = convertJsonToProject(projectData);
-        if (projectName == project.name) {
-            return project;
-        }
-    }
-    return {};
-}
-
 @Description {value:"Check whether the response from sonarqube server has an error field."}
 @Param {value:"response: http Response."}
 @Return {value:"Error details."}
@@ -126,7 +111,10 @@ function SonarQubeConnector::getMeasure(string projectKey, string metricName) re
             }
             return endpointErrors;
         }
-        http:HttpConnectorError err => return err;
+        http:HttpConnectorError err => {
+            error connectionError = {message:err.message};
+            return connectionError;
+        }
     }
 }
 
