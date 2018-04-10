@@ -11,7 +11,7 @@ Using Ballerina SonarQube connector you can easily get important code quality me
 ## Compatibility
 | Language Version        | Connector Version          | SonarQube server Versions  |
 | ------------- |:-------------:| -----:|
-| ballerina-tools-0.970.0-alpha0    | 0.8.0 | 6.7.2 |
+| ballerina-tools-0.970.0-alpha0    | 0.8.1 | 6.7.2 |
 
 The following sections provide you with information on how to use the Ballerina SonarQube connector.
 
