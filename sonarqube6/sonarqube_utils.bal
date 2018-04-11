@@ -106,6 +106,10 @@ function SonarQubeConnector::getMeasure(string projectKey, string metricName) re
             if (endpointErrors.message == ""){
                 json component = check getJsonValueByKey(response, COMPONENT);
                 json[] metricArray = check < json[]>component[MEASURES];
+                if (lengthof metricArray == 0) {
+                    error connectionError = {message: "Metric array is empty"};
+                    return connectionError;
+                }
                 json metricValue = metricArray[0][VALUE];
                 return metricValue.toString() but { () => "" };
             }
