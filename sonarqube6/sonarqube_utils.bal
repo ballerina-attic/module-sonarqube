@@ -23,7 +23,7 @@ import ballerina/util;
 @Param {value:"request: http OutRequest."}
 public function SonarQubeConnector::constructAuthenticatedRequest() returns (http:Request|error) {
     http:Request request;
-    var encodingData = util:base64EncodeString(token + ":");
+    var encodingData = util:base64EncodeString(self.token + ":");
     match encodingData{
         string encodedString => {
             request.addHeader("Authorization", "Basic " + encodedString);
@@ -93,9 +93,9 @@ function checkResponse(http:Response response) returns error {
 @Param {value:"response: http Response."}
 @Return {value:"Value of the metric field in json."}
 function SonarQubeConnector::getMeasure(string projectKey, string metricName) returns string|error {
-    endpoint http:Client httpEndpoint = client;
+    endpoint http:Client httpEndpoint = self.client;
     string value = "";
-    http:Request request = check constructAuthenticatedRequest();
+    http:Request request = check self.constructAuthenticatedRequest();
     string requestPath = API_MEASURES + projectKey + "&" + METRIC_KEYS + "=" + metricName;
     var endpointResponse = httpEndpoint -> get(requestPath, request);
 
