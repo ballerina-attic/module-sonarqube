@@ -22,7 +22,7 @@ import ballerina/http;
 public type SonarQubeConfiguration {
     string uri;
     string token;
-    http:ClientEndpointConfiguration clientConfig;
+    http:ClientEndpointConfig clientConfig;
 };
 
 @Description {value:"Sonarqube client struct."}

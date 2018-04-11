@@ -25,11 +25,11 @@ import ballerina/math;
 @Return {value:"project:Project struct with project details."}
 @Return {value:"err: Returns error if an exception raised in getting project details."}
 public function SonarQubeConnector::getProject(string projectName) returns Project|error {
-    endpoint http:Client httpEndpoint = client;
+    endpoint http:Client httpEndpoint = self.client;
 
     // get the first page of the project details
     string requestPath = API_RESOURCES + PROJECTS_PER_PAGE;
-    http:Request request = check constructAuthenticatedRequest();
+    http:Request request = check self.constructAuthenticatedRequest();
     var endpointResponse = httpEndpoint -> get(requestPath, request);
 
     // match endpointResponse
@@ -56,7 +56,7 @@ public function SonarQubeConnector::getProject(string projectName) returns Proje
 
                 // iterate through pages up-to total pages
                 while (count < totalPages - 1) {
-                    request = check constructAuthenticatedRequest();
+                    request = check self.constructAuthenticatedRequest();
                     requestPath = API_RESOURCES + PROJECTS_PER_PAGE + "&" + PAGE_NUMBER + "=" + (count + 2);
                     endpointResponse = httpEndpoint -> get(requestPath, request);
                     match endpointResponse{
@@ -96,11 +96,11 @@ public function SonarQubeConnector::getProject(string projectName) returns Proje
 @Return {value:"projects:Returns array of Projects."}
 @Return {value:"err: Returns error if an exception raised in getting project details."}
 public function SonarQubeConnector::getAllProjects() returns (Project[]|error) {
-    endpoint http:Client httpEndpoint = client;
+    endpoint http:Client httpEndpoint = self.client;
 
     // get the first page of the project details
     string requestPath = API_RESOURCES + PROJECTS_PER_PAGE;
-    http:Request request = check constructAuthenticatedRequest();
+    http:Request request = check self.constructAuthenticatedRequest();
     var endpointResponse = httpEndpoint -> get(requestPath, request);
 
     // match endpointResponse
@@ -128,7 +128,7 @@ public function SonarQubeConnector::getAllProjects() returns (Project[]|error) {
 
                 // iterate through pages up-to total pages
                 while (count < totalPages - 1) {
-                    request = check constructAuthenticatedRequest();
+                    request = check self.constructAuthenticatedRequest();
                     requestPath = API_RESOURCES + PROJECTS_PER_PAGE + "&" + PAGE_NUMBER + "=" + (count + 2);
                     endpointResponse = httpEndpoint -> get(requestPath, request);
                     match endpointResponse{
@@ -167,12 +167,12 @@ public function SonarQubeConnector::getAllProjects() returns (Project[]|error) {
 @Return {value:"Returns a mapping  of metric name "}
 @Return {value:"err: Returns error if an exception raised in getting project complexity."}
 public function SonarQubeConnector::getMetricValues(string projectKey, string[] metricKeys) returns (map|error) {
-    endpoint http:Client httpEndpoint = client;
+    endpoint http:Client httpEndpoint = self.client;
     string keyList = "";
     foreach key in metricKeys {
         keyList = keyList + key + ",";
     }
-    http:Request request = check constructAuthenticatedRequest();
+    http:Request request = check self.constructAuthenticatedRequest();
     string requestPath = API_MEASURES + projectKey + "&" + METRIC_KEYS + "=" + keyList;
     var endpointResponse = httpEndpoint -> get(requestPath, request);
 
@@ -212,7 +212,7 @@ public function SonarQubeConnector::getMetricValues(string projectKey, string[] 
  the code."}
 @Return {value:"err: Returns error if an exception raised in getting project complexity."}
 public function SonarQubeConnector::getComplexity(string projectKey) returns (int|error) {
-    string value = check getMeasure(projectKey, COMPLEXITY);
+    string value = check self.getMeasure(projectKey, COMPLEXITY);
     return <int>value;
 }
 
@@ -221,7 +221,7 @@ public function SonarQubeConnector::getComplexity(string projectKey) returns (in
 @Return {value:"duplicatedCodeBlocks:returns number of duplicated code blocks in a project."}
 @Return {value:"err: returns error if an exception raised in getting duplicated code blocks count."}
 public function SonarQubeConnector::getDuplicatedCodeBlocksCount(string projectKey) returns (int|error) {
-    string value = check getMeasure(projectKey, DUPLICATED_BLOCKS_COUNT);
+    string value = check self.getMeasure(projectKey, DUPLICATED_BLOCKS_COUNT);
     return <int>value;
 }
 
@@ -230,7 +230,7 @@ public function SonarQubeConnector::getDuplicatedCodeBlocksCount(string projectK
 @Return {value:"duplicatedFiles:returns number of duplicated files in a project."}
 @Return {value:"err: returns error if an exception raised in getting duplicated files count."}
 public function SonarQubeConnector::getDuplicatedFilesCount(string projectKey) returns (int|error) {
-    string value = check getMeasure(projectKey, DUPLICATED_FILES_COUNT);
+    string value = check self.getMeasure(projectKey, DUPLICATED_FILES_COUNT);
     return <int>value;
 }
 
@@ -239,7 +239,7 @@ public function SonarQubeConnector::getDuplicatedFilesCount(string projectKey) r
 @Return {value:"duplicatedFiles:returns number of duplicated lines in a project."}
 @Return {value:"err: returns error if an exception raised in getting duplicated lines count."}
 public function SonarQubeConnector::getDuplicatedLinesCount(string projectKey) returns (int|error) {
-    string value = check getMeasure(projectKey, DUPLICATED_LINES_COUNT);
+    string value = check self.getMeasure(projectKey, DUPLICATED_LINES_COUNT);
     return <int>value;
 }
 
@@ -250,7 +250,7 @@ fixed."}
 @Return {value:"blockerIssue:returns number of blocker issues in a project."}
 @Return {value:"err: returns error if an exception raised in getting blocker issues count."}
 public function SonarQubeConnector::getBlockerIssuesCount(string projectKey) returns (int|error) {
-    string value = check getMeasure(projectKey, BLOCKER_ISSUES_COUNT);
+    string value = check self.getMeasure(projectKey, BLOCKER_ISSUES_COUNT);
     return <int>value;
 }
 
@@ -261,7 +261,7 @@ The code MUST be immediately reviewed. "}
 @Return {value:"criticalIssue:returns number of critical issues in a project."}
 @Return {value:"err: returns error if an exception raised in getting critical issues count."}
 public function SonarQubeConnector::getCriticalIssuesCount(string projectKey) returns (int|error) {
-    string value = check getMeasure(projectKey, CRITICAL_ISSUES_COUNT);
+    string value = check self.getMeasure(projectKey, CRITICAL_ISSUES_COUNT);
     return <int>value;
 }
 
@@ -271,7 +271,7 @@ public function SonarQubeConnector::getCriticalIssuesCount(string projectKey) re
 @Return {value:"minorIssue:returns number of minor issues in a project."}
 @Return {value:"err: returns error if an exception raised in getting major issues count."}
 public function SonarQubeConnector::getMajorIssuesCount(string projectKey) returns (int|error) {
-    string value = check getMeasure(projectKey, MAJOR_ISSUES_COUNT);
+    string value = check self.getMeasure(projectKey, MAJOR_ISSUES_COUNT);
     return <int>value;
 }
 
@@ -281,7 +281,7 @@ productivity: lines should not be too long, switch statements should have at lea
 @Return {value:"majorIssue:returns number of major issues in a project."}
 @Return {value:"err: returns error if an exception raised in getting minor issues count."}
 public function SonarQubeConnector::getMinorIssuesCount(string projectKey) returns (int|error) {
-    string value = check getMeasure(projectKey, MINOR_ISSUES_COUNT);
+    string value = check self.getMeasure(projectKey, MINOR_ISSUES_COUNT);
     return <int>value;
 }
 
@@ -290,7 +290,7 @@ public function SonarQubeConnector::getMinorIssuesCount(string projectKey) retur
 @Return {value:"issuesCount:returns number of open issues in a project."}
 @Return {value:"err: returns error if an exception raised in getting open issues count."}
 public function SonarQubeConnector::getOpenIssuesCount(string projectKey) returns (int|error) {
-    string value = check getMeasure(projectKey, OPEN_ISSUES_COUNT);
+    string value = check self.getMeasure(projectKey, OPEN_ISSUES_COUNT);
     return <int>value;
 }
 
@@ -299,7 +299,7 @@ public function SonarQubeConnector::getOpenIssuesCount(string projectKey) return
 @Return {value:"confirmedIssues:returns number of confirmed issues in a project"}
 @Return {value:"err: returns error if an exception raised in getting confirmed issue count."}
 public function SonarQubeConnector::getConfirmedIssuesCount(string projectKey) returns (int|error) {
-    string value = check getMeasure(projectKey, CONFIRMED_ISSUES_COUNT);
+    string value = check self.getMeasure(projectKey, CONFIRMED_ISSUES_COUNT);
     return <int>value;
 }
 
@@ -308,7 +308,7 @@ public function SonarQubeConnector::getConfirmedIssuesCount(string projectKey) r
 @Return {value:"reopenedIssues:returns number of reopened issues in a project."}
 @Return {value:"err: returns error if an exception raised in getting re-opened issue count."}
 public function SonarQubeConnector::getReopenedIssuesCount(string projectKey) returns (int|error) {
-    string value = check getMeasure(projectKey, REOPENED_ISSUES_COUNT);
+    string value = check self.getMeasure(projectKey, REOPENED_ISSUES_COUNT);
     return <int>value;
 }
 
@@ -317,7 +317,7 @@ public function SonarQubeConnector::getReopenedIssuesCount(string projectKey) re
 @Return {value:"loc: returns project LOC."}
 @Return {value:"err: returns error if an exception raised in getting project LOC."}
 public function SonarQubeConnector::getLinesOfCode(string projectKey) returns (int|error) {
-    string value = check getMeasure(projectKey, LINES_OF_CODE);
+    string value = check self.getMeasure(projectKey, LINES_OF_CODE);
     return <int>value;
 }
 
@@ -326,7 +326,7 @@ public function SonarQubeConnector::getLinesOfCode(string projectKey) returns (i
 @Return {value:"lineCoverage:returns line coverage of a project."}
 @Return {value:"err: returns error if an exception raised in getting line coverage."}
 public function SonarQubeConnector::getLineCoverage(string projectKey) returns (string)|error {
-    string value = check getMeasure(projectKey, LINE_COVERAGE);
+    string value = check self.getMeasure(projectKey, LINE_COVERAGE);
     return value + "%";
 }
 
@@ -335,8 +335,8 @@ public function SonarQubeConnector::getLineCoverage(string projectKey) returns (
 @Return {value:"coveredLinesCount:returns number of covered lines."}
 @Return {value:"err: returns error if an exception raised in getting covered lines count."}
 public function SonarQubeConnector::getCoveredLinesCount(string projectKey) returns (int|error) {
-    int linesToCover = check <int>check getMeasure(projectKey, LINES_TO_COVER);
-    int uncoveredLines = check <int>check getMeasure(projectKey, UNCOVERED_LINES);
+    int linesToCover = check <int>check self.getMeasure(projectKey, LINES_TO_COVER);
+    int uncoveredLines = check <int>check self.getMeasure(projectKey, UNCOVERED_LINES);
     return linesToCover - uncoveredLines;
 }
 
@@ -345,7 +345,7 @@ public function SonarQubeConnector::getCoveredLinesCount(string projectKey) retu
 @Return {value:"branchCoverage:returns branch Coverage of a project."}
 @Return {value:"err: returns error if an exception raised in getting branch coverage."}
 public function SonarQubeConnector::getBranchCoverage(string projectKey) returns (string|error) {
-    string value = check getMeasure(projectKey, BRANCH_COVERAGE);
+    string value = check self.getMeasure(projectKey, BRANCH_COVERAGE);
     return value + "%";
 }
 
@@ -355,7 +355,7 @@ public function SonarQubeConnector::getBranchCoverage(string projectKey) returns
 @Return {value:"codeSmells: returns number of code smells in a project."}
 @Return {value:"err: returns error if an exception raised in getting code smells count."}
 public function SonarQubeConnector::getCodeSmellsCount(string projectKey) returns (int|error) {
-    string value = check getMeasure(projectKey, CODE_SMELLS);
+    string value = check self.getMeasure(projectKey, CODE_SMELLS);
     return <int>value;
 }
 
@@ -365,7 +365,7 @@ public function SonarQubeConnector::getCodeSmellsCount(string projectKey) return
 @Return {value:"sqaleRating:returns sqale rating of a project."}
 @Return {value:"err: returns error if an exception raised in getting SQALE rating."}
 public function SonarQubeConnector::getSQALERating(string projectKey) returns (string|error) {
-    float floatValue = check <float>check getMeasure(projectKey, SQALE_RATING);
+    float floatValue = check <float>check self.getMeasure(projectKey, SQALE_RATING);
     int value = math:round(floatValue);
     if (value <= 5) {
         return "A";
@@ -384,7 +384,7 @@ public function SonarQubeConnector::getSQALERating(string projectKey) returns (s
 @Return {value:"technicalDebt: returns technical debt of a project."}
 @Return {value:"err: returns error if an exception raised in getting technical debt."}
 public function SonarQubeConnector::getTechnicalDebt(string projectKey) returns (string|error) {
-    return getMeasure(projectKey, TECHNICAL_DEBT);
+    return self.getMeasure(projectKey, TECHNICAL_DEBT);
 }
 
 @Description {value:"Get technical debt ratio of a project."}
@@ -392,7 +392,7 @@ public function SonarQubeConnector::getTechnicalDebt(string projectKey) returns 
 @Return {value:"technicalDebtRatio: returns technical debt ratio of a project."}
 @Return {value:"err: returns error if an exception raised in getting technical debt ratio."}
 public function SonarQubeConnector::getTechnicalDebtRatio(string projectKey) returns (string|error) {
-    return getMeasure(projectKey, TECHNICAL_DEBT_RATIO);
+    return self.getMeasure(projectKey, TECHNICAL_DEBT_RATIO);
 }
 
 @Description {value:"Get number of vulnerablities of a project."}
@@ -400,7 +400,7 @@ public function SonarQubeConnector::getTechnicalDebtRatio(string projectKey) ret
 @Return {value:"vulnerabilities: returns number of vulnerabilities of  project."}
 @Return {value:"err: returns error if an exception raised in getting vulnerabilities count."}
 public function SonarQubeConnector::getVulnerabilitiesCount(string projectKey) returns (int|error) {
-    string value = check getMeasure(projectKey, VULNERABILITIES);
+    string value = check self.getMeasure(projectKey, VULNERABILITIES);
     return <int>value;
 }
 
@@ -409,7 +409,7 @@ public function SonarQubeConnector::getVulnerabilitiesCount(string projectKey) r
 @Return {value:"securityRating:returns 	security rating of a project."}
 @Return {value:"err: returns error if an exception raised in getting security rating."}
 public function SonarQubeConnector::getSecurityRating(string projectKey) returns (string|error) {
-    string value = check getMeasure(projectKey, SECURITY_RATING);
+    string value = check self.getMeasure(projectKey, SECURITY_RATING);
     if (value == NO_VULNERABILITY) {
         return "A";
     } else if (value == MINOR_VULNERABILITY) {
@@ -427,7 +427,7 @@ public function SonarQubeConnector::getSecurityRating(string projectKey) returns
 @Return {value:"bugs: returns number of bugs of  project."}
 @Return {value:"err: returns error if an exception raised in getting bugs count."}
 public function SonarQubeConnector::getBugsCount(string projectKey) returns (int|error) {
-    string value = check getMeasure(projectKey, BUGS_COUNT);
+    string value = check self.getMeasure(projectKey, BUGS_COUNT);
     return <int>value;
 }
 
@@ -436,7 +436,7 @@ public function SonarQubeConnector::getBugsCount(string projectKey) returns (int
 @Return {value:"securityRating:returns reliability rating of a project."}
 @Return {value:"err: returns error if an exception raised in getting reliability rating."}
 public function SonarQubeConnector::getReliabilityRating(string projectKey) returns (string|error) {
-    string value = check getMeasure(projectKey, RELIABILITY_RATING);
+    string value = check self.getMeasure(projectKey, RELIABILITY_RATING);
     if (value == NO_BUGS) {
         return "A";
     } else if (value == MINOR_BUGS) {
@@ -454,8 +454,8 @@ public function SonarQubeConnector::getReliabilityRating(string projectKey) retu
 @Return {value:"issues: returns array of project issues."}
 @Return {value:"err: returns error if an exception raised in getting project issues."}
 public function SonarQubeConnector::getIssues(string projectKey) returns (Issue[]|error) {
-    endpoint http:Client httpEndpoint = client;
-    http:Request request = check constructAuthenticatedRequest();
+    endpoint http:Client httpEndpoint = self.client;
+    http:Request request = check self.constructAuthenticatedRequest();
     string requestPath = API_ISSUES_SEARCH + "?" + PROJECT_KEYS + "=" + projectKey + "&" + EXTRA_CONTENT;
     var endpointResponse = httpEndpoint -> get(requestPath, request);
 
