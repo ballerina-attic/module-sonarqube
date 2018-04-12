@@ -20,26 +20,26 @@ import ballerina/config;
 
 @Description {value:"Get SonarQube server URI."}
 @Return {value:"returns SonarQube server URI."}
-public function getURI() returns string {
-    return config:getAsString(SONARQUBE_URI) but { () => "" };
+function getURI() returns string {
+    return config:getAsString(SONARQUBE_URI);
 }
 
 @Description {value:"Get SonarQube server token."}
 @Return {value:"returns SonarQube server token."}
-public function getToken() returns string {
-    return config:getAsString(SONARQUBE_TOKEN) but { () => "" };
+function getToken() returns string {
+    return config:getAsString(SONARQUBE_TOKEN);
 }
 
 @Description {value:"Get project key."}
 @Return {value:"returns key of a project."}
-public function getProjectKey() returns string {
-    return config:getAsString(PROJECT_KEY) but { () => "" };
+function getProjectKey() returns string {
+    return config:getAsString(PROJECT_KEY);
 }
 
 @Description {value:"Get project name."}
 @Return {value:"returns name of a project."}
-public function getProjectName() returns string {
-    return config:getAsString(PROJECT_NAME) but { () => "" };
+function getProjectName() returns string {
+    return config:getAsString(PROJECT_NAME);
 }
 
 //-------------------Constants-------------------//

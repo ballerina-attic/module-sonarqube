@@ -19,9 +19,7 @@
 import ballerina/http;
 import ballerina/util;
 
-@Description {value:"Add authentication headers to the HTTP request."}
-@Param {value:"request: http OutRequest."}
-public function SonarQubeConnector::constructAuthenticatedRequest() returns (http:Request|error) {
+function SonarQubeConnector::constructAuthenticatedRequest() returns (http:Request|error) {
     http:Request request;
     var encodingData = util:base64EncodeString(self.token + ":");
     match encodingData{
@@ -36,10 +34,6 @@ public function SonarQubeConnector::constructAuthenticatedRequest() returns (htt
     }
 }
 
-@Description {value:"Get content from a json specified by key."}
-@Param {value:"response: http Response."}
-@Param {value:"key: String key."}
-@Return {value:"jsonPayload: Content (of type json) specified by the key."}
 function getJsonValueByKey(http:Response response, string key) returns (json|error) {
     match response.getJsonPayload() {
         json jsonPayload => {
@@ -52,10 +46,6 @@ function getJsonValueByKey(http:Response response, string key) returns (json|err
     }
 }
 
-@Description {value:"Get content from a json specified by key."}
-@Param {value:"response: http Response."}
-@Param {value:"key: String key."}
-@Return {value:"jsonPayload: Content (of type json) specified by the key."}
 function getJsonArrayByKey(http:Response response, string key) returns (json[]|error) {
     match response.getJsonPayload() {
         json jsonPayload => {
@@ -73,9 +63,6 @@ function getJsonArrayByKey(http:Response response, string key) returns (json[]|e
     }
 }
 
-@Description {value:"Check whether the response from sonarqube server has an error field."}
-@Param {value:"response: http Response."}
-@Return {value:"Error details."}
 function checkResponse(http:Response response) returns error {
     json[] responseJson = check getJsonArrayByKey(response, ERRORS);
     error err = {message:""};
@@ -89,9 +76,6 @@ function checkResponse(http:Response response) returns error {
     return err;
 }
 
-@Description {value:"Returns value of the metric in measures field of a json."}
-@Param {value:"response: http Response."}
-@Return {value:"Value of the metric field in json."}
 function SonarQubeConnector::getMeasure(string projectKey, string metricName) returns string|error {
     endpoint http:Client httpEndpoint = self.client;
     string value = "";
@@ -107,7 +91,7 @@ function SonarQubeConnector::getMeasure(string projectKey, string metricName) re
                 json component = check getJsonValueByKey(response, COMPONENT);
                 json[] metricArray = check < json[]>component[MEASURES];
                 if (lengthof metricArray == 0) {
-                    error connectionError = {message: "Metric array is empty"};
+                    error connectionError = {message:"Metric array is empty"};
                     return connectionError;
                 }
                 json metricValue = metricArray[0][VALUE];
@@ -122,9 +106,6 @@ function SonarQubeConnector::getMeasure(string projectKey, string metricName) re
     }
 }
 
-@Description {value:"Convert a given json to Comment."}
-@Param {value:"projectDetails:JSON containing comment details."}
-@Return {value:"project:Comment struct."}
 function convertJsonToComment(json commentDetails) returns Comment {
     Comment comment = {};
     comment.text = commentDetails[HTML_TEXT].toString() but { () => "" };
@@ -134,9 +115,6 @@ function convertJsonToComment(json commentDetails) returns Comment {
     return comment;
 }
 
-@Description {value:"Convert a given json to Project."}
-@Param {value:"projectDetails:JSON containing project details."}
-@Return {value:"project:Project struct.."}
 function convertJsonToProject(json projectDetails) returns Project {
     Project project = {};
     project.name = projectDetails[NAME].toString() but { () => "" };
@@ -145,9 +123,6 @@ function convertJsonToProject(json projectDetails) returns Project {
     return project;
 }
 
-@Description {value:"Convert a given json to Issue."}
-@Param {value:"issueDetails:Json containing issue details."}
-@Return {value:"issue:Issue struct."}
 function convertJsonToIssue(json issueDetails) returns Issue {
     Issue issue = {};
     issue.key = issueDetails[KEY].toString() but { () => "" };
