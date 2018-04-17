@@ -28,15 +28,23 @@ The following sections provide you with information on how to use the Ballerina 
 1.Create a SonarQube endpoint.
 
 ```ballerina
-   endpoint sonarqube:SonarQubeClient sonarqube {
-        token:"sonarqube_token",
-        uri:"sonarqube_uri",
+import wso2/sonarqube6;
+
+   endpoint sonarqube6:SonarQubeClient sonarqube {
+        clientConfig: {
+                targets:[{url:getURI()}],
+                auth:{
+                    scheme:"basic",
+                    username:getToken(),
+                    password:""
+                }
+            }
     };
 ```
 2.Get a project from SonarQube server.
 
 ```ballerina
-    Project project = {};
+    sonarqube6:Project project = {};
     var projectDetails = sonarqube -> getProject("project_name");
     match projectDetails {
        sonarqube:Project projectDetails => project = projectDetails;

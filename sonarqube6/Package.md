@@ -30,8 +30,14 @@ The following sections provide you with information on how to use the Ballerina 
 
 ```ballerina
    endpoint sonarqube:SonarQubeEndpoint sonarqubeEP {
-        token:"sonarqube_token",
-        uri:"sonarqube_uri",
+        clientConfig: {
+                targets:[{url:getURI()}],
+                auth:{
+                    scheme:"basic",
+                    username:getToken(),
+                    password:""
+                }
+            }
     };
 ```
 2.Get a project from SonarQube server.
