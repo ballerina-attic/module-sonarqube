@@ -19,21 +19,6 @@
 import ballerina/http;
 import ballerina/util;
 
-function SonarQubeConnector::constructAuthenticatedRequest() returns (http:Request|error) {
-    http:Request request;
-    var encodingData = util:base64EncodeString(self.token + ":");
-    match encodingData{
-        string encodedString => {
-            request.addHeader("Authorization", "Basic " + encodedString);
-            return request;
-        }
-        util:Base64EncodeError => {
-            error err = {message:"Encode error."};
-            return err;
-        }
-    }
-}
-
 function getJsonValueByKey(http:Response response, string key) returns (json|error) {
     match response.getJsonPayload() {
         json jsonPayload => {
@@ -79,7 +64,7 @@ function checkResponse(http:Response response) returns error {
 function SonarQubeConnector::getMeasure(string projectKey, string metricName) returns string|error {
     endpoint http:Client httpEndpoint = self.client;
     string value = "";
-    http:Request request = check self.constructAuthenticatedRequest();
+    http:Request request = new;
     string requestPath = API_MEASURES + projectKey + "&" + METRIC_KEYS + "=" + metricName;
     var endpointResponse = httpEndpoint -> get(requestPath, request);
 

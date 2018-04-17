@@ -22,7 +22,6 @@ import ballerina/math;
 
 public type SonarQubeConnector object {
     private {
-        string token;
         http:Client client;
     }
 
@@ -53,7 +52,6 @@ public type SonarQubeConnector object {
     public function getBugsCount(string projectKey) returns (int|error);
     public function getIssues(string projectKey) returns (Issue[])|error;
     public function getMetricValues(string projectKey, string[] metricKeys) returns (map|error);
-    function constructAuthenticatedRequest() returns http:Request|error;
     function getMeasure(string projectKey, string metricName) returns string|error;
 };
 
@@ -66,7 +64,7 @@ public function SonarQubeConnector::getProject(string projectName) returns Proje
 
     // get the first page of the project details
     string requestPath = API_RESOURCES + PROJECTS_PER_PAGE;
-    http:Request request = check self.constructAuthenticatedRequest();
+    http:Request request = new;
     var endpointResponse = httpEndpoint -> get(requestPath, request);
 
     // match endpointResponse
@@ -93,7 +91,7 @@ public function SonarQubeConnector::getProject(string projectName) returns Proje
 
                 // iterate through pages up-to total pages
                 while (count < totalPages - 1) {
-                    request = check self.constructAuthenticatedRequest();
+                    request = new;
                     requestPath = API_RESOURCES + PROJECTS_PER_PAGE + "&" + PAGE_NUMBER + "=" + (count + 2);
                     endpointResponse = httpEndpoint -> get(requestPath, request);
                     match endpointResponse{
@@ -137,7 +135,7 @@ public function SonarQubeConnector::getAllProjects() returns (Project[]|error) {
 
     // get the first page of the project details
     string requestPath = API_RESOURCES + PROJECTS_PER_PAGE;
-    http:Request request = check self.constructAuthenticatedRequest();
+    http:Request request = new;
     var endpointResponse = httpEndpoint -> get(requestPath, request);
 
     // match endpointResponse
@@ -165,7 +163,7 @@ public function SonarQubeConnector::getAllProjects() returns (Project[]|error) {
 
                 // iterate through pages up-to total pages
                 while (count < totalPages - 1) {
-                    request = check self.constructAuthenticatedRequest();
+                    request = new;
                     requestPath = API_RESOURCES + PROJECTS_PER_PAGE + "&" + PAGE_NUMBER + "=" + (count + 2);
                     endpointResponse = httpEndpoint -> get(requestPath, request);
                     match endpointResponse{
@@ -212,7 +210,8 @@ public function SonarQubeConnector::getMetricValues(string projectKey, string[] 
     foreach key in metricKeys {
         keyList = keyList + key + ",";
     }
-    http:Request request = check self.constructAuthenticatedRequest();
+
+    http:Request request = new;
     string requestPath = API_MEASURES + projectKey + "&" + METRIC_KEYS + "=" + keyList;
     var endpointResponse = httpEndpoint -> get(requestPath, request);
 
@@ -518,7 +517,7 @@ documentation{Get details of project issues.
 }
 public function SonarQubeConnector::getIssues(string projectKey) returns (Issue[]|error) {
     endpoint http:Client httpEndpoint = self.client;
-    http:Request request = check self.constructAuthenticatedRequest();
+    http:Request request = new;
     string requestPath = API_ISSUES_SEARCH + "?" + PROJECT_KEYS + "=" + projectKey + "&" + EXTRA_CONTENT;
     var endpointResponse = httpEndpoint -> get(requestPath, request);
 

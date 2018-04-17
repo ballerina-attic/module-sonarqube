@@ -19,13 +19,9 @@
 import ballerina/http;
 
 documentation{ Represents the SonarQube Client Connector Endpoint configuration.
-    F{{uri}} SonarQube url
-    F{{token}} SonaqQube token
     F{{clientConfig}} Http client endpoint configuration
 }
 public type SonarQubeConfiguration {
-    string uri;
-    string token;
     http:ClientEndpointConfig clientConfig;
 };
 
@@ -42,9 +38,7 @@ public type SonarQubeClient object {
         P{{sonarqubeConfig}} SonarQube connector endpoint configuration
     }
     public function init(SonarQubeConfiguration sonarqubeConfig) {
-        http:HttpClient httpClient = http:createHttpClient(sonarqubeConfig.uri, sonarqubeConfig.clientConfig);
-        self.sonarqubeConnector.client.httpClient = httpClient;
-        self.sonarqubeConnector.token = sonarqubeConfig.token;
+        self.sonarqubeConnector.client.init(sonarqubeConfig.clientConfig);
     }
 
     documentation{Register SonarQube connector endpoint.
