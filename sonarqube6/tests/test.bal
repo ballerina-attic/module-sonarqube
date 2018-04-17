@@ -21,7 +21,7 @@ import ballerina/test;
 
 endpoint SonarQubeClient sonarqube {
     clientConfig: {
-        targets:[{url:"https://wso2.org/sonar"}],
+        targets:[{url:getURI()}],
         auth:{
             scheme:"basic",
             username:getToken(),
