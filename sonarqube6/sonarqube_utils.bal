@@ -42,7 +42,7 @@ function getJsonArrayByKey(http:Response response, string key) returns (json[]|e
             }
         }
         http:PayloadError payloadError => {
-            error err = {message:"Error occured when extracting payload from response"};
+            error err = {message:"Error occured while extracting the payload from response." + payloadError.message};
             return err;
         }
     }
@@ -74,13 +74,22 @@ function SonarQubeConnector::getMeasure(string projectKey, string metricName) re
             error endpointErrors = checkResponse(response);
             if (endpointErrors.message == ""){
                 json component = check getJsonValueByKey(response, COMPONENT);
-                json[] metricArray = check < json[]>component[MEASURES];
-                if (lengthof metricArray == 0) {
-                    error connectionError = {message:"Metric array is empty"};
-                    return connectionError;
+                match < json[]>component[MEASURES]{
+                    json[] metricArray => {
+                        if (lengthof metricArray == 0) {
+                            error connectionError = {message:"Metric array is empty"};
+                            return connectionError;
+                        }
+                        json metricValue = metricArray[0][VALUE];
+                        return metricValue.toString() but { () => "" };
+                    }
+                    error err => {
+                        string errorMessage = err.message;
+                        err = {message:"Cannot find the " + metricName.replace("_", " ") + " for " + projectKey + "."
+                            + errorMessage};
+                        return err;
+                    }
                 }
-                json metricValue = metricArray[0][VALUE];
-                return metricValue.toString() but { () => "" };
             }
             return endpointErrors;
         }

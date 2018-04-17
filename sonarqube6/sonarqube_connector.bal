@@ -223,17 +223,26 @@ public function SonarQubeConnector::getMetricValues(string projectKey, string[] 
             if (endpointErrors.message == ""){
                 map values;
                 json component = check getJsonValueByKey(response, COMPONENT);
-                json[] metrics = check < json[]>component[MEASURES];
-                foreach metric in metrics {
-                    string metricKey = metric[METRIC].toString() but { () => "" };
-                    if (metricKey != ""){
-                        string value = metric[VALUE].toString() but { () => "" };
-                        values[metricKey] = value;
-                    } else {
-                        values[metricKey] = "Not defined for the product.";
+                match < json[]>component[MEASURES]{
+                    json[] metrics => {
+                        foreach metric in metrics {
+                            string metricKey = metric[METRIC].toString() but { () => "" };
+                            if (metricKey != ""){
+                                string value = metric[VALUE].toString() but { () => "" };
+                                values[metricKey] = value;
+                            } else {
+                                values[metricKey] = "Not defined for the product.";
+                            }
+                        }
+                        return values;
+                    }
+                    error err => {
+                        string errorMessage = err.message;
+                        err = {message:"The " + keyList + " cannot be found for the " + projectKey + "." +
+                            errorMessage};
+                        return err;
                     }
                 }
-                return values;
             }
             return endpointErrors;
         }
