@@ -42,7 +42,7 @@ function getJsonArrayByKey(http:Response response, string key) returns (json[]|e
             }
         }
         http:PayloadError payloadError => {
-            error err = {message:"Error occured when extracting payload from response"};
+            error err = {message:"Error occured while extracting the payload from response." + payloadError.message};
             return err;
         }
     }
@@ -53,7 +53,7 @@ function checkResponse(http:Response response) returns error {
     error err = {message:""};
     if (responseJson != ()) {
         foreach item in responseJson {
-            string errorMessage = item.msg.toString() but { () => "" };
+            string errorMessage = item.msg.toString();
             err.message = err.message + errorMessage;
         }
         return err;
@@ -74,13 +74,22 @@ function SonarQubeConnector::getMeasure(string projectKey, string metricName) re
             error endpointErrors = checkResponse(response);
             if (endpointErrors.message == ""){
                 json component = check getJsonValueByKey(response, COMPONENT);
-                json[] metricArray = check < json[]>component[MEASURES];
-                if (lengthof metricArray == 0) {
-                    error connectionError = {message:"Metric array is empty"};
-                    return connectionError;
+                match < json[]>component[MEASURES]{
+                    json[] metricArray => {
+                        if (lengthof metricArray == 0) {
+                            error connectionError = {message:"Metric array is empty"};
+                            return connectionError;
+                        }
+                        json metricValue = metricArray[0][VALUE];
+                        return metricValue.toString();
+                    }
+                    error err => {
+                        string errorMessage = err.message;
+                        err = {message:"Cannot find the " + metricName.replace("_", " ") + " for " + projectKey + "."
+                            + errorMessage};
+                        return err;
+                    }
                 }
-                json metricValue = metricArray[0][VALUE];
-                return metricValue.toString() but { () => "" };
             }
             return endpointErrors;
         }
@@ -93,40 +102,40 @@ function SonarQubeConnector::getMeasure(string projectKey, string metricName) re
 
 function convertJsonToComment(json commentDetails) returns Comment {
     Comment comment = {};
-    comment.text = commentDetails[HTML_TEXT].toString() but { () => "" };
-    comment.key = commentDetails[KEY].toString() but { () => "" };
-    comment.commenter = commentDetails[LOGIN].toString() but { () => "" };
-    comment.createdDate = commentDetails[CREATED_DATE].toString() but { () => "" };
+    comment.text = commentDetails[HTML_TEXT].toString();
+    comment.key = commentDetails[KEY].toString();
+    comment.commenter = commentDetails[LOGIN].toString();
+    comment.createdDate = commentDetails[CREATED_DATE].toString();
     return comment;
 }
 
 function convertJsonToProject(json projectDetails) returns Project {
     Project project = {};
-    project.name = projectDetails[NAME].toString() but { () => "" };
-    project.key = projectDetails[KEY] but { () => "" };
-    project.id = projectDetails[ID] but { () => "" };
+    project.name = projectDetails[NAME].toString();
+    project.key = projectDetails[KEY].toString();
+    project.id = projectDetails[ID].toString();
     return project;
 }
 
 function convertJsonToIssue(json issueDetails) returns Issue {
     Issue issue = {};
-    issue.key = issueDetails[KEY].toString() but { () => "" };
-    issue.severity = issueDetails[SEVERITY].toString() but { () => "" };
-    issue.status = issueDetails[STATUS].toString() but { () => "" };
-    issue.issueType = issueDetails[TYPE].toString() but { () => "" };
-    issue.description = issueDetails[MESSAGE].toString() but { () => "" };
-    issue.author = issueDetails[AUTHOR].toString() but { () => "" };
-    issue.creationDate = issueDetails[CREATION_DATE].toString() but { () => "" };
-    issue.assignee = issueDetails[ASSIGNEE].toString() but { () => "" };
+    issue.key = issueDetails[KEY].toString();
+    issue.severity = issueDetails[SEVERITY].toString();
+    issue.status = issueDetails[STATUS].toString();
+    issue.issueType = issueDetails[TYPE].toString();
+    issue.description = issueDetails[MESSAGE].toString();
+    issue.author = issueDetails[AUTHOR].toString();
+    issue.creationDate = issueDetails[CREATION_DATE].toString();
+    issue.assignee = issueDetails[ASSIGNEE].toString();
     issue.position = {};
-    issue.position.startLine = issueDetails[ISSUE_RANGE][START_LINE].toString() but { () => "" };
-    issue.position.endLine = issueDetails[ISSUE_RANGE][END_LINE].toString() but { () => "" };
+    issue.position.startLine = issueDetails[ISSUE_RANGE][START_LINE].toString();
+    issue.position.endLine = issueDetails[ISSUE_RANGE][END_LINE].toString();
     json tags = issueDetails[TAGS];
     int count = 0;
     if (tags != ()) {
         string[] tagList = [];
         foreach tag in tags {
-            tagList[count] = tag.toString() but { () => "" };
+            tagList[count] = tag.toString();
             count += 1;
         }
         issue.tags = tagList;
@@ -136,7 +145,7 @@ function convertJsonToIssue(json issueDetails) returns Issue {
     if (transitions != ()) {
         string[] workflowTransitions = [];
         foreach transition in transitions {
-            workflowTransitions[count] = transition.toString() but { () => "" };
+            workflowTransitions[count] = transition.toString();
             count += 1;
         }
         issue.workflowTransitions = workflowTransitions;
