@@ -6,12 +6,12 @@
 
 Using Ballerina SonarQube connector you can easily get important code quality measurements of a project.Following diagram gives an overview of Ballerina SonarQube connector.
 
-![Ballerina -SonarQube Connector Overview](sonarqube-connector.png)
+![Ballerina -SonarQube Connector Overview](./docs/resources/sonarqube-connector.png)
 
 ## Compatibility
 | Language Version        | Connector Version          | SonarQube server Versions  |
 | ------------- |:-------------:| -----:|
-| ballerina-tools-0.970.0-alpha0    | 0.8.1 | 6.7.2 |
+| 0.970.0-beta1-SNAPSHOT    | 0.8.2                | 6.7.2         |
 
 The following sections provide you with information on how to use the Ballerina SonarQube connector.
 
@@ -28,15 +28,23 @@ The following sections provide you with information on how to use the Ballerina 
 1.Create a SonarQube endpoint.
 
 ```ballerina
-   endpoint sonarqube:SonarQubeClient sonarqube {
-        token:"sonarqube_token",
-        uri:"sonarqube_uri",
+import wso2/sonarqube6;
+
+   endpoint sonarqube6:SonarQubeClient sonarqube {
+        clientConfig: {
+                targets:[{url:getURI()}],
+                auth:{
+                    scheme:"basic",
+                    username:getToken(),
+                    password:""
+                }
+            }
     };
 ```
 2.Get a project from SonarQube server.
 
 ```ballerina
-    Project project = {};
+    sonarqube6:Project project = {};
     var projectDetails = sonarqube -> getProject("project_name");
     match projectDetails {
        sonarqube:Project projectDetails => project = projectDetails;
