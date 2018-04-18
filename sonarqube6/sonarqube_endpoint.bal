@@ -34,23 +34,13 @@ public type SonarQubeClient object {
         SonarQubeConfiguration sonarqubeConfig;
         SonarQubeConnector sonarqubeConnector = new();
     }
+
     documentation{ SonarQube connector endpoint initialization function.
         P{{sonarqubeConfig}} SonarQube connector endpoint configuration
     }
     public function init(SonarQubeConfiguration sonarqubeConfig) {
         self.sonarqubeConnector.client.init(sonarqubeConfig.clientConfig);
     }
-
-    documentation{Register SonarQube connector endpoint.
-        P{{serviceType}} Accepts types of data (int, float, string, boolean, etc)
-    }
-    public function register(typedesc serviceType) {}
-
-    documentation{Start SonarQube connector client endpoint.}
-    public function start() {}
-
-    documentation{Stop SonarQube connector client endpoint.}
-    public function stop() {}
 
     documentation{Returns the SonarQube connector client.
         R{{SonarQubeConnector}} The SonarQube connector client

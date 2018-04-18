@@ -226,9 +226,9 @@ public function SonarQubeConnector::getMetricValues(string projectKey, string[] 
                 match < json[]>component[MEASURES]{
                     json[] metrics => {
                         foreach metric in metrics {
-                            string metricKey = metric[METRIC].toString() but { () => "" };
+                            string metricKey = metric[METRIC].toString();
                             if (metricKey != ""){
-                                string value = metric[VALUE].toString() but { () => "" };
+                                string value = metric[VALUE].toString();
                                 values[metricKey] = value;
                             } else {
                                 values[metricKey] = "Not defined for the product.";
