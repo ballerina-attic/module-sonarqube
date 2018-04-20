@@ -28,8 +28,8 @@ SonarQube connector provides a Ballerina API to access the [SonarQube REST API](
 import ballerina/io;
 import wso2/sonarqube6;
 
-string token = "YOUR TOKEN";
-string sonarqubeURL = "YOUR SONARQUBE URL";
+string token = "your token";
+string sonarqubeURL = "your sonarqube url";
 
 function main(string... args) {
 
