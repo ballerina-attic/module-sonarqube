@@ -6,7 +6,7 @@ various actions.
 ## Compatibility
 | Language Version                           | Connector Version   | SonarQube API Version |
 | ------------------------------------------ | ------------------- | ------------------ |
-| ballerina-tools-0.970.0-alpha1-SNAPSHOT    | 0.8.1                | 6.7.2         |
+| 0.970.0-beta3     | 0.8.7               | 6.7.2         |
 
 ## Running tests
 
@@ -38,5 +38,5 @@ project_key = ""
 Run tests :
 ```
 ballerina init
-ballerina test sonarqube6
+ballerina test sonarqube6 --config ballerina.conf
 ```

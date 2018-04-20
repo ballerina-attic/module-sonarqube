@@ -26,10 +26,11 @@ public type SonarQubeConfiguration {
 };
 
 documentation{ Represents the SonarQube Client Connector Endpoint object.
+    E{{}}
     F{{sonarqubeConfig}} SonarQube client Connector endpoint configuration
     F{{sonarqubeConnector}} SonarQube client connector object
 }
-public type SonarQubeClient object {
+public type Client object {
     public {
         SonarQubeConfiguration sonarqubeConfig;
         SonarQubeConnector sonarqubeConnector = new();
@@ -39,13 +40,13 @@ public type SonarQubeClient object {
         P{{sonarqubeConfig}} SonarQube connector endpoint configuration
     }
     public function init(SonarQubeConfiguration sonarqubeConfig) {
-        self.sonarqubeConnector.client.init(sonarqubeConfig.clientConfig);
+        sonarqubeConnector.client.init(sonarqubeConfig.clientConfig);
     }
 
     documentation{Returns the SonarQube connector client.
         R{{SonarQubeConnector}} The SonarQube connector client
     }
-    public function getClient() returns SonarQubeConnector {
-        return self.sonarqubeConnector;
+    public function getCallerActions() returns SonarQubeConnector {
+        return sonarqubeConnector;
     }
 };
