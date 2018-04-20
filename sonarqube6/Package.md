@@ -10,13 +10,13 @@ SonarQube connector provides a Ballerina API to access the [SonarQube REST API](
 
 ## Getting started
 
-1.  Refer https://stage.ballerina.io/learn/getting-started/ to download and install Ballerina.
+1.  Refer [Getting Strated Guide](https://stage.ballerina.io/learn/getting-started/) to download and install Ballerina.
 2.  To use SonarQube endpoint, you need to provide the following:
 
        - SonarQube URL
        - SonarQube token
     
-       Refer https://docs.sonarqube.org/display/SONAR/User+Token to obtain the above credentials.
+       Refer [SonarQube API docuementation](https://docs.sonarqube.org/display/SONAR/User+Token) to obtain the above credentials.
 
 4. Create a new Ballerina project by executing the following command.
 
