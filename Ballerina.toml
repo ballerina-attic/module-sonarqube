@@ -1,0 +1,7 @@
+[project]
+org-name = "wso2"
+version = "0.8.7 "
+authors = ["WSO2"]
+repository = "https://github.com/hasithajayasundara/package-sonarqube"
+keywords = ["ballerina", "sonarqube","sonarqube6"]
+license = "Apache-2.0"
