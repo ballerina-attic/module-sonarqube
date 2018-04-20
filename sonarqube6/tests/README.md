@@ -4,9 +4,9 @@ Ballerina SonarQube connector allows you to access the [SonarQube REST API](http
 various actions.
 
 ## Compatibility
-| Language Version                           | Connector Version   | SonarQube API Version |
-| ------------------------------------------ | ------------------- | ------------------ |
-| 0.970.0-beta1-SNAPSHOT    | 0.8.2                | 6.7.2         |
+| Language Version                             | SonarQube API Version |
+| ------------------------------------------ | ------------------ |
+| 0.970.0-beta3     |  6.7.2         |
 
 ## Running tests
 
@@ -38,5 +38,5 @@ project_key = ""
 Run tests :
 ```
 ballerina init
-ballerina test sonarqube6
+ballerina test sonarqube6 --config ballerina.conf
 ```

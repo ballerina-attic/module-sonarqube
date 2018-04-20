@@ -1,64 +1,53 @@
-# Ballerina SonarQube Connector
+# SonarQube Connector
 
-*[SonarQube](https://www.sonarqube.org/) is an open source platform developed by SonarSource for continuous inspection of code quality to perform automatic reviews with static analysis of code to detect bugs, code smells and security vulnerabilities on 20+ programming languages including Java (including Android), C#, PHP, JavaScript, C/C++, COBOL, PL/SQL, PL/I, ABAP, VB.NET, VB6, Python, RPG, Flex, Objective-C, Swift, Web and XML.* (Source - https://en.wikipedia.org/wiki/SonarQube).
-
-### Why would you use a Ballerina connector for SonarQube
-
-Using Ballerina SonarQube connector you can easily get important code quality measurements of a project.Following diagram gives an overview of Ballerina SonarQube connector.
-
-![Ballerina -SonarQube Connector Overview](./docs/resources/sonarqube-connector.png)
+SonarQube connector provides a Ballerina API to access the [SonarQube REST API](https://docs.sonarqube.org/display/DEV/Web+API)
 
 ## Compatibility
-| Language Version        | Connector Version          | SonarQube server Versions  |
-| ------------- |:-------------:| -----:|
-| 0.970.0-beta1-SNAPSHOT    | 0.8.2                | 6.7.2         |
 
-The following sections provide you with information on how to use the Ballerina SonarQube connector.
-
-- [Getting started](#getting-started)
-- [Working with sonarqube connector actions](#working-with-sonarqube-connector-actions)
+| Ballerina Language Version                              | API Version
+| ---------------------------------------------| :--------------:
+| 0.970.0-beta3                              | 6.7.2
 
 ## Getting started
 
-1. Clone Ballerina (https://github.com/ballerina-lang/ballerina) repository and run the Maven command ``mvn clean install`` from the ``ballerina`` root directory.
-2. Extract the Ballerina distribution created at `distribution/zip/ballerina/target/ballerina-<version>-SNAPSHOT.zip`  and set the PATH environment variable to the bin directory .
+1.  Refer [Getting Strated Guide](https://stage.ballerina.io/learn/getting-started/) to download and install Ballerina.
+2.  To use SonarQube endpoint, you need to provide the following:
 
-## Working with SonarQube connector actions
+       - SonarQube URL
+       - SonarQube token
+    
+       Refer [SonarQube API docuementation](https://docs.sonarqube.org/display/SONAR/User+Token) to obtain the above credentials.
 
-1.Create a SonarQube endpoint.
+4. Create a new Ballerina project by executing the following command.
+
+      ``<PROJECT_ROOT_DIRECTORY>$ ballerina init``
+
+5. Import the sonarqube package to your Ballerina project as follows.
 
 ```ballerina
+import ballerina/io;
 import wso2/sonarqube6;
 
-   endpoint sonarqube6:SonarQubeClient sonarqube {
-        clientConfig: {
-                targets:[{url:getURI()}],
-                auth:{
-                    scheme:"basic",
-                    username:getToken(),
-                    password:""
-                }
-            }
-    };
-```
-2.Get a project from SonarQube server.
+string token = "your token";
+string sonarqubeURL = "your sonarqube url";
 
-```ballerina
-    sonarqube6:Project project = {};
-    var projectDetails = sonarqube -> getProject("project_name");
-    match projectDetails {
-       sonarqube:Project projectDetails => project = projectDetails;
-       error err => io:println(err);
-    }
-```
+function main(string... args) {
 
-3.Using the project you can call the set of functions defined below.
-
-```ballerina
-    //Get project complexity
-    var complexity = sonarqube -> getComplexity(project.key);
-    match complexity {
-        string value => io:println("Complexity - " + value);
-        error err => io:println(err);
-    }
+   endpoint Client sonarqube {
+       clientConfig:{
+           url:sonarqubeURL,
+           auth:{
+               scheme:"basic",
+               username:token,
+               password:""
+           }
+       }
+   };
+   
+   var projectDetails = sonarqube -> getProject(config:getAsString(PROJECT_NAME));
+       match projectDetails {
+           Project project => io:println(projects);
+           error err => io:println(err);
+       }
+}
 ```

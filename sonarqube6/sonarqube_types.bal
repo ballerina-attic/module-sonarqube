@@ -79,4 +79,3 @@ public type Comment {
     string commenter;
     string createdDate;
 };
-
