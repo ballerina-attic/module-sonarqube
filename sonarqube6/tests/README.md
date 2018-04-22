@@ -6,7 +6,7 @@ various actions.
 ## Compatibility
 | Language Version                             | SonarQube API Version |
 | ------------------------------------------ | ------------------ |
-| 0.970.0-beta3     |  6.7.2         |
+| 0.970.0-beta10-SNAPSHOT     |  6.7.2         |
 
 ## Running tests
 
