@@ -66,7 +66,7 @@ function SonarQubeConnector::getMeasure(string projectKey, string metricName) re
     string value = "";
     http:Request request = new;
     string requestPath = API_MEASURES + projectKey + "&" + METRIC_KEYS + "=" + metricName;
-    var endpointResponse = httpEndpoint -> get(requestPath, request);
+    var endpointResponse = httpEndpoint -> get(requestPath);
 
     // match endpointResponse
     match endpointResponse{
