@@ -232,7 +232,7 @@ public function SonarQubeConnector::getProject(string projectName) returns Proje
     // get the first page of the project details
     string requestPath = API_RESOURCES + PROJECTS_PER_PAGE;
     http:Request request = new;
-    var endpointResponse = httpEndpoint -> get(requestPath, request = request);
+    var endpointResponse = httpEndpoint -> get(requestPath);
 
     // match endpointResponse
     match endpointResponse{
@@ -260,7 +260,7 @@ public function SonarQubeConnector::getProject(string projectName) returns Proje
                 while (count < totalPages - 1) {
                     request = new;
                     requestPath = API_RESOURCES + PROJECTS_PER_PAGE + "&" + PAGE_NUMBER + "=" + (count + 2);
-                    endpointResponse = httpEndpoint -> get(requestPath, request = request);
+                    endpointResponse = httpEndpoint -> get(requestPath);
                     match endpointResponse{
                         http:Response newResponse => {
                             endpointErrors = checkResponse(newResponse);
@@ -299,7 +299,7 @@ public function SonarQubeConnector::getAllProjects() returns (Project[]|error) {
     // get the first page of the project details
     string requestPath = API_RESOURCES + PROJECTS_PER_PAGE;
     http:Request request = new;
-    var endpointResponse = httpEndpoint -> get(requestPath, request = request);
+    var endpointResponse = httpEndpoint -> get(requestPath);
 
     // match endpointResponse
     match endpointResponse{
@@ -328,7 +328,7 @@ public function SonarQubeConnector::getAllProjects() returns (Project[]|error) {
                 while (count < totalPages - 1) {
                     request = new;
                     requestPath = API_RESOURCES + PROJECTS_PER_PAGE + "&" + PAGE_NUMBER + "=" + (count + 2);
-                    endpointResponse = httpEndpoint -> get(requestPath, request = request);
+                    endpointResponse = httpEndpoint -> get(requestPath);
                     match endpointResponse{
                         http:Response newResponse => {
                             endpointErrors = checkResponse(newResponse);
@@ -370,7 +370,7 @@ public function SonarQubeConnector::getMetricValues(string projectKey, string[] 
 
     http:Request request = new;
     string requestPath = API_MEASURES + projectKey + "&" + METRIC_KEYS + "=" + keyList;
-    var endpointResponse = httpEndpoint -> get(requestPath, request = request);
+    var endpointResponse = httpEndpoint -> get(requestPath);
 
     // match endpointResponse
     match endpointResponse{
@@ -556,7 +556,7 @@ public function SonarQubeConnector::getIssues(string projectKey) returns (Issue[
     endpoint http:Client httpEndpoint = self.client;
     http:Request request = new;
     string requestPath = API_ISSUES_SEARCH + "?" + PROJECT_KEYS + "=" + projectKey + "&" + EXTRA_CONTENT;
-    var endpointResponse = httpEndpoint -> get(requestPath, request = request);
+    var endpointResponse = httpEndpoint -> get(requestPath);
 
     // match endpointResponse
     match endpointResponse{
