@@ -10,7 +10,7 @@ SonarQube is a platform for continuous inspection of code quality.SonarQube offe
 
 | Ballerina Language Version                              | API Version
 | ---------------------------------------------| :--------------:
-| 0.970.0-beta10-SNAPSHOT                                | 6.7.2
+| Ballerina 0.970.0-beta11                             | 6.7.2
 
 ## Getting started
 
