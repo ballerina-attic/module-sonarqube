@@ -17,7 +17,6 @@
 //
 
 import ballerina/http;
-import ballerina/util;
 
 function getJsonValueByKey(http:Response response, string key) returns (json|error) {
     match response.getJsonPayload() {

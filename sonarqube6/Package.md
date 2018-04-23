@@ -1,12 +1,14 @@
 # SonarQube Connector
 
-SonarQube connector provides a Ballerina API to access the [SonarQube REST API](https://docs.sonarqube.org/display/DEV/Web+API)
+Allows you to access the SonarQube REST API.
+
+SonarQube connector provides a Ballerina API to access the SonarQube REST API. This connector provides facility to get several important code quality measurements like line coverage,branch coverage,code smellls and etc. of a project. The following section provides you the details on how to use SonarQube connector.
 
 ## Compatibility
 
 | Ballerina Language Version                              | API Version
 | ---------------------------------------------| :--------------:
-| 0.970.0-beta10-SNAPSHOT                                | 6.7.2
+| Ballerina 0.970.0-beta11                             | 6.7.2
 
 ## Getting started
 
@@ -20,34 +22,36 @@ SonarQube connector provides a Ballerina API to access the [SonarQube REST API](
 
 4. Create a new Ballerina project by executing the following command.
 
-      ``<PROJECT_ROOT_DIRECTORY>$ ballerina init``
+    ```shell
+       <PROJECT_ROOT_DIRECTORY>$ ballerina init
+    ```
 
 5. Import the sonarqube package to your Ballerina project as follows.
 
-```ballerina
-import ballerina/io;
-import wso2/sonarqube6;
-
-string token = "your token";
-string sonarqubeURL = "your sonarqube url";
-
-function main(string... args) {
-
-   endpoint Client sonarqube {
-       clientConfig:{
-           url:sonarqubeURL,
-           auth:{
-               scheme:"basic",
-               username:token,
-               password:""
+    ```ballerina
+    import ballerina/io;
+    import wso2/sonarqube6;
+    
+    string token = "your token";
+    string sonarqubeURL = "your sonarqube url";
+    
+    function main(string... args) {
+    
+       endpoint Client sonarqube {
+           clientConfig:{
+               url:sonarqubeURL,
+               auth:{
+                   scheme:"basic",
+                   username:token,
+                   password:""
+               }
            }
-       }
-   };
-   
-   var projectDetails = sonarqube -> getProject(config:getAsString(PROJECT_NAME));
-       match projectDetails {
-           Project project => io:println(projects);
-           error err => io:println(err);
-       }
-}
+       };
+       
+       var projectDetails = sonarqube -> getProject(config:getAsString(PROJECT_NAME));
+           match projectDetails {
+               Project project => io:println(projects);
+               error err => io:println(err);
+           }
+    }
 ```
