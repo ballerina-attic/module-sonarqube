@@ -34,7 +34,7 @@ function getJsonArrayByKey(http:Response response, string key) returns (json[]|e
     match response.getJsonPayload() {
         json jsonPayload => {
             if (jsonPayload[key] != ()){
-                json[] array = check < json[]>jsonPayload[key];
+                json[] array = check <json[]>jsonPayload[key];
                 return array;
             } else {
                 return {};
@@ -65,7 +65,7 @@ function SonarQubeConnector::getMeasure(string projectKey, string metricName) re
     string value = "";
     http:Request request = new;
     string requestPath = API_MEASURES + projectKey + "&" + METRIC_KEYS + "=" + metricName;
-    var endpointResponse = httpEndpoint -> get(requestPath);
+    var endpointResponse = httpEndpoint->get(requestPath);
 
     // match endpointResponse
     match endpointResponse{
@@ -73,7 +73,7 @@ function SonarQubeConnector::getMeasure(string projectKey, string metricName) re
             error endpointErrors = checkResponse(response);
             if (endpointErrors.message == ""){
                 json component = check getJsonValueByKey(response, COMPONENT);
-                match < json[]>component[MEASURES]{
+                match <json[]>component[MEASURES]{
                     json[] metricArray => {
                         if (lengthof metricArray == 0) {
                             error connectionError = {message:"Metric array is empty"};
