@@ -26,35 +26,30 @@ public type SonarQubeConnector object {
     }
 
     documentation{Returns a Project record.
-        R{{Project}} Project record
-        R{{error}} error record
+        R{{Project}} If the execution is successful returns a Project record else an error
     }
     public function getProject(string projectName) returns (Project|error);
 
     documentation{Returns an array of all projects.
-        R{{Project}} Project record
-        R{{error}} error record
+        R{{Project}} If the execution is successful returns an array of Project records else an error
     }
     public function getAllProjects() returns (Project[]|error);
 
     documentation{Get number of duplicated code blocks.
         P{{projectKey}} Key of a project
-        R{{}} returns number of duplicated code blocks in a project the code
-        R{{}} Returns error if an exception raised in getting duplicated blocks count
+        R{{}} If the execution is successful returns number of duplicated code blocks else an error
     }
     public function getDuplicatedCodeBlocksCount(string projectKey) returns (int|error);
 
     documentation{Get Number of duplicated files.
         P{{projectKey}} Key of a project
-        R{{}} returns number of duplicated files in a project the code
-        R{{}} Returns error if an exception raised in getting dupl
+        R{{}} If the execution is successful returns number of duplicated files else an error
     }
     public function getDuplicatedFilesCount(string projectKey) returns (int|error);
 
     documentation{Get Number of duplicated lines.
         P{{projectKey}} Key of a project
-        R{{}} returns number of duplicated lines in a project the code
-        R{{}} Returns error if an exception raised in getting duplicated files count
+        R{{}} If the execution is successful returns number of duplicated lines else an error
     }
     public function getDuplicatedLinesCount(string projectKey) returns (int|error);
 
@@ -62,8 +57,7 @@ public type SonarQubeConnector object {
     the behavior of the application in production: memory leak, unclosed JDBC connection, .... The code MUST be immediately
     fixed.
         P{{projectKey}} Key of a project
-        R{{}} returns number of blocker issues in a project the code
-        R{{}} Returns error if an exception raised in getting blocker issues count
+        R{{}} If the execution is successful returns number of blocker issues else an error
     }
     public function getBlockerIssuesCount(string projectKey) returns (int|error);
 
@@ -71,90 +65,78 @@ public type SonarQubeConnector object {
     of the application in production or an issue which represents a security flaw: empty catch block, SQL injection, ...
     The code MUST be immediately reviewed.
         P{{projectKey}} Key of a project
-        R{{}} returns number of critical issues in a project the code
-        R{{}} Returns error if an exception raised in getting critical issues count
+        R{{}} If the execution is successful returns number of critical issues else an error
     }
     public function getCriticalIssuesCount(string projectKey) returns (int|error);
 
     documentation{Number of major issues in a project.Quality flaw which can highly impact the developer productivity:
     uncovered piece of code, duplicated blocks, unused parameters, ...
         P{{projectKey}} Key of a project
-        R{{}} returns number of major issues in a project the code
-        R{{}} Returns error if an exception raised in getting major issues count
+        R{{}} If the execution is successful returns number of major issues else an error
     }
     public function getMajorIssuesCount(string projectKey) returns (int|error);
 
     documentation{Number of minor issues in a project.Quality flaw which can slightly impact the developer
     productivity: lines should not be too long, switch statements should have at least 3 cases, ....
         P{{projectKey}} Key of a project
-        R{{}} returns number of minor issues in a project the code
-        R{{}} Returns error if an exception raised in getting minor issues count
+        R{{}} If the execution is successful returns number of minor issues else an error
     }
     public function getMinorIssuesCount(string projectKey) returns (int|error);
 
     documentation{Number of open issues in a project.
         P{{projectKey}} Key of a project
-        R{{}} returns number of open issues in a project the code
-        R{{}} Returns error if an exception raised in getting open issues count
+        R{{}} If the execution is successful returns number of open issues else an error
     }
     public function getOpenIssuesCount(string projectKey) returns (int|error);
 
     documentation{Number of confirmed issues in a project.
         P{{projectKey}} Key of a project
-        R{{}} returns number of confirmed issues in a project the code
-        R{{}} Returns error if an exception raised in getting confirmed issues count
+        R{{}} If the execution is successful returns number of confirmed issues else an error
     }
     public function getConfirmedIssuesCount(string projectKey) returns (int|error);
 
     documentation{Number of reopened issues in a project.
         P{{projectKey}} Key of a project
-        R{{}} returns number of reopened issues in a project the code
-        R{{}} Returns error if an exception raised in getting reopened issues count
+        R{{}} If the execution is successful returns number of repoened issues else an error
     }
     public function getReopenedIssuesCount(string projectKey) returns (int|error);
 
     documentation{Get lines of code of a project.
         P{{projectKey}} Key of a project
-        R{{}} returns returns project LOC
-        R{{}} Returns error if an exception raised in getting lines of code issues count
+        R{{}} If the execution is successful returns lines of code else an error
     }
     public function getLinesOfCode(string projectKey) returns (int|error);
 
     documentation{Get line coverage of a project.
         P{{projectKey}} Key of a project
-        R{{}} returns line coverage of a project
-        R{{}} Returns error if an exception raised in getting line coverage
+        R{{}} If the execution is successful returns line coverage else an error
     }
     public function getLineCoverage(string projectKey) returns (string)|error;
 
-    documentation{Get complexity of a project.
-        P{{projectKey}} Key of a project
-        R{{}} Returns complexity of a project.Complexity calculated based on the number of paths through
+    documentation{Get complexity of a project.Complexity calculated based on the number of paths through
      the code.
-        R{{}} Returns error if an exception raised in getting project metric values
+        P{{projectKey}} Key of a project
+        R{{}} If the execution is successful returns complexity else an error
     }
     public function getComplexity(string projectKey) returns (int|error);
 
     documentation{Get number of lines covered by unit tests.
         P{{projectKey}} Key of a project
-        R{{}} returns number of covered lines
-        R{{}} Returns error if an exception raised in getting lines covered by unit tests
+        R{{}} If the execution is successful returns number of covered lines else an error
     }
     public function getCoveredLinesCount(string projectKey) returns (int|error);
 
 
     documentation{Get branch coverage of a project.
         P{{projectKey}} Key of a project
-        R{{}} returns branch Coverage of a project
-        R{{}} Returns error if an exception raised in getting branch coverage
+        R{{}} returns branch Coverage of a project or an error if an exception raised in getting branch coverage
     }
     public function getBranchCoverage(string projectKey) returns (string|error);
 
     documentation{Get number of code smells in a project.Code smell, (or bad smell) is any symptom in the source code
      of a program that possibly indicates a deeper problem.
         P{{projectKey}} Key of a project
-        R{{}} returns number of code smells in a project
-        R{{}} Returns error if an exception raised in getting number of code smells
+        R{{}} If the execution is successful returns number of code smells else an error
     }
     public function getCodeSmellsCount(string projectKey) returns (int|error);
 
@@ -162,57 +144,49 @@ public type SonarQubeConnector object {
     documentation{Get SQALE rating of a project.This is the rating given to your project related to the value of your
      Technical Debt Ratio.
         P{{projectKey}} Key of a project
-        R{{}} returns sqale rating of a project
-        R{{}} Returns error if an exception raised in getting SQALE rating
+        R{{}} If the execution is successful returns SQALE rating else an error
     }
     public function getSQALERating(string projectKey) returns (string|error);
 
     documentation{Get technical debt of a project.Technical debt is the effort to fix all maintainability issues.
         P{{projectKey}} Key of a project
-        R{{}} returns technical debt of a project
-        R{{}} Returns error if an exception raised in getting technical debt
+        R{{}} If the execution is successful returns technical debt else an error
     }
     public function getTechnicalDebt(string projectKey) returns (string|error);
 
     documentation{Get technical debt ratio of a project.
         P{{projectKey}} Key of a project
-        R{{}} returns technical debt ratio of a project
-        R{{}} Returns error if an exception raised in getting technical debt ratio
+        R{{}} If the execution is successful returns technical debt ratio else an error
     }
     public function getTechnicalDebtRatio(string projectKey) returns (string|error);
 
     documentation{Get number of vulnerablities of a project.
         P{{projectKey}} Key of a project
-        R{{}} returns number of vulnerabilities of  project
-        R{{}} Returns error if an exception raised in getting vulnerabilities count
+       R{{}} If the execution is successful returns number of vulnerabilities else an error
     }
     public function getVulnerabilitiesCount(string projectKey) returns (int|error);
 
     documentation{Get security rating of a project.
         P{{projectKey}} Key of a project
-        R{{}} returns 	security rating of a project
-        R{{}} Returns error if an exception raised in getting security rating
+        R{{}} If the execution is successful returns security rating else an error
     }
     public function getSecurityRating(string projectKey) returns (string|error);
 
     documentation{Get reliability rating of a project.
         P{{projectKey}} Key of a project
-        R{{}} returns reliability rating of a project
-        R{{}} Returns error if an exception raised in getting reliability rating
+        R{{}} If the execution is successful returns reliability rating else an error
     }
     public function getReliabilityRating(string projectKey) returns (string|error);
 
     documentation{Get number of bugs in a project.
         P{{projectKey}} Key of a project
-        R{{}} returns number of bugs of  project
-        R{{}} Returns error if an exception raised in getting bugs count
+        R{{}} If the execution is successful returns number of bugs else an error
     }
     public function getBugsCount(string projectKey) returns (int|error);
 
     documentation{Get details of project issues.
         P{{projectKey}} Key of a project
-        R{{}} returns array of project issues
-        R{{}} Returns error if an exception raised in getting project issues
+        R{{}} If the execution is successful returns an array of Issue records else an error
     }
     public function getIssues(string projectKey) returns (Issue[])|error;
 
