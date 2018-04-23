@@ -2,7 +2,6 @@
 
 Allows you to access the SonarQube REST API.
 
-
 SonarQube connector provides a Ballerina API to access the SonarQube REST API. This connector provides facility to get several important code quality measurements like line coverage,branch coverage,code smellls and etc. of a project. The following section provides you the details on how to use SonarQube connector.
 
 ## Compatibility
