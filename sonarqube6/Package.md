@@ -3,8 +3,7 @@
 Allows you to access the SonarQube REST API.
 
 
-SonarQube is a platform for continuous inspection of code quality.SonarQube offers reports on duplicated code, coding standards, unit tests, code coverage, code complexity, comments, bugs, and security vulnerabilities
-(source - [Wikipedia](https://en.wikipedia.org/wiki/SonarQube)).SonarQube connector provides a Ballerina API to access the SonarQube REST API.
+SonarQube connector provides a Ballerina API to access the SonarQube REST API. This connector provides facility to get several important code quality measurements of a project. The following section provides you the details on how to use SonarQube connector.
 
 ## Compatibility
 
