@@ -23,7 +23,7 @@ function getJsonValueByKey(http:Response response, string key) returns (json|err
         json jsonPayload => {
             return jsonPayload[key];
         }
-        http:PayloadError payloadError => {
+        error payloadError => {
             error err = {message:"Error occured when extracting payload from response"};
             return err;
         }
@@ -40,7 +40,7 @@ function getJsonArrayByKey(http:Response response, string key) returns (json[]|e
                 return {};
             }
         }
-        http:PayloadError payloadError => {
+        error payloadError => {
             error err = {message:"Error occured while extracting the payload from response." + payloadError.message};
             return err;
         }
@@ -92,7 +92,7 @@ function SonarQubeConnector::getMeasure(string projectKey, string metricName) re
             }
             return endpointErrors;
         }
-        http:HttpConnectorError err => {
+        error err => {
             error connectionError = {message:err.message};
             return connectionError;
         }

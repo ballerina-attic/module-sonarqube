@@ -4,9 +4,9 @@ SonarQube connector provides a Ballerina API to access the [SonarQube REST API](
 
 ## Compatibility
 
-| Ballerina Language Version                              | API Version
+| Ballerina Language Version                   | API Version     
 | ---------------------------------------------| :--------------:
-| Ballerina 0.970.0-beta11                            | 6.7.2
+| Ballerina 0.970.0-beta15            | 6.7.2
 
 ## Getting started
 
