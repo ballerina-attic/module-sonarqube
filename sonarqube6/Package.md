@@ -1,57 +1,95 @@
-# SonarQube Connector
+Connects to SonarQube from Ballerina.
 
-Allows you to access the SonarQube REST API.
+# Package Overview
 
-SonarQube connector provides a Ballerina API to access the SonarQube REST API. This connector provides facility to get several important code quality measurements like line coverage,branch coverage,code smellls and etc. of a project. The following section provides you the details on how to use SonarQube connector.
+This package provides a Ballerina API to access the SonarQube REST API. It provides the ability to get important code-quality measurements like line coverage, branch coverage, code smells, etc. for a project.
+
+**SonarQube Project Operations**
+
+The `wso2/sonarqube6` package contains operations that get the details of SonarQube projects and their code-quality measurements such as line coverage, branch coverage, complexities, technical debt, technical debt ratio, duplicated lines count. etc. Users can also use this connector to get multiple code-quality measurements as a map by providing the required metric keys.
+
 
 ## Compatibility
 
-| Ballerina Language Version                              | API Version
-| ---------------------------------------------| :--------------:
-| Ballerina 0.970.0-beta12                             | 6.7.2
+|                    |    Version     |  
+| :-----------------:|:--------------:| 
+| Ballerina Language | 0.970.0-beta15 |
+|  SonarQube API     |   6.7.2        |
 
-## Getting started
 
-1.  Refer [Getting Strated Guide](https://stage.ballerina.io/learn/getting-started/) to download and install Ballerina.
-2.  To use SonarQube endpoint, you need to provide the following:
+## Sample
 
-       - SonarQube URL
-       - SonarQube token
+The SonarQube connector can be used to get project details, line coverage, and security ratings. First, import the `wso2/sonarqube6` package into the Ballerina project.
     
-       Refer [SonarQube API docuementation](https://docs.sonarqube.org/display/SONAR/User+Token) to obtain the above credentials.
+```ballerina
+import wso2/sonarqube6;
+```
 
-4. Create a new Ballerina project by executing the following command.
+**Obtaining Tokens to Run the Samples**
 
-    ```shell
-       <PROJECT_ROOT_DIRECTORY>$ ballerina init
-    ```
+1. To generate a token, go to **User -> My Account -> Security** in the SonarQube server. Existing tokens are listed, each with a Revoke button.
+2. Click the **Generate** button at the bottom of the page.
 
-5. Import the sonarqube package to your Ballerina project as follows.
-
-    ```ballerina
-    import ballerina/io;
-    import wso2/sonarqube6;
-    
-    string token = "your token";
-    string sonarqubeURL = "your sonarqube url";
-    
-    function main(string... args) {
-    
-       endpoint Client sonarqube {
-           clientConfig:{
-               url:sonarqubeURL,
-               auth:{
-                   scheme:"basic",
-                   username:token,
-                   password:""
-               }
-           }
-       };
-       
-       var projectDetails = sonarqube -> getProject(config:getAsString(PROJECT_NAME));
-           match projectDetails {
-               Project project => io:println(projects);
-               error err => io:println(err);
-           }
+You can now enter the token in the HTTP client config:
+```ballerina
+endpoint sonarqube6:Client sonarqubeEP {
+    clientConfig:{
+        url:url,
+        auth:{
+            scheme:"basic",
+            username:token,
+            password:""
+        }
     }
+};
+```
+
+The `getProject` function provides the details of a project in SonarQube server for the given project name.
+
+```ballerina
+var projectDetails = sonarqubeEP->getProject(“project_name”);
+```
+
+The response from `getProject` is either a `Project` (if the request was successful) or an `error`. 
+The match operation can be used to handle the response if an error occurs. Project is a type that holds the information of a project.
+
+```ballerina
+match projectDetails {
+    sonarqube6:Project project => io:println(project);
+    error err => io:println(err)
+}
+```
+
+The `getLineCoverage` function provides the line coverage of a project in SonarQube server for the given project key. 
+You can get the project key using the SonarQube server UI or the getProject function.
+
+```ballerina
+var value = sonarqubeEP->getLineCoverage(“project_key”);
+```
+    
+The response from `getLineCoverage` is either a string (if the request was successful) or an error. 
+The match operation can be used to handle the response if an error occurs.
+
+```ballerina
+match value {
+        string val => io:println(val);       
+        error err => io:println(err);
+}
+``` 
+
+The `getSecurityRating` function provides the security rating of a project in SonarQube server for the given project key. 
+You can get the project key using the SonarQube server UI or the getProject function.
+
+```ballerina
+var value = sonarqubeEP->getSecurityRating(“project_key”);
+```
+
+The response from `getSecurityRating` is either a string (if the request was successful) or an error. 
+The match operation can be used to handle the response if an error occurs.
+
+```ballerina
+match value {
+        string val => io:println(val);       
+        error err => io:println(err);
+}
 ```

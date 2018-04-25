@@ -250,7 +250,7 @@ public function SonarQubeConnector::getProject(string projectName) returns Proje
                                 return endpointErrors;
                             }
                         }
-                        http:HttpConnectorError err => {
+                        error err => {
                             error connectionError = {message:err.message};
                             return connectionError;
                         }
@@ -260,7 +260,7 @@ public function SonarQubeConnector::getProject(string projectName) returns Proje
             }
             return endpointErrors;
         }
-        http:HttpConnectorError err => {
+        error err => {
             error connectionError = {message:err.message};
             return connectionError;
         }
@@ -317,7 +317,7 @@ public function SonarQubeConnector::getAllProjects() returns (Project[]|error) {
                                 return endpointErrors;
                             }
                         }
-                        http:HttpConnectorError err => {
+                        error err => {
                             error connectionError = {message:err.message};
                             return connectionError;
                         }
@@ -328,7 +328,7 @@ public function SonarQubeConnector::getAllProjects() returns (Project[]|error) {
             }
             return endpointErrors;
         }
-        http:HttpConnectorError err => {
+        error err => {
             error connectionError = {message:err.message};
             return connectionError;
         }
@@ -377,7 +377,7 @@ public function SonarQubeConnector::getMetricValues(string projectKey, string[] 
             }
             return endpointErrors;
         }
-        http:HttpConnectorError err => {
+        error err => {
             error connectionError = {message:err.message};
             return connectionError;
         }
@@ -551,7 +551,7 @@ public function SonarQubeConnector::getIssues(string projectKey) returns (Issue[
             }
             return issues;
         }
-        http:HttpConnectorError err => {
+        error err => {
             error connectionError = {message:err.message};
             return connectionError;
         }
