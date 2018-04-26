@@ -12,8 +12,8 @@ The `wso2/sonarqube6` package contains operations that get the details of SonarQ
 ## Compatibility
 
 |                    |    Version     |  
-| :-----------------:|:--------------:| 
-| Ballerina Language | 0.970.0-beta15 |
+|  ----------------- | -------------- | 
+| Ballerina Language | 0.970.0-beta19 |
 |  SonarQube API     |   6.7.2        |
 
 
