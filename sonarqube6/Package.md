@@ -2,8 +2,8 @@ Connects to SonarQube from Ballerina.
 
 # Package Overview
 
-The SonarQube connector allows you to work with SonarQube projects and get important code-quality measurements like 
-line coverage, branch coverage, code smells, etc. It handles basic authentication.
+The SonarQube connector allows you to work with projects and get important code-quality measurements like 
+line coverage, branch coverage, code smells, etc via SonarQube API. It handles basic authentication.
 
 **SonarQube Project Operations**
 
