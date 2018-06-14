@@ -15,7 +15,7 @@ count. etc. Users can also use this connector to get multiple code-quality measu
 
 |                    |    Version     |  
 |  ----------------- | -------------- | 
-| Ballerina Language |   0.970.0      |
+| Ballerina Language |   0.974.1      |
 |  SonarQube API     |   6.7.2        |
 
 
@@ -38,7 +38,7 @@ endpoint sonarqube6:Client sonarqubeEP {
     clientConfig:{
         url:url,
         auth:{
-            scheme:"basic",
+            scheme:http:BASIC_AUTH,
             username:token,
             password:""
         }
