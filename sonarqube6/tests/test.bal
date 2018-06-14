@@ -24,7 +24,7 @@ endpoint Client sonarqube {
     clientConfig:{
         url:config:getAsString(SONARQUBE_URI),
         auth:{
-            scheme:"basic",
+            scheme:http:BASIC_AUTH,
             username:config:getAsString(SONARQUBE_TOKEN),
             password:""
         }
