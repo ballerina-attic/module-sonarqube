@@ -24,7 +24,7 @@ function getJsonValueByKey(http:Response response, string key) returns (json|err
             return jsonPayload[key];
         }
         error payloadError => {
-            error err = {message:"Error occured when extracting payload from response"};
+            error err = { message: "Error occured when extracting payload from response" };
             return err;
         }
     }
@@ -41,7 +41,7 @@ function getJsonArrayByKey(http:Response response, string key) returns (json[]|e
             }
         }
         error payloadError => {
-            error err = {message:"Error occured while extracting the payload from response." + payloadError.message};
+            error err = { message: "Error occured while extracting the payload from response." + payloadError.message };
             return err;
         }
     }
@@ -49,7 +49,7 @@ function getJsonArrayByKey(http:Response response, string key) returns (json[]|e
 
 function checkResponse(http:Response response) returns error {
     json[] responseJson = check getJsonArrayByKey(response, ERRORS);
-    error err = {message:""};
+    error err = { message: "" };
     if (responseJson != ()) {
         foreach item in responseJson {
             string errorMessage = item.msg.toString();
@@ -68,7 +68,7 @@ function SonarQubeConnector::getMeasure(string projectKey, string metricName) re
     var endpointResponse = httpEndpoint->get(requestPath);
 
     // match endpointResponse
-    match endpointResponse{
+    match endpointResponse {
         http:Response response => {
             error endpointErrors = checkResponse(response);
             if (endpointErrors.message == ""){
@@ -76,7 +76,7 @@ function SonarQubeConnector::getMeasure(string projectKey, string metricName) re
                 match <json[]>component[MEASURES]{
                     json[] metricArray => {
                         if (lengthof metricArray == 0) {
-                            error connectionError = {message:"Metric array is empty"};
+                            error connectionError = { message: "Metric array is empty" };
                             return connectionError;
                         }
                         json metricValue = metricArray[0][VALUE];
@@ -84,8 +84,8 @@ function SonarQubeConnector::getMeasure(string projectKey, string metricName) re
                     }
                     error err => {
                         string errorMessage = err.message;
-                        err = {message:"Cannot find the " + metricName.replace("_", " ") + " for " + projectKey + "."
-                            + errorMessage};
+                        err = { message: "Cannot find the " + metricName.replace("_", " ") + " for " + projectKey + "."
+                            + errorMessage };
                         return err;
                     }
                 }
@@ -93,7 +93,7 @@ function SonarQubeConnector::getMeasure(string projectKey, string metricName) re
             return endpointErrors;
         }
         error err => {
-            error connectionError = {message:err.message};
+            error connectionError = { message: err.message };
             return connectionError;
         }
     }

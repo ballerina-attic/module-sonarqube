@@ -209,7 +209,7 @@ public function SonarQubeConnector::getProject(string projectName) returns Proje
     var endpointResponse = httpEndpoint->get(requestPath);
 
     // match endpointResponse
-    match endpointResponse{
+    match endpointResponse {
         http:Response response => {
             // checking whether the response has errors
             error endpointErrors = checkResponse(response);
@@ -225,7 +225,9 @@ public function SonarQubeConnector::getProject(string projectName) returns Proje
                 // Cannot find results in the first page.Iterate through other pages
                 json paging = check getJsonValueByKey(response, PAGING);
                 // get the total project count
-                float totalProjectsCount = check <float>(paging[TOTAL].toString() but { () => "0.0" });
+                float totalProjectsCount = check <float>(paging[TOTAL].toString() but {
+                    () => "0.0"
+                });
                 // get the total number of projects which have the project details
                 int totalPages = <int>math:ceil(totalProjectsCount / PROJECTS_PER_PAGE);
                 int count = 0;
@@ -235,7 +237,7 @@ public function SonarQubeConnector::getProject(string projectName) returns Proje
                     request = new;
                     requestPath = API_RESOURCES + PROJECTS_PER_PAGE + "&" + PAGE_NUMBER + "=" + (count + 2);
                     endpointResponse = httpEndpoint->get(requestPath);
-                    match endpointResponse{
+                    match endpointResponse {
                         http:Response newResponse => {
                             endpointErrors = checkResponse(newResponse);
                             if (endpointErrors.message == ""){
@@ -251,7 +253,7 @@ public function SonarQubeConnector::getProject(string projectName) returns Proje
                             }
                         }
                         error err => {
-                            error connectionError = {message:err.message};
+                            error connectionError = { message: err.message };
                             return connectionError;
                         }
                     }
@@ -261,7 +263,7 @@ public function SonarQubeConnector::getProject(string projectName) returns Proje
             return endpointErrors;
         }
         error err => {
-            error connectionError = {message:err.message};
+            error connectionError = { message: err.message };
             return connectionError;
         }
     }
@@ -276,7 +278,7 @@ public function SonarQubeConnector::getAllProjects() returns (Project[]|error) {
     var endpointResponse = httpEndpoint->get(requestPath);
 
     // match endpointResponse
-    match endpointResponse{
+    match endpointResponse {
         http:Response response => {
             // checking whether the response has errors
             error endpointErrors = checkResponse(response);
@@ -293,7 +295,9 @@ public function SonarQubeConnector::getAllProjects() returns (Project[]|error) {
                 // Cannot find results in the first page.Iterate through other pages
                 json paging = check getJsonValueByKey(response, PAGING);
                 // get the total project count
-                float totalProjectsCount = check <float>(paging[TOTAL].toString() but { () => "0.0" });
+                float totalProjectsCount = check <float>(paging[TOTAL].toString() but {
+                    () => "0.0"
+                });
                 // get the total number of projects which have the project details
                 int totalPages = <int>math:ceil(totalProjectsCount / PROJECTS_PER_PAGE);
                 int count = 0;
@@ -303,7 +307,7 @@ public function SonarQubeConnector::getAllProjects() returns (Project[]|error) {
                     request = new;
                     requestPath = API_RESOURCES + PROJECTS_PER_PAGE + "&" + PAGE_NUMBER + "=" + (count + 2);
                     endpointResponse = httpEndpoint->get(requestPath);
-                    match endpointResponse{
+                    match endpointResponse {
                         http:Response newResponse => {
                             endpointErrors = checkResponse(newResponse);
                             if (endpointErrors.message == ""){
@@ -318,7 +322,7 @@ public function SonarQubeConnector::getAllProjects() returns (Project[]|error) {
                             }
                         }
                         error err => {
-                            error connectionError = {message:err.message};
+                            error connectionError = { message: err.message };
                             return connectionError;
                         }
                     }
@@ -329,7 +333,7 @@ public function SonarQubeConnector::getAllProjects() returns (Project[]|error) {
             return endpointErrors;
         }
         error err => {
-            error connectionError = {message:err.message};
+            error connectionError = { message: err.message };
             return connectionError;
         }
     }
@@ -347,7 +351,7 @@ public function SonarQubeConnector::getMetricValues(string projectKey, string[] 
     var endpointResponse = httpEndpoint->get(requestPath);
 
     // match endpointResponse
-    match endpointResponse{
+    match endpointResponse {
         http:Response response => {
             // checking whether the response has errors
             error endpointErrors = checkResponse(response);
@@ -369,8 +373,8 @@ public function SonarQubeConnector::getMetricValues(string projectKey, string[] 
                     }
                     error err => {
                         string errorMessage = err.message;
-                        err = {message:"The " + keyList + " cannot be found for the " + projectKey + "." +
-                            errorMessage};
+                        err = { message: "The " + keyList + " cannot be found for the " + projectKey + "." +
+                            errorMessage };
                         return err;
                     }
                 }
@@ -378,7 +382,7 @@ public function SonarQubeConnector::getMetricValues(string projectKey, string[] 
             return endpointErrors;
         }
         error err => {
-            error connectionError = {message:err.message};
+            error connectionError = { message: err.message };
             return connectionError;
         }
     }
@@ -533,7 +537,7 @@ public function SonarQubeConnector::getIssues(string projectKey) returns (Issue[
     var endpointResponse = httpEndpoint->get(requestPath);
 
     // match endpointResponse
-    match endpointResponse{
+    match endpointResponse {
         http:Response response => {
             // checking whether the response has errors
             error endpointErrors = checkResponse(response);
@@ -552,7 +556,7 @@ public function SonarQubeConnector::getIssues(string projectKey) returns (Issue[
             return issues;
         }
         error err => {
-            error connectionError = {message:err.message};
+            error connectionError = { message: err.message };
             return connectionError;
         }
     }

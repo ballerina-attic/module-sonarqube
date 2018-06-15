@@ -21,18 +21,18 @@ import ballerina/test;
 import ballerina/config;
 
 endpoint Client sonarqube {
-    clientConfig:{
-        url:config:getAsString(SONARQUBE_URI),
-        auth:{
-            scheme:http:BASIC_AUTH,
-            username:config:getAsString(SONARQUBE_TOKEN),
-            password:""
+    clientConfig: {
+        url: config:getAsString(SONARQUBE_URI),
+        auth: {
+            scheme: http:BASIC_AUTH,
+            username: config:getAsString(SONARQUBE_TOKEN),
+            password: ""
         }
     }
 };
 
 @test:Config {
-    groups:["network-calls"]
+    groups: ["network-calls"]
 }
 function testGetProject() {
     log:printInfo("sonarqubeEndpoint -> getProject()");
@@ -47,7 +47,7 @@ function testGetProject() {
 }
 
 @test:Config {
-    groups:["network-calls"]
+    groups: ["network-calls"]
 }
 function testGetAllProjects() {
     log:printInfo("sonarqubeEndpoint -> getAllProjects()");
@@ -62,7 +62,7 @@ function testGetAllProjects() {
 }
 
 @test:Config {
-    groups:["network-calls"]
+    groups: ["network-calls"]
 }
 function testGetMetricValues() {
     log:printInfo("sonarqubeEndpoint -> getMetricValues(projectKey,metricKeys[])");
@@ -78,203 +78,233 @@ function testGetMetricValues() {
 }
 
 @test:Config {
-    groups:["network-calls"]
+    groups: ["network-calls"]
 }
 function testGetComplexity() {
     log:printInfo("sonarqubeEndpoint -> getComplexity(projectKey)");
     var value = sonarqube->getComplexity(config:getAsString(PROJECT_KEY));
     match value {
-        int val => {boolean hasParameter = (val >= 0) ? true : false;
-        test:assertEquals(hasParameter, true, msg = "Failed getComplexity(projectKey)");}
+        int val => {
+            boolean hasParameter = (val >= 0) ? true : false;
+            test:assertEquals(hasParameter, true, msg = "Failed getComplexity(projectKey)");
+        }
         error err => test:assertFail(msg = err.message);
     }
 }
 
 @test:Config {
-    groups:["network-calls"]
+    groups: ["network-calls"]
 }
 function testGetDuplicatedCodeBlocksCount() {
     log:printInfo("sonarqubeEndpoint -> getDuplicatedCodeBlocksCount((projectKey)");
     var value = sonarqube->getDuplicatedCodeBlocksCount(config:getAsString(PROJECT_KEY));
     match value {
-        int val => {boolean hasParameter = (val >= 0) ? true : false;
-        test:assertEquals(hasParameter, true, msg = "Failed getDuplicatedCodeBlocksCount((projectKey)");}
+        int val => {
+            boolean hasParameter = (val >= 0) ? true : false;
+            test:assertEquals(hasParameter, true, msg = "Failed getDuplicatedCodeBlocksCount((projectKey)");
+        }
         error err => test:assertFail(msg = err.message);
     }
 }
 
 @test:Config {
-    groups:["network-calls"]
+    groups: ["network-calls"]
 }
 function testGetDuplicatedFilesCount() {
     log:printInfo("sonarqubeEndpoint -> getDuplicatedFilesCount(projectKey)");
     var value = sonarqube->getDuplicatedFilesCount(config:getAsString(PROJECT_KEY));
     match value {
-        int val => {boolean hasParameter = (val >= 0) ? true : false;
-        test:assertEquals(hasParameter, true, msg = "Failed getDuplicatedFilesCount(projectKey)");}
+        int val => {
+            boolean hasParameter = (val >= 0) ? true : false;
+            test:assertEquals(hasParameter, true, msg = "Failed getDuplicatedFilesCount(projectKey)");
+        }
         error err => test:assertFail(msg = err.message);
     }
 }
 
 @test:Config {
-    groups:["network-calls"]
+    groups: ["network-calls"]
 }
 function testGetDuplicatedLinesCount() {
     log:printInfo("sonarqubeEndpoint -> getDuplicatedLinesCount(projectKey)");
     var value = sonarqube->getDuplicatedLinesCount(config:getAsString(PROJECT_KEY));
     match value {
-        int val => {boolean hasParameter = (val >= 0) ? true : false;
-        test:assertEquals(hasParameter, true, msg = "Failed getDuplicatedLinesCount(projectKey)");}
+        int val => {
+            boolean hasParameter = (val >= 0) ? true : false;
+            test:assertEquals(hasParameter, true, msg = "Failed getDuplicatedLinesCount(projectKey)");
+        }
         error err => test:assertFail(msg = err.message);
     }
 }
 
 @test:Config {
-    groups:["network-calls"]
+    groups: ["network-calls"]
 }
 function testGetCoveredLinesCount() {
     log:printInfo("sonarqubeEndpoint -> getCoveredLinesCount(projectKey)");
     var value = sonarqube->getCoveredLinesCount(config:getAsString(PROJECT_KEY));
     match value {
-        int val => {boolean hasParameter = (val >= 0) ? true : false;
-        test:assertEquals(hasParameter, true, msg = "Failed getCoveredLinesCount(projectKey)");}
+        int val => {
+            boolean hasParameter = (val >= 0) ? true : false;
+            test:assertEquals(hasParameter, true, msg = "Failed getCoveredLinesCount(projectKey)");
+        }
         error err => test:assertFail(msg = err.message);
     }
 }
 
 @test:Config {
-    groups:["network-calls"]
+    groups: ["network-calls"]
 }
 function testGetBlockerIssuesCount() {
     log:printInfo("sonarqubeEndpoint -> getBlockerIssuesCount(projectKey)");
     var value = sonarqube->getBlockerIssuesCount(config:getAsString(PROJECT_KEY));
     match value {
-        int val => {boolean hasParameter = (val >= 0) ? true : false;
-        test:assertEquals(hasParameter, true, msg = "Failed getBlockerIssuesCount(projectKey)");}
+        int val => {
+            boolean hasParameter = (val >= 0) ? true : false;
+            test:assertEquals(hasParameter, true, msg = "Failed getBlockerIssuesCount(projectKey)");
+        }
         error err => test:assertFail(msg = err.message);
     }
 }
 
 @test:Config {
-    groups:["network-calls"]
+    groups: ["network-calls"]
 }
 function testGetCriticalIssuesCount() {
     log:printInfo("sonarqubeEndpoint -> getCriticalIssuesCount(projectKey)");
     var value = sonarqube->getCriticalIssuesCount(config:getAsString(PROJECT_KEY));
     match value {
-        int val => {boolean hasParameter = (val >= 0) ? true : false;
-        test:assertEquals(hasParameter, true, msg = "Failed getCriticalIssuesCount(projectKey)");}
+        int val => {
+            boolean hasParameter = (val >= 0) ? true : false;
+            test:assertEquals(hasParameter, true, msg = "Failed getCriticalIssuesCount(projectKey)");
+        }
         error err => test:assertFail(msg = err.message);
     }
 }
 
 @test:Config {
-    groups:["network-calls"]
+    groups: ["network-calls"]
 }
 function testGetMajorIssuesCount() {
     log:printInfo("sonarqubeEndpoint -> getMajorIssuesCount(projectKey)");
     var value = sonarqube->getMajorIssuesCount(config:getAsString(PROJECT_KEY));
     match value {
-        int val => {boolean hasParameter = (val >= 0) ? true : false;
-        test:assertEquals(hasParameter, true, msg = "Failed getMajorIssuesCount(projectKey)");}
+        int val => {
+            boolean hasParameter = (val >= 0) ? true : false;
+            test:assertEquals(hasParameter, true, msg = "Failed getMajorIssuesCount(projectKey)");
+        }
         error err => test:assertFail(msg = err.message);
     }
 }
 
 @test:Config {
-    groups:["network-calls"]
+    groups: ["network-calls"]
 }
 function testGetOpenIssuesCount() {
     log:printInfo("sonarqubeEndpoint -> getOpenIssuesCount(projectKey)");
     var value = sonarqube->getOpenIssuesCount(config:getAsString(PROJECT_KEY));
     match value {
-        int val => {boolean hasParameter = (val >= 0) ? true : false;
-        test:assertEquals(hasParameter, true, msg = "Failed getOpenIssuesCount(projectKey)");}
+        int val => {
+            boolean hasParameter = (val >= 0) ? true : false;
+            test:assertEquals(hasParameter, true, msg = "Failed getOpenIssuesCount(projectKey)");
+        }
         error err => test:assertFail(msg = err.message);
     }
 }
 
 @test:Config {
-    groups:["network-calls"]
+    groups: ["network-calls"]
 }
 function testGetConfirmedIssuesCount() {
     log:printInfo("sonarqubeEndpoint -> getConfirmedIssuesCount(projectKey)");
     var value = sonarqube->getConfirmedIssuesCount(config:getAsString(PROJECT_KEY));
     match value {
-        int val => {boolean hasParameter = (val >= 0) ? true : false;
-        test:assertEquals(hasParameter, true, msg = "Failed getConfirmedIssuesCount(projectKey)");}
+        int val => {
+            boolean hasParameter = (val >= 0) ? true : false;
+            test:assertEquals(hasParameter, true, msg = "Failed getConfirmedIssuesCount(projectKey)");
+        }
         error err => test:assertFail(msg = err.message);
     }
 }
 
 @test:Config {
-    groups:["network-calls"]
+    groups: ["network-calls"]
 }
 function testGetLinesOfCode() {
     log:printInfo("sonarqubeEndpoint -> getLinesOfCode(projectKey)");
     var value = sonarqube->getLinesOfCode(config:getAsString(PROJECT_KEY));
     match value {
-        int val => {boolean hasParameter = (val > 0) ? true : false;
-        test:assertEquals(hasParameter, true, msg = "Failed getLinesOfCode(projectKey)");}
+        int val => {
+            boolean hasParameter = (val > 0) ? true : false;
+            test:assertEquals(hasParameter, true, msg = "Failed getLinesOfCode(projectKey)");
+        }
         error err => test:assertFail(msg = err.message);
     }
 }
 
 @test:Config {
-    groups:["network-calls"]
+    groups: ["network-calls"]
 }
 function testGetCodeSmellsCount() {
     log:printInfo("sonarqubeEndpoint -> getCodeSmellsCount(projectKey)");
     var value = sonarqube->getCodeSmellsCount(config:getAsString(PROJECT_KEY));
     match value {
-        int val => {boolean hasParameter = (val >= 0) ? true : false;
-        test:assertEquals(hasParameter, true, msg = "Failed getCodeSmellsCount(projectKey)");}
+        int val => {
+            boolean hasParameter = (val >= 0) ? true : false;
+            test:assertEquals(hasParameter, true, msg = "Failed getCodeSmellsCount(projectKey)");
+        }
         error err => test:assertFail(msg = err.message);
     }
 }
 
 
 @test:Config {
-    groups:["network-calls"]
+    groups: ["network-calls"]
 }
 function testGetVulnerabilitiesCount() {
     log:printInfo("sonarqubeEndpoint -> getVulnerabilitiesCount(projectKey)");
     var value = sonarqube->getVulnerabilitiesCount(config:getAsString(PROJECT_KEY));
     match value {
-        int val => {boolean hasParameter = (val >= 0) ? true : false;
-        test:assertEquals(hasParameter, true, msg = "Failed getVulnerabilitiesCount(projectKey)");}
+        int val => {
+            boolean hasParameter = (val >= 0) ? true : false;
+            test:assertEquals(hasParameter, true, msg = "Failed getVulnerabilitiesCount(projectKey)");
+        }
         error err => test:assertFail(msg = err.message);
     }
 }
 
 @test:Config {
-    groups:["network-calls"]
+    groups: ["network-calls"]
 }
 function testGetBugsCount() {
     log:printInfo("sonarqubeEndpoint -> getBugsCount(projectKey)");
     var value = sonarqube->getBugsCount(config:getAsString(PROJECT_KEY));
     match value {
-        int val => {boolean hasParameter = (val >= 0) ? true : false;
-        test:assertEquals(hasParameter, true, msg = "Failed getBugsCount(projectKey)");}
+        int val => {
+            boolean hasParameter = (val >= 0) ? true : false;
+            test:assertEquals(hasParameter, true, msg = "Failed getBugsCount(projectKey)");
+        }
         error err => test:assertFail(msg = err.message);
     }
 }
 
 @test:Config {
-    groups:["network-calls"]
+    groups: ["network-calls"]
 }
 function testGetLineCoverage() {
     log:printInfo("sonarqubeEndpoint -> getLineCoverage(projectKey)");
     var value = sonarqube->getLineCoverage(config:getAsString(PROJECT_KEY));
     match value {
-        string val => {boolean hasCharacter = (val.indexOf("%") != -1) ? true : false;
-        test:assertEquals(hasCharacter, true, msg = "Failed getLineCoverage(projectKey)");}
+        string val => {
+            boolean hasCharacter = (val.indexOf("%") != -1) ? true : false;
+            test:assertEquals(hasCharacter, true, msg = "Failed getLineCoverage(projectKey)");
+        }
         error err => test:assertFail(msg = err.message);
     }
 }
 
 @test:Config {
-    groups:["network-calls"]
+    groups: ["network-calls"]
 }
 function testGetSQALERating() {
     log:printInfo("sonarqubeEndpoint -> getSQALERating(projectKey)");
@@ -285,65 +315,74 @@ function testGetSQALERating() {
             if (val == "A" || val == "B" || val == "C" || val == "D" || val == "E") {
                 hasCharacters = true;
             }
-            test:assertEquals(hasCharacters, true, msg = "Failed getSQALERating(projectKey)");}
+            test:assertEquals(hasCharacters, true, msg = "Failed getSQALERating(projectKey)");
+        }
         error err => test:assertFail(msg = err.message);
     }
 }
 
 @test:Config {
-    groups:["network-calls"]
+    groups: ["network-calls"]
 }
 function testGetTechnicalDebt() {
     log:printInfo("sonarqubeEndpoint -> getTechnicalDebt(projectKey)");
     var value = sonarqube->getTechnicalDebt(config:getAsString(PROJECT_KEY));
     match value {
-        string val => {boolean notEmpty = (val != "") ? true : false;
-        test:assertEquals(notEmpty, true, msg = "Failed getTechnicalDebt(projectKey)");}
+        string val => {
+            boolean notEmpty = (val != "") ? true : false;
+            test:assertEquals(notEmpty, true, msg = "Failed getTechnicalDebt(projectKey)");
+        }
         error err => test:assertFail(msg = err.message);
     }
 }
 
 @test:Config {
-    groups:["network-calls"]
+    groups: ["network-calls"]
 }
 function testGetTechnicalDebtRatio() {
     log:printInfo("sonarqubeEndpoint -> getTechnicalDebtRatio(projectKey)");
     var value = sonarqube->getTechnicalDebtRatio(config:getAsString(PROJECT_KEY));
     match value {
-        string val => {boolean notEmpty = (val != "") ? true : false;
-        test:assertEquals(notEmpty, true, msg = "Failed getTechnicalDebtRatio(projectKey)");}
+        string val => {
+            boolean notEmpty = (val != "") ? true : false;
+            test:assertEquals(notEmpty, true, msg = "Failed getTechnicalDebtRatio(projectKey)");
+        }
         error err => test:assertFail(msg = err.message);
     }
 }
 
 @test:Config {
-    groups:["network-calls"]
+    groups: ["network-calls"]
 }
 function testGetSecurityRating() {
     log:printInfo("sonarqubeEndpoint -> getSecurityRating(projectKey)");
     var value = sonarqube->getSecurityRating(config:getAsString(PROJECT_KEY));
     match value {
-        string val => {boolean hasCharacters = false;
-        if (val == "A" || val == "B" || val == "C" || val == "D" || val == "E") {
-            hasCharacters = true;
+        string val => {
+            boolean hasCharacters = false;
+            if (val == "A" || val == "B" || val == "C" || val == "D" || val == "E") {
+                hasCharacters = true;
+            }
+            test:assertEquals(hasCharacters, true, msg = "Failed getSecurityRating(projectKey)");
         }
-        test:assertEquals(hasCharacters, true, msg = "Failed getSecurityRating(projectKey)");}
         error err => test:assertFail(msg = err.message);
     }
 }
 
 @test:Config {
-    groups:["network-calls"]
+    groups: ["network-calls"]
 }
 function testGetReliability() {
     log:printInfo("sonarqubeEndpoint -> getReliabilityRating(projectKey)");
     var value = sonarqube->getReliabilityRating(config:getAsString(PROJECT_KEY));
     match value {
-        string val => {boolean hasCharacters = false;
-        if (val == "A" || val == "B" || val == "C" || val == "D" || val == "E") {
-            hasCharacters = true;
+        string val => {
+            boolean hasCharacters = false;
+            if (val == "A" || val == "B" || val == "C" || val == "D" || val == "E") {
+                hasCharacters = true;
+            }
+            test:assertEquals(hasCharacters, true, msg = "Failed getReliabilityRating(projectKey)");
         }
-        test:assertEquals(hasCharacters, true, msg = "Failed getReliabilityRating(projectKey)");}
         error err => test:assertFail(msg = err.message);
     }
 }
