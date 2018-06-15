@@ -37,10 +37,10 @@ public type Client object {
     }
 
     documentation{ SonarQube connector endpoint initialization function.
-        P{{sonarqubeConfig}} SonarQube connector endpoint configuration
+        P{{config}} SonarQube connector endpoint configuration
     }
-    public function init(SonarQubeConfiguration sonarqubeConfig) {
-        sonarqubeConnector.client.init(sonarqubeConfig.clientConfig);
+    public function init(SonarQubeConfiguration config) {
+        sonarqubeConnector.client.init(config.clientConfig);
     }
 
     documentation{Returns the SonarQube connector client.
