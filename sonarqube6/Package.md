@@ -14,9 +14,9 @@ count. etc. Users can also use this connector to get multiple code-quality measu
 ## Compatibility
 
 |                    |    Version     |  
-|  ----------------- | -------------- | 
-| Ballerina Language |   0.975.0     |
-|  SonarQube API     |   6.7.2        |
+| ------------------ | -------------- |
+| Ballerina Language |   0.975.0      |
+| SonarQube API      |   6.7.2        |
 
 
 ## Sample
@@ -74,8 +74,8 @@ The `match` operation can be used to handle the response if an error occurs.
 
 ```ballerina
 match value {
-        string val => io:println(val);       
-        error err => io:println(err);
+    string val => io:println(val);
+    error err => io:println(err);
 }
 ``` 
 
@@ -91,7 +91,7 @@ The `match` operation can be used to handle the response if an error occurs.
 
 ```ballerina
 match value {
-        string val => io:println(val);       
-        error err => io:println(err);
+    string val => io:println(val);
+    error err => io:println(err);
 }
 ```

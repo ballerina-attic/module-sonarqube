@@ -4,9 +4,9 @@ SonarQube connector provides a Ballerina API to access the [SonarQube REST API](
 
 ## Compatibility
 
-| Ballerina Language Version                   | API Version     
-| ---------------------------------------------| :--------------:
-| 0.975.0                                    | 6.7.2
+| Ballerina Language Version       | API Version     |
+| ---------------------------------| :--------------:|
+| 0.975.0                          | 6.7.2           |
 
 ## Getting started
 
@@ -25,6 +25,7 @@ SonarQube connector provides a Ballerina API to access the [SonarQube REST API](
 5. Import the sonarqube package to your Ballerina project as follows.
 
 ```ballerina
+import ballerina/config;
 import ballerina/io;
 import wso2/sonarqube6;
 
@@ -33,20 +34,20 @@ string sonarqubeURL = "your sonarqube url";
 
 function main(string... args) {
 
-   endpoint Client sonarqube {
+   endpoint sonarqube6:Client sonarqube {
        clientConfig:{
            url:sonarqubeURL,
            auth:{
-               scheme:"basic",
+               scheme:http:BASIC_AUTH,
                username:token,
                password:""
            }
        }
    };
    
-   var projectDetails = sonarqube -> getProject(config:getAsString(PROJECT_NAME));
+   var projectDetails = sonarqube->getProject(config:getAsString(PROJECT_NAME));
        match projectDetails {
-           Project project => io:println(projects);
+           sonarqube6:Project project => io:println(projects);
            error err => io:println(err);
        }
 }

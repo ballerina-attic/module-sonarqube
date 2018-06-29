@@ -5,9 +5,9 @@ various actions.
 
 ## Compatibility
 
-| Language Version                             | SonarQube API Version |
-| ------------------------------------------ | ------------------ |
-| 0.974.1                                    |  6.7.2         |
+| Language Version    | SonarQube API Version |
+| ------------------- | --------------------- |
+| 0.975.0             |  6.7.2                |
 
 ## Running tests
 
@@ -29,12 +29,12 @@ project_name = ""
 project_key = ""
 ```
 
-| Parameter   | Description                                                                                  |
-| ----------- | -------------------------------------------------------------------------------------------- |
-| sonarqube_uri    | The base url of your SonarQube server.                                                                 |
-| sonarqube_token | Auth token of your SonarQube account.                                                      |
-|project_name | Name of a project in SonarQube server.                        |
-| project_key  | Key of a project in SonarQube server.                        |
+| Parameter         | Description                                |
+| ----------------- | ------------------------------------------ |
+| sonarqube_uri     | The base url of your SonarQube server.     |
+| sonarqube_token   | Auth token of your SonarQube account.      |
+| project_name      | Name of a project in SonarQube server.     |
+| project_key       | Key of a project in SonarQube server.      |
 
 Run tests :
 ```
