@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/wso2-ballerina/package-sonarqube.svg?branch=master)](https://travis-ci.org/wso2-ballerina/package-sonarqube)
+
 # SonarQube Connector
 
 SonarQube connector provides a Ballerina API to access the [SonarQube REST API](https://docs.sonarqube.org/display/DEV/Web+API)
