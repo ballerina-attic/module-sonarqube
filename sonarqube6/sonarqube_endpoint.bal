@@ -21,7 +21,7 @@ import ballerina/http;
 documentation{ Represents the SonarQube Client Connector Endpoint configuration.
     F{{clientConfig}} Http client endpoint configuration
 }
-public type SonarQubeConfiguration {
+public type SonarQubeConfiguration record {
     http:ClientEndpointConfig clientConfig;
 };
 
@@ -31,10 +31,8 @@ documentation{ Represents the SonarQube Client Connector Endpoint object.
     F{{sonarqubeConnector}} SonarQube client connector object
 }
 public type Client object {
-    public {
-        SonarQubeConfiguration sonarqubeConfig;
-        SonarQubeConnector sonarqubeConnector = new();
-    }
+    public SonarQubeConfiguration sonarqubeConfig;
+    public SonarQubeConnector sonarqubeConnector = new();
 
     documentation{ SonarQube connector endpoint initialization function.
         P{{config}} SonarQube connector endpoint configuration

@@ -21,9 +21,7 @@ import ballerina/log;
 import ballerina/math;
 
 public type SonarQubeConnector object {
-    private {
-        http:Client client;
-    }
+    http:Client client;
 
     documentation{Returns a Project record.
         R{{Project}} If the execution is successful returns a Project record else an error
@@ -200,7 +198,7 @@ public type SonarQubeConnector object {
     function getMeasure(string projectKey, string metricName) returns string|error;
 };
 
-public function SonarQubeConnector::getProject(string projectName) returns Project|error {
+function SonarQubeConnector::getProject(string projectName) returns Project|error {
     endpoint http:Client httpEndpoint = self.client;
 
     // get the first page of the project details
@@ -269,7 +267,7 @@ public function SonarQubeConnector::getProject(string projectName) returns Proje
     }
 }
 
-public function SonarQubeConnector::getAllProjects() returns (Project[]|error) {
+function SonarQubeConnector::getAllProjects() returns (Project[]|error) {
     endpoint http:Client httpEndpoint = self.client;
 
     // get the first page of the project details
@@ -339,7 +337,7 @@ public function SonarQubeConnector::getAllProjects() returns (Project[]|error) {
     }
 }
 
-public function SonarQubeConnector::getMetricValues(string projectKey, string[] metricKeys) returns (map|error) {
+function SonarQubeConnector::getMetricValues(string projectKey, string[] metricKeys) returns (map|error) {
     endpoint http:Client httpEndpoint = self.client;
     string keyList = "";
     foreach key in metricKeys {
@@ -388,88 +386,88 @@ public function SonarQubeConnector::getMetricValues(string projectKey, string[] 
     }
 }
 
-public function SonarQubeConnector::getComplexity(string projectKey) returns (int|error) {
+function SonarQubeConnector::getComplexity(string projectKey) returns (int|error) {
     string value = check self.getMeasure(projectKey, COMPLEXITY);
     return <int>value;
 }
 
-public function SonarQubeConnector::getDuplicatedCodeBlocksCount(string projectKey) returns (int|error) {
+function SonarQubeConnector::getDuplicatedCodeBlocksCount(string projectKey) returns (int|error) {
     string value = check self.getMeasure(projectKey, DUPLICATED_BLOCKS_COUNT);
     return <int>value;
 }
 
-public function SonarQubeConnector::getDuplicatedFilesCount(string projectKey) returns (int|error) {
+function SonarQubeConnector::getDuplicatedFilesCount(string projectKey) returns (int|error) {
     string value = check self.getMeasure(projectKey, DUPLICATED_FILES_COUNT);
     return <int>value;
 }
 
-public function SonarQubeConnector::getDuplicatedLinesCount(string projectKey) returns (int|error) {
+function SonarQubeConnector::getDuplicatedLinesCount(string projectKey) returns (int|error) {
     string value = check self.getMeasure(projectKey, DUPLICATED_LINES_COUNT);
     return <int>value;
 }
 
-public function SonarQubeConnector::getBlockerIssuesCount(string projectKey) returns (int|error) {
+function SonarQubeConnector::getBlockerIssuesCount(string projectKey) returns (int|error) {
     string value = check self.getMeasure(projectKey, BLOCKER_ISSUES_COUNT);
     return <int>value;
 }
 
-public function SonarQubeConnector::getCriticalIssuesCount(string projectKey) returns (int|error) {
+function SonarQubeConnector::getCriticalIssuesCount(string projectKey) returns (int|error) {
     string value = check self.getMeasure(projectKey, CRITICAL_ISSUES_COUNT);
     return <int>value;
 }
 
-public function SonarQubeConnector::getMajorIssuesCount(string projectKey) returns (int|error) {
+function SonarQubeConnector::getMajorIssuesCount(string projectKey) returns (int|error) {
     string value = check self.getMeasure(projectKey, MAJOR_ISSUES_COUNT);
     return <int>value;
 }
 
-public function SonarQubeConnector::getMinorIssuesCount(string projectKey) returns (int|error) {
+function SonarQubeConnector::getMinorIssuesCount(string projectKey) returns (int|error) {
     string value = check self.getMeasure(projectKey, MINOR_ISSUES_COUNT);
     return <int>value;
 }
 
-public function SonarQubeConnector::getOpenIssuesCount(string projectKey) returns (int|error) {
+function SonarQubeConnector::getOpenIssuesCount(string projectKey) returns (int|error) {
     string value = check self.getMeasure(projectKey, OPEN_ISSUES_COUNT);
     return <int>value;
 }
 
-public function SonarQubeConnector::getConfirmedIssuesCount(string projectKey) returns (int|error) {
+function SonarQubeConnector::getConfirmedIssuesCount(string projectKey) returns (int|error) {
     string value = check self.getMeasure(projectKey, CONFIRMED_ISSUES_COUNT);
     return <int>value;
 }
 
-public function SonarQubeConnector::getReopenedIssuesCount(string projectKey) returns (int|error) {
+function SonarQubeConnector::getReopenedIssuesCount(string projectKey) returns (int|error) {
     string value = check self.getMeasure(projectKey, REOPENED_ISSUES_COUNT);
     return <int>value;
 }
 
-public function SonarQubeConnector::getLinesOfCode(string projectKey) returns (int|error) {
+function SonarQubeConnector::getLinesOfCode(string projectKey) returns (int|error) {
     string value = check self.getMeasure(projectKey, LINES_OF_CODE);
     return <int>value;
 }
 
-public function SonarQubeConnector::getLineCoverage(string projectKey) returns (string)|error {
+function SonarQubeConnector::getLineCoverage(string projectKey) returns (string)|error {
     string value = check self.getMeasure(projectKey, LINE_COVERAGE);
     return value + "%";
 }
 
-public function SonarQubeConnector::getCoveredLinesCount(string projectKey) returns (int|error) {
+function SonarQubeConnector::getCoveredLinesCount(string projectKey) returns (int|error) {
     int linesToCover = check <int>check self.getMeasure(projectKey, LINES_TO_COVER);
     int uncoveredLines = check <int>check self.getMeasure(projectKey, UNCOVERED_LINES);
     return linesToCover - uncoveredLines;
 }
 
-public function SonarQubeConnector::getBranchCoverage(string projectKey) returns (string|error) {
+function SonarQubeConnector::getBranchCoverage(string projectKey) returns (string|error) {
     string value = check self.getMeasure(projectKey, BRANCH_COVERAGE);
     return value + "%";
 }
 
-public function SonarQubeConnector::getCodeSmellsCount(string projectKey) returns (int|error) {
+function SonarQubeConnector::getCodeSmellsCount(string projectKey) returns (int|error) {
     string value = check self.getMeasure(projectKey, CODE_SMELLS);
     return <int>value;
 }
 
-public function SonarQubeConnector::getSQALERating(string projectKey) returns (string|error) {
+function SonarQubeConnector::getSQALERating(string projectKey) returns (string|error) {
     float floatValue = check <float>check self.getMeasure(projectKey, SQALE_RATING);
     int value = math:round(floatValue);
     if (value <= 5) {
@@ -484,20 +482,20 @@ public function SonarQubeConnector::getSQALERating(string projectKey) returns (s
     return "E";
 }
 
-public function SonarQubeConnector::getTechnicalDebt(string projectKey) returns (string|error) {
+function SonarQubeConnector::getTechnicalDebt(string projectKey) returns (string|error) {
     return self.getMeasure(projectKey, TECHNICAL_DEBT);
 }
 
-public function SonarQubeConnector::getTechnicalDebtRatio(string projectKey) returns (string|error) {
+function SonarQubeConnector::getTechnicalDebtRatio(string projectKey) returns (string|error) {
     return self.getMeasure(projectKey, TECHNICAL_DEBT_RATIO);
 }
 
-public function SonarQubeConnector::getVulnerabilitiesCount(string projectKey) returns (int|error) {
+function SonarQubeConnector::getVulnerabilitiesCount(string projectKey) returns (int|error) {
     string value = check self.getMeasure(projectKey, VULNERABILITIES);
     return <int>value;
 }
 
-public function SonarQubeConnector::getSecurityRating(string projectKey) returns (string|error) {
+function SonarQubeConnector::getSecurityRating(string projectKey) returns (string|error) {
     string value = check self.getMeasure(projectKey, SECURITY_RATING);
     if (value == NO_VULNERABILITY) {
         return "A";
@@ -511,12 +509,12 @@ public function SonarQubeConnector::getSecurityRating(string projectKey) returns
     return "E";
 }
 
-public function SonarQubeConnector::getBugsCount(string projectKey) returns (int|error) {
+function SonarQubeConnector::getBugsCount(string projectKey) returns (int|error) {
     string value = check self.getMeasure(projectKey, BUGS_COUNT);
     return <int>value;
 }
 
-public function SonarQubeConnector::getReliabilityRating(string projectKey) returns (string|error) {
+function SonarQubeConnector::getReliabilityRating(string projectKey) returns (string|error) {
     string value = check self.getMeasure(projectKey, RELIABILITY_RATING);
     if (value == NO_BUGS) {
         return "A";
@@ -530,7 +528,7 @@ public function SonarQubeConnector::getReliabilityRating(string projectKey) retu
     return "E";
 }
 
-public function SonarQubeConnector::getIssues(string projectKey) returns (Issue[]|error) {
+function SonarQubeConnector::getIssues(string projectKey) returns (Issue[]|error) {
     endpoint http:Client httpEndpoint = self.client;
     http:Request request = new;
     string requestPath = API_ISSUES_SEARCH + "?" + PROJECT_KEYS + "=" + projectKey + "&" + EXTRA_CONTENT;
