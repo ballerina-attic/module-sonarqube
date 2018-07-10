@@ -23,7 +23,7 @@ documentation{Represents a summary of a SonarQube project.
     F{{key}} project key
     F{{id}} project Id
 }
-public type Project {
+public type Project record {
     string name;
     string key;
     string id;
@@ -43,7 +43,7 @@ documentation{Represents a summary of a project issue.
     F{{comments}} comments in the issue
     F{{workflowTransitions}} available workflow transitions for the issue
 }
-public type Issue {
+public type Issue record {
     string key;
     string severity;
     string status;
@@ -62,7 +62,7 @@ documentation{Represents a position of a SonarQube Issue.
     F{{startLine}} start line of poition
     F{{endLine}} end line of position
 }
-public type Position {
+public type Position record {
     string startLine;
     string endLine;
 };
@@ -73,7 +73,7 @@ documentation{Represents a comment in SonarQube Issue.
     F{{commenter}} commenter of the comment
     F{{createdDate}} date of creation
 }
-public type Comment {
+public type Comment record {
     string text;
     string key;
     string commenter;
