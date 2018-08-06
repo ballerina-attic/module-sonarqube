@@ -15,7 +15,7 @@ count. etc. Users can also use this connector to get multiple code-quality measu
 
 |                    |    Version     |  
 | ------------------ | -------------- |
-| Ballerina Language |   0.990.0      |
+| Ballerina Language |   0.981.0      |
 | SonarQube API      |   6.7.2        |
 
 
