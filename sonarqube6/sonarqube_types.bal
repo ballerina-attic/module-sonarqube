@@ -18,31 +18,29 @@
 
 import ballerina/http;
 
-documentation{Represents a summary of a SonarQube project.
-    F{{name}} project name
-    F{{key}} project key
-    F{{id}} project Id
-}
+# Represents a summary of a SonarQube project.
+# + name - project name
+# + key - project key
+# + id - project Id
 public type Project record {
     string name;
     string key;
     string id;
 };
 
-documentation{Represents a summary of a project issue.
-    F{{key}} issue key
-    F{{severity}} severity of the issue
-    F{{status}} status of the issue
-    F{{description}} issue description
-    F{{author}} author of the issue
-    F{{creationDate}} date of creation
-    F{{assignee}} assignee of the issue
-    F{{issueType}} type of the issue
-    F{{position}} position of the issue
-    F{{tags}} string array of issue tags
-    F{{comments}} comments in the issue
-    F{{workflowTransitions}} available workflow transitions for the issue
-}
+# Represents a summary of a project issue.
+# + key - issue key
+# + severity - severity of the issue
+# + status - status of the issue
+# + description - issue description
+# + author - author of the issue
+# + creationDate - date of creation
+# + assignee - assignee of the issue
+# + issueType - type of the issue
+# + position - position of the issue
+# + tags - string array of issue tags
+# + comments - comments in the issue
+# + workflowTransitions - available workflow transitions for the issue
 public type Issue record {
     string key;
     string severity;
@@ -58,21 +56,19 @@ public type Issue record {
     string[] workflowTransitions = [];
 };
 
-documentation{Represents a position of a SonarQube Issue.
-    F{{startLine}} start line of poition
-    F{{endLine}} end line of position
-}
+# Represents a position of a SonarQube Issue.
+# + startLine - start line of poition
+# + endLine - end line of position
 public type Position record {
     string startLine;
     string endLine;
 };
 
-documentation{Represents a comment in SonarQube Issue.
-    F{{text}} comment text
-    F{{key}} key of a comment
-    F{{commenter}} commenter of the comment
-    F{{createdDate}} date of creation
-}
+# Represents a comment in SonarQube Issue.
+# + text - comment text
+# + key - key of a comment
+# + commenter - commenter of the comment
+# + createdDate - date of creation
 public type Comment record {
     string text;
     string key;

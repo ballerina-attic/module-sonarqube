@@ -18,32 +18,27 @@
 
 import ballerina/http;
 
-documentation{ Represents the SonarQube Client Connector Endpoint configuration.
-    F{{clientConfig}} Http client endpoint configuration
-}
+# Represents the SonarQube Client Connector Endpoint configuration.
+# + clientConfig - Http client endpoint configuration
 public type SonarQubeConfiguration record {
     http:ClientEndpointConfig clientConfig;
 };
 
-documentation{ Represents the SonarQube Client Connector Endpoint object.
-    E{{}}
-    F{{sonarqubeConfig}} SonarQube client Connector endpoint configuration
-    F{{sonarqubeConnector}} SonarQube client connector object
-}
+# Represents the SonarQube Client Connector Endpoint object.
+# + sonarqubeConfig - SonarQube client Connector endpoint configuration
+# + sonarqubeConnector - SonarQube client connector object
 public type Client object {
     public SonarQubeConfiguration sonarqubeConfig;
     public SonarQubeConnector sonarqubeConnector = new();
 
-    documentation{ SonarQube connector endpoint initialization function.
-        P{{config}} SonarQube connector endpoint configuration
-    }
+    # SonarQube connector endpoint initialization function.
+    # + config - SonarQube connector endpoint configuration
     public function init(SonarQubeConfiguration config) {
         sonarqubeConnector.client.init(config.clientConfig);
     }
 
-    documentation{Returns the SonarQube connector client.
-        R{{SonarQubeConnector}} The SonarQube connector client
-    }
+    # Returns the SonarQube connector client.
+    # + return - The SonarQube connector client
     public function getCallerActions() returns SonarQubeConnector {
         return sonarqubeConnector;
     }

@@ -16,12 +16,9 @@
 // under the License.
 //
 
-documentation{
-    Transforms JSON comment object into Comment.
-
-    P{{commentDetails}} - Json comment object
-    R{{}} - Comment type object.
-}
+# Transforms JSON comment object into Comment.
+# + commentDetails - Json comment object
+# + return - Comment type object.
 function convertJsonToComment(json commentDetails) returns Comment {
     Comment comment = {};
     comment.text = commentDetails[HTML_TEXT].toString();
@@ -31,12 +28,9 @@ function convertJsonToComment(json commentDetails) returns Comment {
     return comment;
 }
 
-documentation{
-    Transforms JSON project object into Project.
-
-    P{{projectDetails}} - Json project object
-    R{{}} - Project type object.
-}
+# Transforms JSON project object into Project.
+# + projectDetails - Json project object
+# + return - Project type object.
 function convertJsonToProject(json projectDetails) returns Project {
     Project project = {};
     project.name = projectDetails[NAME].toString();
@@ -45,12 +39,9 @@ function convertJsonToProject(json projectDetails) returns Project {
     return project;
 }
 
-documentation{
-    Transforms JSON issue object into Issue.
-
-    P{{issueDetails}} - Json issue object
-    R{{}} - Issue type object.
-}
+# Transforms JSON issue object into Issue.
+# + issueDetails - Json issue object
+# + return - Issue type object.
 function convertJsonToIssue(json issueDetails) returns Issue {
     Issue issue = {};
     issue.key = issueDetails[KEY].toString();
