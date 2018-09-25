@@ -46,22 +46,22 @@ public type SonarQubeConnector object {
     # + return - If the execution is successful returns number of duplicated lines else an error
     public function getDuplicatedLinesCount(string projectKey) returns (int|error);
 
-    # Number of blocker issues in a project.Blocker issue may be a bug with a high probability to impact
-    # the behavior of the application in production: memory leak, unclosed JDBC connection, .... The code MUST be
-    # immediately fixed..
+    # Number of blocker issues in a project. Blocker issue may be a bug with a high probability to impact.
+    # The behavior of the application in production: memory leak, unclosed JDBC connection, .... The code MUST be
+    # immediately fixed.
     # + projectKey - Key of a project
     # + return - If the execution is successful returns number of blocker issues else an error
     public function getBlockerIssuesCount(string projectKey) returns (int|error);
 
     # Number of critical issues in a project.Either a bug with a low probability to impact the behavior
     # of the application in production or an issue which represents a security flaw: empty catch block, SQL injection,
-    # The code MUST be immediately reviewed..
+    # The code MUST be immediately reviewed.
     # + projectKey - Key of a project
     # + return - If the execution is successful returns number of critical issues else an error
     public function getCriticalIssuesCount(string projectKey) returns (int|error);
 
     # Number of major issues in a project.Quality flaw which can highly impact the developer productivity:
-    # uncovered piece of code, duplicated blocks, unused parameters, ...
+    # uncovered piece of code, duplicated blocks, unused parameters.
     # + projectKey - Key of a project
     # + return - If the execution is successful returns number of major issues else an error
     public function getMajorIssuesCount(string projectKey) returns (int|error);
@@ -97,7 +97,7 @@ public type SonarQubeConnector object {
     # + return - If the execution is successful returns line coverage else an error
     public function getLineCoverage(string projectKey) returns (string)|error;
 
-    # Get complexity of a project.Complexity calculated based on the number of paths through the code.
+    # Get complexity of a project. Complexity calculated based on the number of paths through the code.
     # + projectKey - Key of a project
     # + return - If the execution is successful returns complexity else an error
     public function getComplexity(string projectKey) returns (int|error);

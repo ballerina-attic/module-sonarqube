@@ -17,7 +17,7 @@
 //
 
 # Transforms JSON comment object into Comment.
-# + commentDetails - Json comment object
+# + commentDetails - `json` comment object
 # + return - Comment type object.
 function convertJsonToComment(json commentDetails) returns Comment {
     Comment comment = {};
@@ -29,7 +29,7 @@ function convertJsonToComment(json commentDetails) returns Comment {
 }
 
 # Transforms JSON project object into Project.
-# + projectDetails - Json project object
+# + projectDetails - `json` project object
 # + return - Project type object.
 function convertJsonToProject(json projectDetails) returns Project {
     Project project = {};
@@ -40,7 +40,7 @@ function convertJsonToProject(json projectDetails) returns Project {
 }
 
 # Transforms JSON issue object into Issue.
-# + issueDetails - Json issue object
+# + issueDetails - `json` issue object
 # + return - Issue type object.
 function convertJsonToIssue(json issueDetails) returns Issue {
     Issue issue = {};

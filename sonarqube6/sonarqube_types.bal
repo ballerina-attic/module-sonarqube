@@ -19,9 +19,9 @@
 import ballerina/http;
 
 # Represents a summary of a SonarQube project.
-# + name - project name
-# + key - project key
-# + id - project Id
+# + name - Project name
+# + key - Project key
+# + id - Project Id
 public type Project record {
     string name;
     string key;
@@ -29,18 +29,18 @@ public type Project record {
 };
 
 # Represents a summary of a project issue.
-# + key - issue key
-# + severity - severity of the issue
-# + status - status of the issue
-# + description - issue description
-# + author - author of the issue
-# + creationDate - date of creation
-# + assignee - assignee of the issue
-# + issueType - type of the issue
-# + position - position of the issue
+# + key - Issue key
+# + severity - Severity of the issue
+# + status - Status of the issue
+# + description - Issue description
+# + author - Author of the issue
+# + creationDate - Date of creation
+# + assignee - Assignee of the issue
+# + issueType - Type of the issue
+# + position - Position of the issue
 # + tags - string array of issue tags
-# + comments - comments in the issue
-# + workflowTransitions - available workflow transitions for the issue
+# + comments - Comments in the issue
+# + workflowTransitions - Available workflow transitions for the issue
 public type Issue record {
     string key;
     string severity;
@@ -57,18 +57,18 @@ public type Issue record {
 };
 
 # Represents a position of a SonarQube Issue.
-# + startLine - start line of poition
-# + endLine - end line of position
+# + startLine - Start line of poition
+# + endLine - End line of position
 public type Position record {
     string startLine;
     string endLine;
 };
 
 # Represents a comment in SonarQube Issue.
-# + text - comment text
-# + key - key of a comment
-# + commenter - commenter of the comment
-# + createdDate - date of creation
+# + text - Comment text
+# + key - Key of a comment
+# + commenter - Commenter of the comment
+# + createdDate - Date of creation
 public type Comment record {
     string text;
     string key;
