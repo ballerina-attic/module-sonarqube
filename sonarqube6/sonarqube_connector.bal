@@ -23,177 +23,147 @@ import ballerina/math;
 public type SonarQubeConnector object {
     http:Client client;
 
-    documentation{Returns a Project record.
-        R{{Project}} If the execution is successful returns a Project record else an error
-    }
+    # Returns a Project record.
+    # + return - If the execution is successful returns a Project record else an error
     public function getProject(string projectName) returns (Project|error);
 
-    documentation{Returns an array of all projects.
-        R{{Project}} If the execution is successful returns an array of Project records else an error
-    }
+    # Returns an array of all projects.
+    # + return - If the execution is successful returns an array of Project records else an error
     public function getAllProjects() returns (Project[]|error);
 
-    documentation{Get number of duplicated code blocks.
-        P{{projectKey}} Key of a project
-        R{{}} If the execution is successful returns number of duplicated code blocks else an error
-    }
+    # Get number of duplicated code blocks.
+    # + projectKey - Key of a project
+    # + return - If the execution is successful returns number of duplicated code blocks else an error
     public function getDuplicatedCodeBlocksCount(string projectKey) returns (int|error);
 
-    documentation{Get Number of duplicated files.
-        P{{projectKey}} Key of a project
-        R{{}} If the execution is successful returns number of duplicated files else an error
-    }
+    # Get Number of duplicated files.
+    # + projectKey - Key of a project
+    # + return - If the execution is successful returns number of duplicated files else an error
     public function getDuplicatedFilesCount(string projectKey) returns (int|error);
 
-    documentation{Get Number of duplicated lines.
-        P{{projectKey}} Key of a project
-        R{{}} If the execution is successful returns number of duplicated lines else an error
-    }
+    # Get Number of duplicated lines.
+    # + projectKey - Key of a project
+    # + return - If the execution is successful returns number of duplicated lines else an error
     public function getDuplicatedLinesCount(string projectKey) returns (int|error);
 
-    documentation{Number of blocker issues in a project.Blocker issue may be a bug with a high probability to impact
-    the behavior of the application in production: memory leak, unclosed JDBC connection, .... The code MUST be immediately
-    fixed.
-        P{{projectKey}} Key of a project
-        R{{}} If the execution is successful returns number of blocker issues else an error
-    }
+    # Number of blocker issues in a project. Blocker issue may be a bug with a high probability to impact.
+    # The behavior of the application in production: memory leak, unclosed JDBC connection, .... The code MUST be
+    # immediately fixed.
+    # + projectKey - Key of a project
+    # + return - If the execution is successful returns number of blocker issues else an error
     public function getBlockerIssuesCount(string projectKey) returns (int|error);
 
-    documentation{Number of critical issues in a project.Either a bug with a low probability to impact the behavior
-    of the application in production or an issue which represents a security flaw: empty catch block, SQL injection, ...
-    The code MUST be immediately reviewed.
-        P{{projectKey}} Key of a project
-        R{{}} If the execution is successful returns number of critical issues else an error
-    }
+    # Number of critical issues in a project.Either a bug with a low probability to impact the behavior
+    # of the application in production or an issue which represents a security flaw: empty catch block, SQL injection,
+    # The code MUST be immediately reviewed.
+    # + projectKey - Key of a project
+    # + return - If the execution is successful returns number of critical issues else an error
     public function getCriticalIssuesCount(string projectKey) returns (int|error);
 
-    documentation{Number of major issues in a project.Quality flaw which can highly impact the developer productivity:
-    uncovered piece of code, duplicated blocks, unused parameters, ...
-        P{{projectKey}} Key of a project
-        R{{}} If the execution is successful returns number of major issues else an error
-    }
+    # Number of major issues in a project.Quality flaw which can highly impact the developer productivity:
+    # uncovered piece of code, duplicated blocks, unused parameters.
+    # + projectKey - Key of a project
+    # + return - If the execution is successful returns number of major issues else an error
     public function getMajorIssuesCount(string projectKey) returns (int|error);
 
-    documentation{Number of minor issues in a project.Quality flaw which can slightly impact the developer
-    productivity: lines should not be too long, switch statements should have at least 3 cases, ....
-        P{{projectKey}} Key of a project
-        R{{}} If the execution is successful returns number of minor issues else an error
-    }
+    # Number of minor issues in a project.Quality flaw which can slightly impact the developer
+    # productivity: lines should not be too long, switch statements should have at least 3 cases, ....
+    # + projectKey - Key of a project
+    # + return - If the execution is successful returns number of minor issues else an error
     public function getMinorIssuesCount(string projectKey) returns (int|error);
 
-    documentation{Number of open issues in a project.
-        P{{projectKey}} Key of a project
-        R{{}} If the execution is successful returns number of open issues else an error
-    }
+    # Number of open issues in a project.
+    # + projectKey - Key of a project
+    # + return - If the execution is successful returns number of open issues else an error
     public function getOpenIssuesCount(string projectKey) returns (int|error);
 
-    documentation{Number of confirmed issues in a project.
-        P{{projectKey}} Key of a project
-        R{{}} If the execution is successful returns number of confirmed issues else an error
-    }
+    # Number of confirmed issues in a project.
+    # + projectKey - Key of a project
+    # + return - If the execution is successful returns number of confirmed issues else an error
     public function getConfirmedIssuesCount(string projectKey) returns (int|error);
 
-    documentation{Number of reopened issues in a project.
-        P{{projectKey}} Key of a project
-        R{{}} If the execution is successful returns number of repoened issues else an error
-    }
+    # Number of reopened issues in a project.
+    # + projectKey - Key of a project
+    # + return - If the execution is successful returns number of repoened issues else an error
     public function getReopenedIssuesCount(string projectKey) returns (int|error);
 
-    documentation{Get lines of code of a project.
-        P{{projectKey}} Key of a project
-        R{{}} If the execution is successful returns lines of code else an error
-    }
+    # Get lines of code of a project.
+    # + projectKey - Key of a project
+    # + return - If the execution is successful returns lines of code else an error
     public function getLinesOfCode(string projectKey) returns (int|error);
 
-    documentation{Get line coverage of a project.
-        P{{projectKey}} Key of a project
-        R{{}} If the execution is successful returns line coverage else an error
-    }
+    # Get line coverage of a project.
+    # + projectKey - Key of a project
+    # + return - If the execution is successful returns line coverage else an error
     public function getLineCoverage(string projectKey) returns (string)|error;
 
-    documentation{Get complexity of a project.Complexity calculated based on the number of paths through
-     the code.
-        P{{projectKey}} Key of a project
-        R{{}} If the execution is successful returns complexity else an error
-    }
+    # Get complexity of a project. Complexity calculated based on the number of paths through the code.
+    # + projectKey - Key of a project
+    # + return - If the execution is successful returns complexity else an error
     public function getComplexity(string projectKey) returns (int|error);
 
-    documentation{Get number of lines covered by unit tests.
-        P{{projectKey}} Key of a project
-        R{{}} If the execution is successful returns number of covered lines else an error
-    }
+    # Get number of lines covered by unit tests.
+    # + projectKey - Key of a project
+    # + return - If the execution is successful returns number of covered lines else an error
     public function getCoveredLinesCount(string projectKey) returns (int|error);
 
-
-    documentation{Get branch coverage of a project.
-        P{{projectKey}} Key of a project
-        R{{}} returns branch Coverage of a project or an error if an exception raised in getting branch coverage
-    }
+    # Get branch coverage of a project.
+    # + projectKey - Key of a project
+    # + return - branch Coverage of a project or an error if an exception raised in getting branch coverage
     public function getBranchCoverage(string projectKey) returns (string|error);
 
-    documentation{Get number of code smells in a project.Code smell, (or bad smell) is any symptom in the source code
-     of a program that possibly indicates a deeper problem.
-        P{{projectKey}} Key of a project
-        R{{}} If the execution is successful returns number of code smells else an error
-    }
+    # Get number of code smells in a project.Code smell, (or bad smell) is any symptom in the source code
+    # of a program that possibly indicates a deeper problem.
+    # + projectKey - Key of a project
+    # + return - If the execution is successful returns number of code smells else an error
     public function getCodeSmellsCount(string projectKey) returns (int|error);
 
-
-    documentation{Get SQALE rating of a project.This is the rating given to your project related to the value of your
-     Technical Debt Ratio.
-        P{{projectKey}} Key of a project
-        R{{}} If the execution is successful returns SQALE rating else an error
-    }
+    # Get SQALE rating of a project.This is the rating given to your project related to the value of your
+    # Technical Debt Ratio.
+    # + projectKey - Key of a project
+    # + return - If the execution is successful returns SQALE rating else an error
     public function getSQALERating(string projectKey) returns (string|error);
 
-    documentation{Get technical debt of a project.Technical debt is the effort to fix all maintainability issues.
-        P{{projectKey}} Key of a project
-        R{{}} If the execution is successful returns technical debt else an error
-    }
+    # Get technical debt of a project.Technical debt is the effort to fix all maintainability issues.
+    # + projectKey - Key of a project
+    # + return - If the execution is successful returns technical debt else an error
     public function getTechnicalDebt(string projectKey) returns (string|error);
 
-    documentation{Get technical debt ratio of a project.
-        P{{projectKey}} Key of a project
-        R{{}} If the execution is successful returns technical debt ratio else an error
-    }
+    # Get technical debt ratio of a project.
+    # + projectKey - Key of a project
+    # + return - If the execution is successful returns technical debt ratio else an error
     public function getTechnicalDebtRatio(string projectKey) returns (string|error);
 
-    documentation{Get number of vulnerablities of a project.
-        P{{projectKey}} Key of a project
-       R{{}} If the execution is successful returns number of vulnerabilities else an error
-    }
+    # Get number of vulnerablities of a project.
+    # + projectKey - Key of a project
+    # + return - If the execution is successful returns number of vulnerabilities else an error
     public function getVulnerabilitiesCount(string projectKey) returns (int|error);
 
-    documentation{Get security rating of a project.
-        P{{projectKey}} Key of a project
-        R{{}} If the execution is successful returns security rating else an error
-    }
+    # Get security rating of a project.
+    # + projectKey - Key of a project
+    # + return - If the execution is successful returns security rating else an error
     public function getSecurityRating(string projectKey) returns (string|error);
 
-    documentation{Get reliability rating of a project.
-        P{{projectKey}} Key of a project
-        R{{}} If the execution is successful returns reliability rating else an error
-    }
+    # Get reliability rating of a project.
+    # + projectKey - Key of a project
+    # + return - If the execution is successful returns reliability rating else an error
     public function getReliabilityRating(string projectKey) returns (string|error);
 
-    documentation{Get number of bugs in a project.
-        P{{projectKey}} Key of a project
-        R{{}} If the execution is successful returns number of bugs else an error
-    }
+    # Get number of bugs in a project.
+    # + projectKey - Key of a project
+    # + return - If the execution is successful returns number of bugs else an error
     public function getBugsCount(string projectKey) returns (int|error);
 
-    documentation{Get details of project issues.
-        P{{projectKey}} Key of a project
-        R{{}} If the execution is successful returns an array of Issue records else an error
-    }
+    # Get details of project issues.
+    # + projectKey - Key of a project
+    # + return - If the execution is successful returns an array of Issue records else an error
     public function getIssues(string projectKey) returns (Issue[])|error;
 
-    documentation{Get values for provided metrics relavant to a project key.
-        P{{projectKey}} Key of a project
-        P{{metricKeys}} string array of metric keys
-        R{{}} Returns a mapping  of metric name
-        R{{}} Returns error if an exception raised in getting project metric values
-    }
+    # Get values for provided metrics relavant to a project key.
+    # + projectKey - Key of a project
+    # + metricKeys - string array of metric keys
+    # + return - Returns a mapping  of metric name and
+    # Returns error if an exception raised in getting project metric values
     public function getMetricValues(string projectKey, string[] metricKeys) returns (map|error);
     function getMeasure(string projectKey, string metricName) returns string|error;
 };
