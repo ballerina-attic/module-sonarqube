@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/wso2-ballerina/package-sonarqube.svg?branch=master)](https://travis-ci.org/wso2-ballerina/package-sonarqube)
+[![Build Status](https://travis-ci.org/wso2-ballerina/module-sonarqube.svg?branch=master)](https://travis-ci.org/wso2-ballerina/module-sonarqube)
 
 # SonarQube Connector
 
@@ -8,7 +8,7 @@ SonarQube connector provides a Ballerina API to access the [SonarQube REST API](
 
 | Ballerina Language Version       | API Version     |
 |:--------------------------------:|:---------------:|
-| 0.982.0                          | 6.7.2           |
+| 0.983.0                          | 6.7.2           |
 
 ## Getting started
 
@@ -24,7 +24,7 @@ SonarQube connector provides a Ballerina API to access the [SonarQube REST API](
 
       ``<PROJECT_ROOT_DIRECTORY>$ ballerina init``
 
-5. Import the sonarqube package to your Ballerina project as follows.
+5. Import the sonarqube module to your Ballerina project as follows.
 
 ```ballerina
 import ballerina/config;

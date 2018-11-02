@@ -315,7 +315,7 @@ function SonarQubeConnector::getMetricValues(string projectKey, string[] metricK
     }
 
     http:Request request = new;
-    string requestPath = API_MEASURES + projectKey + "&" + METRIC_KEYS + "=" + keyList;
+    string requestPath = API_MEASURES + projectKey + "&" + METRIC_KEYS + "=" + untaint keyList;
     var endpointResponse = httpEndpoint->get(requestPath);
 
     // match endpointResponse

@@ -1,12 +1,12 @@
 Connects to SonarQube from Ballerina.
 
-# Package Overview
+# Module Overview
 
 The SonarQube connector allows you to work with projects and get important code-quality measurements like line coverage, branch coverage, code smells, etc through the SonarQube API. It handles basic authentication.
 
 **SonarQube Project Operations**
 
-The `wso2/sonarqube6` package contains operations that get the details of SonarQube projects and their code-quality 
+The `wso2/sonarqube6` module contains operations that get the details of SonarQube projects and their code-quality 
 measurements such as line coverage, branch coverage, complexities, technical debt, technical debt ratio, duplicated lines 
 count. etc. Users can also use this connector to get multiple code-quality measurements as a map by providing the required metric keys.
 
@@ -15,13 +15,13 @@ count. etc. Users can also use this connector to get multiple code-quality measu
 
 |                    |    Version     |  
 | ------------------ | -------------- |
-| Ballerina Language |   0.982.0      |
+| Ballerina Language |   0.983.0      |
 | SonarQube API      |   6.7.2        |
 
 
 ## Sample
 
-First, import the `wso2/sonarqube6` package into the Ballerina project.
+First, import the `wso2/sonarqube6` module into the Ballerina project.
     
 ```ballerina
 import wso2/sonarqube6;

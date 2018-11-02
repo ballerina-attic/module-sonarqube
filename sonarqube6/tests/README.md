@@ -7,11 +7,11 @@ various actions.
 
 | Language Version    | SonarQube API Version |
 | ------------------- | --------------------- |
-| 0.982.0             |  6.7.2                |
+| 0.983.0             |  6.7.2                |
 
 ## Running tests
 
-All the tests inside this package will make HTTP calls to the SoarQube REST API.
+All the tests inside this module will make HTTP calls to the SoarQube REST API.
 
 In order to run the tests, the user will need to have a SonarQube account and and a token.
 
@@ -19,7 +19,7 @@ In order to run the tests, the user will need to have a SonarQube account and an
 
 - The form at the bottom of the page allows you to generate new tokens. Once you click the generate button, you will see the token value. Copy it immediately; once you dismiss the notification you will not be able to retrieve it.
 
-After that create a Ballerina.conf file inside package-sonarqube and add following details.
+After that create a Ballerina.conf file inside module-sonarqube and add following details.
 
 ###### ballerina.conf
 ```.conf
