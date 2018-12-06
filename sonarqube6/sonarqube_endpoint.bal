@@ -735,11 +735,11 @@ remote function Client.getIssues(string projectKey) returns Issue[]|error {
         if (<string>endpointErrors.detail().message == ""){
             int i = 0;
             json[] issueList = <json[]>getJsonArrayByKey(endpointResponse, ISSUES);
-                foreach var issue in issueList {
-                    Issue issueStruct = convertJsonToIssue(issue);
-                    issues[i] = issueStruct;
-                    i = i + 1;
-                }
+            foreach var issue in issueList {
+                Issue issueStruct = convertJsonToIssue(issue);
+                issues[i] = issueStruct;
+                i = i + 1;
+            }
         } else {
             return endpointErrors;
         }
