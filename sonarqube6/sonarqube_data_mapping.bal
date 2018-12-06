@@ -55,31 +55,31 @@ function convertJsonToIssue(json issueDetails) returns Issue {
     issue.position = {};
     issue.position.startLine = issueDetails[ISSUE_RANGE][START_LINE].toString();
     issue.position.endLine = issueDetails[ISSUE_RANGE][END_LINE].toString();
-    json tags = issueDetails[TAGS];
+    json[] tags = <json[]>issueDetails[TAGS];
     int count = 0;
-    if (tags != ()) {
+    if (tags.length() > 0) {
         string[] tagList = [];
-        foreach tag in tags {
+        foreach json tag in tags {
             tagList[count] = tag.toString();
             count += 1;
         }
         issue.tags = tagList;
         count = 0;
     }
-    json transitions = issueDetails[TRANSITIONS];
-    if (transitions != ()) {
+    json[] transitions = <json[]>issueDetails[TRANSITIONS];
+    if (transitions.length() > 0) {
         string[] workflowTransitions = [];
-        foreach transition in transitions {
+        foreach json transition in transitions {
             workflowTransitions[count] = transition.toString();
             count += 1;
         }
         issue.workflowTransitions = workflowTransitions;
         count = 0;
     }
-    json comments = issueDetails[COMMENTS];
-    if (comments != ()) {
+    json[] comments = <json[]>issueDetails[COMMENTS];
+    if (comments.length() > 0) {
         Comment[] commentList = [];
-        foreach comment in comments {
+        foreach json comment in comments {
             commentList[count] = convertJsonToComment(comment);
             count += 1;
         }

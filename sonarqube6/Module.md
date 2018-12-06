@@ -15,7 +15,7 @@ count. etc. Users can also use this connector to get multiple code-quality measu
 
 |                    |    Version     |  
 | ------------------ | -------------- |
-| Ballerina Language |   0.983.0      |
+| Ballerina Language |   0.990.0      |
 | SonarQube API      |   6.7.2        |
 
 
@@ -34,9 +34,9 @@ import wso2/sonarqube6;
 
 You can now enter the token in the HTTP client config:
 ```ballerina
-endpoint sonarqube6:Client sonarqubeEP {
+sonarqube6:SonarQubeConfiguration sonarqubeConfig = {
     clientConfig:{
-        url:url,
+        url:sonarqubeURL,
         auth:{
             scheme:http:BASIC_AUTH,
             username:token,
@@ -44,6 +44,8 @@ endpoint sonarqube6:Client sonarqubeEP {
         }
     }
 };
+   
+sonarqube6:Client sonarqube = new(sonarqubeConfig);
 ```
 
 The `getProject` function provides the details of a project in SonarQube server for the given project name.
@@ -53,12 +55,13 @@ var projectDetails = sonarqubeEP->getProject(“project_name”);
 ```
 
 The response from `getProject` is either a `Project` (if the request was successful) or an `error`. 
-The `match` operation can be used to handle the response if an error occurs. `Project` is a type that holds the information of a project.
+The `Project` is a type that holds the information of a project.
 
 ```ballerina
-match projectDetails {
-    sonarqube6:Project project => io:println(project);
-    error err => io:println(err)
+if (projectDetails is Project) {
+   io:println(projectDetails)
+} else {
+   io:println(msg = <string>projectDetails.detail().message);
 }
 ```
 
@@ -70,12 +73,13 @@ var value = sonarqubeEP->getLineCoverage(“project_key”);
 ```
     
 The response from `getLineCoverage` is either a `string` (if the request was successful) or an `error`. 
-The `match` operation can be used to handle the response if an error occurs.
+
 
 ```ballerina
-match value {
-    string val => io:println(val);
-    error err => io:println(err);
+if (value is string) {
+   io:println(value)
+} else {
+   io:println(msg = <string>value.detail().message);
 }
 ``` 
 
@@ -87,11 +91,12 @@ var value = sonarqubeEP->getSecurityRating(“project_key”);
 ```
 
 The response from `getSecurityRating` is either a `string` (if the request was successful) or an `error`. 
-The `match` operation can be used to handle the response if an error occurs.
+
 
 ```ballerina
-match value {
-    string val => io:println(val);
-    error err => io:println(err);
+if (value is string) {
+   io:println(value)
+} else {
+   io:println(msg = <string>value.detail().message);
 }
 ```
