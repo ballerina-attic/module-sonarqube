@@ -23,9 +23,9 @@ import ballerina/http;
 # + key - Project key
 # + id - Project Id
 public type Project record {
-    string name;
-    string key;
-    string id;
+    string name = "";
+    string key = "";
+    string id = "";
 };
 
 # Represents a summary of a project issue.
@@ -42,15 +42,15 @@ public type Project record {
 # + comments - Comments in the issue
 # + workflowTransitions - Available workflow transitions for the issue
 public type Issue record {
-    string key;
-    string severity;
-    string status;
-    string description;
-    string author;
-    string creationDate;
-    string assignee;
-    string issueType;
-    Position position;
+    string key = "";
+    string severity = "";
+    string status = "";
+    string description = "";
+    string author = "";
+    string creationDate = "";
+    string assignee = "";
+    string issueType = "";
+    Position position = {};
     string[] tags = [];
     Comment[] comments = [];
     string[] workflowTransitions = [];
@@ -60,8 +60,8 @@ public type Issue record {
 # + startLine - Start line of poition
 # + endLine - End line of position
 public type Position record {
-    string startLine;
-    string endLine;
+    string startLine = "";
+    string endLine = "";
 };
 
 # Represents a comment in SonarQube Issue.
@@ -70,8 +70,16 @@ public type Position record {
 # + commenter - Commenter of the comment
 # + createdDate - Date of creation
 public type Comment record {
-    string text;
-    string key;
-    string commenter;
-    string createdDate;
+    string text = "";
+    string key = "";
+    string commenter = "";
+    string createdDate = "";
+};
+
+# Represents the SonarQube Client Connector Endpoint configuration.
+# + clientConfig - HTTP client endpoint configuration
+# + baseUrl - The base url of your SonarQube server.
+public type SonarQubeConfiguration record {
+    string baseUrl = "";
+    http:ClientEndpointConfig clientConfig = {};
 };

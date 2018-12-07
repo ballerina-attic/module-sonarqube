@@ -19,82 +19,74 @@
 import ballerina/http;
 
 function getJsonValueByKey(http:Response response, string key) returns (json|error) {
-    match response.getJsonPayload() {
-        json jsonPayload => {
-            return jsonPayload[key];
-        }
-        error payloadError => {
-            error err = { message: "Error occured when extracting payload from response" };
-            return err;
-        }
+    var value = response.getJsonPayload();
+    if (value is json) {
+        return value[key];
+    } else {
+        error err = error(SONARQUBE_ERROR_CODE, { message: "Error occured when extracting payload from response" });
+        return err;
     }
 }
 
-function getJsonArrayByKey(http:Response response, string key) returns (json[]|error) {
-    match response.getJsonPayload() {
-        json jsonPayload => {
-            if (jsonPayload[key] != ()){
-                json[] array = check <json[]>jsonPayload[key];
-                return array;
-            } else {
-                return {};
-            }
+function getJsonArrayByKey(http:Response response, string key) returns json[]|error {
+    var payload = response.getJsonPayload();
+    if (payload is json) {
+        if (payload[key] != ()){
+            json[] array = check json[].convert(payload[key]);
+            return array;
+        } else {
+            json[] output =[];
+            return output;
         }
-        error payloadError => {
-            error err = { message: "Error occured while extracting the payload from response." + payloadError.message };
-            return err;
-        }
+    } else {
+        error err = error(SONARQUBE_ERROR_CODE, { message:"Error occured while extracting the payload from response."});
+        return err;
     }
 }
 
 function checkResponse(http:Response response) returns error {
     json[] responseJson = check getJsonArrayByKey(response, ERRORS);
-    error err = { message: "" };
-    if (responseJson != ()) {
-        foreach item in responseJson {
+    error err = error(SONARQUBE_ERROR_CODE, { message: "" });
+    if (responseJson.length() > 0) {
+        foreach json item in responseJson {
             string errorMessage = item.msg.toString();
-            err.message = err.message + errorMessage;
+            err.detail().message = errorMessage;
         }
         return err;
     }
     return err;
 }
 
-function SonarQubeConnector::getMeasure(string projectKey, string metricName) returns string|error {
-    endpoint http:Client httpEndpoint = self.client;
+function Client.getMeasure(string projectKey, string metricName) returns string|error {
     string value = "";
     http:Request request = new;
     string requestPath = API_MEASURES + projectKey + "&" + METRIC_KEYS + "=" + metricName;
-    var endpointResponse = httpEndpoint->get(requestPath);
+    var endpointResponse = self.sonarQubeClient->get(requestPath);
 
     // match endpointResponse
-    match endpointResponse {
-        http:Response response => {
-            error endpointErrors = checkResponse(response);
-            if (endpointErrors.message == ""){
-                json component = check getJsonValueByKey(response, COMPONENT);
-                match <json[]>component[MEASURES]{
-                    json[] metricArray => {
-                        if (lengthof metricArray == 0) {
-                            error connectionError = { message: "Metric array is empty" };
-                            return connectionError;
-                        }
-                        json metricValue = metricArray[0][VALUE];
-                        return metricValue.toString();
-                    }
-                    error err => {
-                        string errorMessage = err.message;
-                        err = { message: "Cannot find the " + metricName.replace("_", " ") + " for " + projectKey + "."
-                            + errorMessage };
-                        return err;
-                    }
-                }
-            }
+    if (endpointResponse is http:Response) {
+        error endpointErrors = checkResponse(endpointResponse);
+        if (<string>endpointErrors.detail().message == "") {
             return endpointErrors;
+        } else {
+            json component = check getJsonValueByKey(endpointResponse, COMPONENT);
+            var result = json[].convert(component[MEASURES]);
+            if (result is json[]) {
+                json[] metricArray = result;
+                if (result.length() == 0) {
+                    error err = error(SONARQUBE_ERROR_CODE, { message: "Metric array is empty" });
+                    return err;
+                }
+                json metricValue = metricArray[0][VALUE];
+                return metricValue.toString();
+            } else {
+                error err = error(SONARQUBE_ERROR_CODE
+                , { message: " Error occurred while invoking the sonarqube API" });
+                return err;
+            }
         }
-        error err => {
-            error connectionError = { message: err.message };
-            return connectionError;
-        }
+    } else {
+        error err = error(SONARQUBE_ERROR_CODE, { message: " Error occurred while invoking the sonarqube API" });
+        return err;
     }
 }

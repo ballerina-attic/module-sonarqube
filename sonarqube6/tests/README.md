@@ -7,7 +7,7 @@ various actions.
 
 | Language Version    | SonarQube API Version |
 | ------------------- | --------------------- |
-| 0.983.0             |  6.7.2                |
+| 0.990.0             |  6.7.2                |
 
 ## Running tests
 
