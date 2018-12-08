@@ -58,7 +58,7 @@ The response from `getProject` is either a `Project` (if the request was success
 The `Project` is a type that holds the information of a project.
 
 ```ballerina
-if (projectDetails is Project) {
+if (projectDetails is sonarqube6:Project) {
    io:println(projectDetails)
 } else {
    io:println(msg = <string>projectDetails.detail().message);

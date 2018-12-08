@@ -48,9 +48,8 @@ sonarqube6:SonarQubeConfiguration sonarqubeConfig = {
 sonarqube6:Client sonarqube = new(sonarqubeConfig);
 
 public function main() {
-   
    var projectDetails = sonarqube->getProject(config:getAsString(PROJECT_NAME));
-   if (projectDetails is Project) {
+   if (projectDetails is sonarqube6:Project) {
        io:println(projectDetails)
    } else {
        io:println(msg = <string>projectDetails.detail().message);
