@@ -36,146 +36,146 @@ public type Client client object {
 
     # Returns a Project record.
     # + return - If the execution is successful returns a Project record else an error
-    remote function getProject(string projectName) returns Project|error;
+    public remote function getProject(string projectName) returns Project|error;
 
     # Returns an array of all projects.
     # + return - If the execution is successful returns an array of Project records else an error
-    remote function getAllProjects() returns Project[]|error;
+    public remote function getAllProjects() returns Project[]|error;
 
     # Get number of duplicated code blocks.
     # + projectKey - Key of a project
     # + return - If the execution is successful returns number of duplicated code blocks else an error
-    remote function getDuplicatedCodeBlocksCount(string projectKey) returns int|error;
+    public remote function getDuplicatedCodeBlocksCount(string projectKey) returns int|error;
 
     # Get Number of duplicated files.
     # + projectKey - Key of a project
     # + return - If the execution is successful returns number of duplicated files else an error
-    remote function getDuplicatedFilesCount(string projectKey) returns int|error;
+    public remote function getDuplicatedFilesCount(string projectKey) returns int|error;
 
     # Get Number of duplicated lines.
     # + projectKey - Key of a project
     # + return - If the execution is successful returns number of duplicated lines else an error
-    remote function getDuplicatedLinesCount(string projectKey) returns int|error ;
+    public remote function getDuplicatedLinesCount(string projectKey) returns int|error ;
 
     # Number of blocker issues in a project. Blocker issue may be a bug with a high probability to impact.
     # The behavior of the application in production: memory leak, unclosed JDBC connection, .... The code MUST be
     # immediately fixed.
     # + projectKey - Key of a project
     # + return - If the execution is successful returns number of blocker issues else an error
-    remote function getBlockerIssuesCount(string projectKey) returns int|error;
+    public remote function getBlockerIssuesCount(string projectKey) returns int|error;
 
     # Number of critical issues in a project.Either a bug with a low probability to impact the behavior
     # of the application in production or an issue which represents a security flaw: empty catch block, SQL injection,
     # The code MUST be immediately reviewed.
     # + projectKey - Key of a project
     # + return - If the execution is successful returns number of critical issues else an error
-    remote function getCriticalIssuesCount(string projectKey) returns int|error;
+    public remote function getCriticalIssuesCount(string projectKey) returns int|error;
 
     # Number of major issues in a project.Quality flaw which can highly impact the developer productivity:
     # uncovered piece of code, duplicated blocks, unused parameters.
     # + projectKey - Key of a project
     # + return - If the execution is successful returns number of major issues else an error
-    remote function getMajorIssuesCount(string projectKey) returns int|error;
+    public remote function getMajorIssuesCount(string projectKey) returns int|error;
 
     # Number of minor issues in a project.Quality flaw which can slightly impact the developer
     # productivity: lines should not be too long, switch statements should have at least 3 cases, ....
     # + projectKey - Key of a project
     # + return - If the execution is successful returns number of minor issues else an error
-    remote function getMinorIssuesCount(string projectKey) returns int|error;
+    public remote function getMinorIssuesCount(string projectKey) returns int|error;
 
     # Number of open issues in a project.
     # + projectKey - Key of a project
     # + return - If the execution is successful returns number of open issues else an error
-    remote function getOpenIssuesCount(string projectKey) returns int|error;
+    public remote function getOpenIssuesCount(string projectKey) returns int|error;
 
     # Number of confirmed issues in a project.
     # + projectKey - Key of a project
     # + return - If the execution is successful returns number of confirmed issues else an error
-    remote function getConfirmedIssuesCount(string projectKey) returns int|error;
+    public remote function getConfirmedIssuesCount(string projectKey) returns int|error;
 
     # Number of reopened issues in a project.
     # + projectKey - Key of a project
     # + return - If the execution is successful returns number of repoened issues else an error
-    remote function getReopenedIssuesCount(string projectKey) returns int|error;
+    public remote function getReopenedIssuesCount(string projectKey) returns int|error;
 
     # Get lines of code of a project.
     # + projectKey - Key of a project
     # + return - If the execution is successful returns lines of code else an error
-    remote function getLinesOfCode(string projectKey) returns int|error;
+    public remote function getLinesOfCode(string projectKey) returns int|error;
 
     # Get line coverage of a project.
     # + projectKey - Key of a project
     # + return - If the execution is successful returns line coverage else an error
-    remote function getLineCoverage(string projectKey) returns string|error;
+    public remote function getLineCoverage(string projectKey) returns string|error;
 
     # Get complexity of a project. Complexity calculated based on the number of paths through the code.
     # + projectKey - Key of a project
     # + return - If the execution is successful returns complexity else an error
-    remote function getComplexity(string projectKey) returns int|error;
+    public remote function getComplexity(string projectKey) returns int|error;
 
     # Get number of lines covered by unit tests.
     # + projectKey - Key of a project
     # + return - If the execution is successful returns number of covered lines else an error
-    remote function getCoveredLinesCount(string projectKey) returns int|error ;
+    public remote function getCoveredLinesCount(string projectKey) returns int|error ;
 
     # Get branch coverage of a project.
     # + projectKey - Key of a project
     # + return - branch Coverage of a project or an error if an exception raised in getting branch coverage
-    remote function getBranchCoverage(string projectKey) returns (string|error);
+    public remote function getBranchCoverage(string projectKey) returns (string|error);
 
     # Get number of code smells in a project.Code smell, (or bad smell) is any symptom in the source code
     # of a program that possibly indicates a deeper problem.
     # + projectKey - Key of a project
     # + return - If the execution is successful returns number of code smells else an error
-    remote function getCodeSmellsCount(string projectKey) returns int|error;
+    public remote function getCodeSmellsCount(string projectKey) returns int|error;
 
     # Get SQALE rating of a project.This is the rating given to your project related to the value of your
     # Technical Debt Ratio.
     # + projectKey - Key of a project
     # + return - If the execution is successful returns SQALE rating else an error
-    remote function getSQALERating(string projectKey) returns (string|error);
+    public remote function getSQALERating(string projectKey) returns (string|error);
 
     # Get technical debt of a project.Technical debt is the effort to fix all maintainability issues.
     # + projectKey - Key of a project
     # + return - If the execution is successful returns technical debt else an error
-    remote function getTechnicalDebt(string projectKey) returns string|error ;
+    public remote function getTechnicalDebt(string projectKey) returns string|error ;
 
     # Get technical debt ratio of a project.
     # + projectKey - Key of a project
     # + return - If the execution is successful returns technical debt ratio else an error
-    remote function getTechnicalDebtRatio(string projectKey) returns string|error;
+    public remote function getTechnicalDebtRatio(string projectKey) returns string|error;
 
     # Get number of vulnerablities of a project.
     # + projectKey - Key of a project
     # + return - If the execution is successful returns number of vulnerabilities else an error
-    remote function getVulnerabilitiesCount(string projectKey) returns int|error;
+    public remote function getVulnerabilitiesCount(string projectKey) returns int|error;
 
     # Get security rating of a project.
     # + projectKey - Key of a project
     # + return - If the execution is successful returns security rating else an error
-    remote function getSecurityRating(string projectKey) returns string|error;
+    public remote function getSecurityRating(string projectKey) returns string|error;
 
     # Get reliability rating of a project.
     # + projectKey - Key of a project
     # + return - If the execution is successful returns reliability rating else an error
-    remote function getReliabilityRating(string projectKey) returns string|error;
+    public remote function getReliabilityRating(string projectKey) returns string|error;
 
     # Get number of bugs in a project.
     # + projectKey - Key of a project
     # + return - If the execution is successful returns number of bugs else an error
-    remote function getBugsCount(string projectKey) returns int|error;
+    public remote function getBugsCount(string projectKey) returns int|error;
 
     # Get details of project issues.
     # + projectKey - Key of a project
     # + return - If the execution is successful returns an array of Issue records else an error
-    remote function getIssues(string projectKey) returns Issue[]|error;
+    public remote function getIssues(string projectKey) returns Issue[]|error;
 
     # Get values for provided metrics relavant to a project key.
     # + projectKey - Key of a project
     # + metricKeys - string array of metric keys
     # + return - Returns a mapping  of metric name and
     # Returns error if an exception raised in getting project metric values
-    remote function getMetricValues(string projectKey, string[] metricKeys) returns map<string>|error;
+    public remote function getMetricValues(string projectKey, string[] metricKeys) returns map<string>|error;
 
     function getMeasure(string projectKey, string metricName) returns string|error;
 };
