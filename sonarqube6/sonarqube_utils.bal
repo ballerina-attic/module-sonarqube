@@ -66,7 +66,7 @@ function Client.getMeasure(string projectKey, string metricName) returns string|
     // match endpointResponse
     if (endpointResponse is http:Response) {
         error endpointErrors = checkResponse(endpointResponse);
-        if (<string>endpointErrors.detail().message == "") {
+        if (<string>endpointErrors.detail().message != "") {
             return endpointErrors;
         } else {
             json component = check getJsonValueByKey(endpointResponse, COMPONENT);

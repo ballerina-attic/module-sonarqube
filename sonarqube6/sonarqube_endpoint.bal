@@ -180,7 +180,7 @@ public type Client client object {
     function getMeasure(string projectKey, string metricName) returns string|error;
 };
 
-remote function Client.getProject(string projectName) returns Project|error {
+public remote function Client.getProject(string projectName) returns Project|error {
 
     // get the first page of the project details
     string requestPath = API_RESOURCES + PROJECTS_PER_PAGE;
@@ -242,7 +242,7 @@ remote function Client.getProject(string projectName) returns Project|error {
     }
 }
 
-remote function Client.getAllProjects() returns Project[]|error {
+public remote function Client.getAllProjects() returns Project[]|error {
 
     // get the first page of the project details
     string requestPath = API_RESOURCES + PROJECTS_PER_PAGE;
@@ -305,7 +305,7 @@ remote function Client.getAllProjects() returns Project[]|error {
     }
 }
 
-remote function Client.getMetricValues(string projectKey, string[] metricKeys) returns map<string>|error {
+public remote function Client.getMetricValues(string projectKey, string[] metricKeys) returns map<string>|error {
     string keyList = "";
     foreach var key in metricKeys {
         keyList = keyList + key + ",";
@@ -346,7 +346,7 @@ remote function Client.getMetricValues(string projectKey, string[] metricKeys) r
     }
 }
 
-remote function Client.getComplexity(string projectKey) returns int|error {
+public remote function Client.getComplexity(string projectKey) returns int|error {
     var result = self.getMeasure(projectKey, COMPLEXITY);
     if (result is string) {
         var intValue = int.convert(result);
@@ -362,7 +362,7 @@ remote function Client.getComplexity(string projectKey) returns int|error {
     }
 }
 
-remote function Client.getDuplicatedCodeBlocksCount(string projectKey) returns int|error {
+public remote function Client.getDuplicatedCodeBlocksCount(string projectKey) returns int|error {
     var result = self.getMeasure(projectKey, DUPLICATED_BLOCKS_COUNT);
     if (result is string) {
         var intValue = int.convert(result);
@@ -378,7 +378,7 @@ remote function Client.getDuplicatedCodeBlocksCount(string projectKey) returns i
     }
 }
 
-remote function Client.getDuplicatedFilesCount(string projectKey) returns int|error {
+public remote function Client.getDuplicatedFilesCount(string projectKey) returns int|error {
     var result = self.getMeasure(projectKey, DUPLICATED_FILES_COUNT);
     if (result is string) {
         var intValue = int.convert(result);
@@ -394,7 +394,7 @@ remote function Client.getDuplicatedFilesCount(string projectKey) returns int|er
     }
 }
 
-remote function Client.getDuplicatedLinesCount(string projectKey) returns int|error {
+public remote function Client.getDuplicatedLinesCount(string projectKey) returns int|error {
     var result = self.getMeasure(projectKey, DUPLICATED_LINES_COUNT);
     if (result is string) {
         var intValue = int.convert(result);
@@ -410,7 +410,7 @@ remote function Client.getDuplicatedLinesCount(string projectKey) returns int|er
     }
 }
 
-remote function Client.getBlockerIssuesCount(string projectKey) returns int|error {
+public remote function Client.getBlockerIssuesCount(string projectKey) returns int|error {
     var result = self.getMeasure(projectKey, BLOCKER_ISSUES_COUNT);
     if (result is string) {
         var intValue = int.convert(result);
@@ -426,7 +426,7 @@ remote function Client.getBlockerIssuesCount(string projectKey) returns int|erro
     }
 }
 
-remote function Client.getCriticalIssuesCount(string projectKey) returns int|error {
+public remote function Client.getCriticalIssuesCount(string projectKey) returns int|error {
     var result = self.getMeasure(projectKey, CRITICAL_ISSUES_COUNT);
     if (result is string) {
         var intValue = int.convert(result);
@@ -443,7 +443,7 @@ remote function Client.getCriticalIssuesCount(string projectKey) returns int|err
     }
 }
 
-remote function Client.getMajorIssuesCount(string projectKey) returns int|error {
+public remote function Client.getMajorIssuesCount(string projectKey) returns int|error {
     var result = self.getMeasure(projectKey, MAJOR_ISSUES_COUNT);
     if (result is string) {
         var intValue = int.convert(result);
@@ -460,7 +460,7 @@ remote function Client.getMajorIssuesCount(string projectKey) returns int|error 
     }
 }
 
-remote function Client.getMinorIssuesCount(string projectKey) returns int|error {
+public remote function Client.getMinorIssuesCount(string projectKey) returns int|error {
     var result = self.getMeasure(projectKey, MINOR_ISSUES_COUNT);
     if (result is string) {
         var intValue = int.convert(result);
@@ -478,7 +478,7 @@ remote function Client.getMinorIssuesCount(string projectKey) returns int|error 
     }
 }
 
-remote function Client.getOpenIssuesCount(string projectKey) returns int|error {
+public remote function Client.getOpenIssuesCount(string projectKey) returns int|error {
     var result = self.getMeasure(projectKey, OPEN_ISSUES_COUNT);
     if (result is string) {
     var intValue = int.convert(result);
@@ -495,7 +495,7 @@ remote function Client.getOpenIssuesCount(string projectKey) returns int|error {
     }
 }
 
-remote function Client.getConfirmedIssuesCount(string projectKey) returns int|error {
+public remote function Client.getConfirmedIssuesCount(string projectKey) returns int|error {
     var result = self.getMeasure(projectKey, CONFIRMED_ISSUES_COUNT);
     if (result is string) {
         var intValue = int.convert(result);
@@ -511,7 +511,7 @@ remote function Client.getConfirmedIssuesCount(string projectKey) returns int|er
     }
 }
 
-remote function Client.getReopenedIssuesCount(string projectKey) returns int|error {
+public remote function Client.getReopenedIssuesCount(string projectKey) returns int|error {
     var result = self.getMeasure(projectKey, REOPENED_ISSUES_COUNT);
     if (result is string) {
         var intValue = int.convert(result);
@@ -528,7 +528,7 @@ remote function Client.getReopenedIssuesCount(string projectKey) returns int|err
     }
 }
 
-remote function Client.getLinesOfCode(string projectKey) returns int|error {
+public remote function Client.getLinesOfCode(string projectKey) returns int|error {
     var result = self.getMeasure(projectKey, LINES_OF_CODE);
     if (result is string) {
         var intValue = int.convert(result);
@@ -544,7 +544,7 @@ remote function Client.getLinesOfCode(string projectKey) returns int|error {
     }
 }
 
-remote function Client.getLineCoverage(string projectKey) returns string|error {
+public remote function Client.getLineCoverage(string projectKey) returns string|error {
     var result = self.getMeasure(projectKey, LINE_COVERAGE);
     if (result is string) {
         return result + "%";
@@ -554,7 +554,7 @@ remote function Client.getLineCoverage(string projectKey) returns string|error {
     }
 }
 
-remote function Client.getCoveredLinesCount(string projectKey) returns int|error {
+public remote function Client.getCoveredLinesCount(string projectKey) returns int|error {
     int uncoveredLines = 0;
     int linesToCover = 0;
     var value = self.getMeasure(projectKey, LINES_TO_COVER);
@@ -588,7 +588,7 @@ remote function Client.getCoveredLinesCount(string projectKey) returns int|error
     return linesToCover - uncoveredLines;
 }
 
-remote function Client.getBranchCoverage(string projectKey) returns string|error {
+public remote function Client.getBranchCoverage(string projectKey) returns string|error {
     var result = self.getMeasure(projectKey, BRANCH_COVERAGE);
     if (result is string) {
         return result + "%";
@@ -598,7 +598,7 @@ remote function Client.getBranchCoverage(string projectKey) returns string|error
     }
 }
 
-remote function Client.getCodeSmellsCount(string projectKey) returns int|error {
+public remote function Client.getCodeSmellsCount(string projectKey) returns int|error {
     var result = self.getMeasure(projectKey, CODE_SMELLS);
     if (result is string) {
     var intValue = int.convert(result);
@@ -615,7 +615,7 @@ remote function Client.getCodeSmellsCount(string projectKey) returns int|error {
     }
 }
 
-remote function Client.getSQALERating(string projectKey) returns string|error {
+public remote function Client.getSQALERating(string projectKey) returns string|error {
     float floatValue = 0.0;
     var result = self.getMeasure(projectKey, SQALE_RATING);
     if (result is string) {
@@ -644,15 +644,15 @@ remote function Client.getSQALERating(string projectKey) returns string|error {
     return "E";
 }
 
-remote function Client.getTechnicalDebt(string projectKey) returns string|error {
+public remote function Client.getTechnicalDebt(string projectKey) returns string|error {
     return self.getMeasure(projectKey, TECHNICAL_DEBT);
 }
 
-remote function Client.getTechnicalDebtRatio(string projectKey) returns string|error {
+public remote function Client.getTechnicalDebtRatio(string projectKey) returns string|error {
     return self.getMeasure(projectKey, TECHNICAL_DEBT_RATIO);
 }
 
-remote function Client.getVulnerabilitiesCount(string projectKey) returns int|error {
+public remote function Client.getVulnerabilitiesCount(string projectKey) returns int|error {
     var result = self.getMeasure(projectKey, VULNERABILITIES);
     if (result is string) {
         var intValue = int.convert(result);
@@ -669,7 +669,7 @@ remote function Client.getVulnerabilitiesCount(string projectKey) returns int|er
     }
 }
 
-remote function Client.getSecurityRating(string projectKey) returns string|error {
+public remote function Client.getSecurityRating(string projectKey) returns string|error {
     string value = check self.getMeasure(projectKey, SECURITY_RATING);
     if (value == NO_VULNERABILITY) {
         return "A";
@@ -683,7 +683,7 @@ remote function Client.getSecurityRating(string projectKey) returns string|error
     return "E";
 }
 
-remote function Client.getBugsCount(string projectKey) returns int|error {
+public remote function Client.getBugsCount(string projectKey) returns int|error {
     var result = self.getMeasure(projectKey, BUGS_COUNT);
     if (result is string) {
         var intValue = int.convert(result);
@@ -701,7 +701,7 @@ remote function Client.getBugsCount(string projectKey) returns int|error {
     }
 }
 
-remote function Client.getReliabilityRating(string projectKey) returns string|error {
+public remote function Client.getReliabilityRating(string projectKey) returns string|error {
     var result = self.getMeasure(projectKey, RELIABILITY_RATING);
     string value = "";
     if (result is string) {
@@ -722,7 +722,7 @@ remote function Client.getReliabilityRating(string projectKey) returns string|er
     return "E";
 }
 
-remote function Client.getIssues(string projectKey) returns Issue[]|error {
+public remote function Client.getIssues(string projectKey) returns Issue[]|error {
     http:Client httpEndpoint = self.sonarQubeClient;
     http:Request request = new;
     string requestPath = API_ISSUES_SEARCH + "?" + PROJECT_KEYS + "=" + projectKey + "&" + EXTRA_CONTENT;
