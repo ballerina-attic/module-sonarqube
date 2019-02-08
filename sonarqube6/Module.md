@@ -45,23 +45,23 @@ sonarqube6:SonarQubeConfiguration sonarqubeConfig = {
     }
 };
    
-sonarqube6:Client sonarqube = new(sonarqubeConfig);
+sonarqube6:Client sonarqubeClient = new(sonarqubeConfig);
 ```
 
 The `getProject` function provides the details of a project in SonarQube server for the given project name.
 
 ```ballerina
-var projectDetails = sonarqubeEP->getProject(“project_name”);
+var projectDetails = sonarqubeClient->getProject(“project_name”);
 ```
 
-The response from `getProject` is either a `Project` (if the request was successful) or an `error`. 
+The response from `getProject` is either a `Project` if the request was successful or an `error` if unsuccessful.
 The `Project` is a type that holds the information of a project.
 
 ```ballerina
 if (projectDetails is sonarqube6:Project) {
-   io:println(projectDetails)
+   io:println("Prohect Details: ", projectDetails)
 } else {
-   io:println(msg = <string>projectDetails.detail().message);
+   io:println("Error: ", <string>projectDetails.detail().message);
 }
 ```
 
@@ -69,17 +69,17 @@ The `getLineCoverage` function provides the line coverage of a project in SonarQ
 You can get the project key using the SonarQube server UI or the `getProject` function.
 
 ```ballerina
-var value = sonarqubeEP->getLineCoverage(“project_key”);
+var response = sonarqubeClient->getLineCoverage(“project_key”);
 ```
     
-The response from `getLineCoverage` is either a `string` (if the request was successful) or an `error`. 
+The response from `getLineCoverage` is either a `string` if the request was successful or an `error` if unsuccessful.
 
 
 ```ballerina
-if (value is string) {
-   io:println(value)
+if (response is string) {
+   io:println("Line Coverage: ", response)
 } else {
-   io:println(msg = <string>value.detail().message);
+   io:println("Error: ", <string>response.detail().message);
 }
 ``` 
 
@@ -87,16 +87,16 @@ The `getSecurityRating` function provides the security rating of a project in So
 You can get the project key using the SonarQube server UI or the `getProject` function.
 
 ```ballerina
-var value = sonarqubeEP->getSecurityRating(“project_key”);
+var response = sonarqubeClient->getSecurityRating(“project_key”);
 ```
 
-The response from `getSecurityRating` is either a `string` (if the request was successful) or an `error`. 
+The response from `getSecurityRating` is either a `string` (if the request was successful) or an `error` if unsuccessful.
 
 
 ```ballerina
-if (value is string) {
-   io:println(value)
+if (response is string) {
+   io:println("Security Rating: ", response)
 } else {
-   io:println(msg = <string>value.detail().message);
+   io:println("Error: ", <string>response.detail().message);
 }
 ```
