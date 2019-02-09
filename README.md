@@ -36,24 +36,24 @@ string token = "your token";
 string sonarqubeURL = "your sonarqube url";
 
 sonarqube6:SonarQubeConfiguration sonarqubeConfig = {
-    baseUrl:sonarqubeURL,
-    clientConfig:{
-        auth:{
-            scheme:http:BASIC_AUTH,
-            username:token,
-            password:""
+    baseUrl: sonarqubeURL,
+    clientConfig: {
+        auth: {
+            scheme: http:BASIC_AUTH,
+            username: token,
+            password: ""
         }
     }
 };
    
 sonarqube6:Client sonarqubeClient = new(sonarqubeConfig);
 
-public function main(string... args) {
+public function main() {
    var projectDetails = sonarqubeClient->getProject(config:getAsString(PROJECT_NAME));
    if (projectDetails is sonarqube6:Project) {
-       io:println(projectDetails)
+       io:println("Project Details: ", projectDetails)
    } else {
-       io:println(msg = <string>projectDetails.detail().message);
+       io:println("Error: ", projectDetails);
    }
 }
 ```

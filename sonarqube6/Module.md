@@ -48,7 +48,7 @@ sonarqube6:SonarQubeConfiguration sonarqubeConfig = {
 sonarqube6:Client sonarqubeClient = new(sonarqubeConfig);
 ```
 
-The `getProject` function provides the details of a project in SonarQube server for the given project name.
+The `getProject` remote function provides the details of a project in SonarQube server for the given project name.
 
 ```ballerina
 var projectDetails = sonarqubeClient->getProject(“project_name”);
@@ -59,17 +59,17 @@ The `Project` is a type that holds the information of a project.
 
 ```ballerina
 if (projectDetails is sonarqube6:Project) {
-   io:println("Prohect Details: ", projectDetails)
+   io:println("Project Details: ", projectDetails);
 } else {
-   io:println("Error: ", <string>projectDetails.detail().message);
+   io:println("Error: ", <string> projectDetails.detail().message);
 }
 ```
 
-The `getLineCoverage` function provides the line coverage of a project in SonarQube server for the given project key. 
+The `getLineCoverage` remote function provides the line coverage of a project in SonarQube server for the given project key.
 You can get the project key using the SonarQube server UI or the `getProject` function.
 
 ```ballerina
-var response = sonarqubeClient->getLineCoverage(“project_key”);
+var response = sonarqubeClient->getLineCoverage("project_key");
 ```
     
 The response from `getLineCoverage` is either a `string` if the request was successful or an `error` if unsuccessful.
@@ -83,11 +83,11 @@ if (response is string) {
 }
 ``` 
 
-The `getSecurityRating` function provides the security rating of a project in SonarQube server for the given project key. 
+The `getSecurityRating` remote function provides the security rating of a project in SonarQube server for the given project key.
 You can get the project key using the SonarQube server UI or the `getProject` function.
 
 ```ballerina
-var response = sonarqubeClient->getSecurityRating(“project_key”);
+var response = sonarqubeClient->getSecurityRating("project_key");
 ```
 
 The response from `getSecurityRating` is either a `string` (if the request was successful) or an `error` if unsuccessful.
