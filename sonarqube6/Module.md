@@ -15,7 +15,7 @@ count. etc. Users can also use this connector to get multiple code-quality measu
 
 |                    |    Version     |  
 | ------------------ | -------------- |
-| Ballerina Language |   0.990.3      |
+| Ballerina Language |   0.991.0      |
 | SonarQube API      |   6.7.2        |
 
 
@@ -39,8 +39,10 @@ sonarqube6:SonarQubeConfiguration sonarqubeConfig = {
         url:sonarqubeURL,
         auth:{
             scheme:http:BASIC_AUTH,
-            username:token,
-            password:""
+            config: {
+                username:token,
+                password:""
+            }
         }
     }
 };

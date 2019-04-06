@@ -8,7 +8,7 @@ SonarQube connector provides a Ballerina API to access the [SonarQube REST API](
 
 | Ballerina Language Version       | API Version     |
 |:--------------------------------:|:---------------:|
-| 0.990.3                          | 6.7.2           |
+| 0.991.0                          | 6.7.2           |
 
 ## Getting started
 
@@ -40,8 +40,10 @@ sonarqube6:SonarQubeConfiguration sonarqubeConfig = {
     clientConfig: {
         auth: {
             scheme: http:BASIC_AUTH,
-            username: token,
-            password: ""
+            config: {
+                username: token,
+                password: ""
+            }
         }
     }
 };
