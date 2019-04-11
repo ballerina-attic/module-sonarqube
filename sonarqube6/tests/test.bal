@@ -25,8 +25,10 @@ SonarQubeConfiguration sonarqubeConfig = {
     clientConfig: {
         auth: {
             scheme: http:BASIC_AUTH,
-            username: config:getAsString(SONARQUBE_TOKEN),
-            password: ""
+            config: {
+                username: config:getAsString(SONARQUBE_TOKEN),
+                password: ""
+            }
         }
     }
 };
