@@ -17,7 +17,6 @@
 //
 
 import ballerina/http;
-// import ballerina/log;
 import ballerina/math;
 import ballerina/lang.'float as floatUtil;
 import ballerina/lang.'int as ints;
