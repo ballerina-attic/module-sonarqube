@@ -30,7 +30,7 @@ SonarQube connector provides a Ballerina API to access the [SonarQube REST API](
 import ballerina/config;
 import ballerina/http;
 import ballerina/io;
-import wso2/sonarqube6;
+import wso2/sonarqube;
 
 string token = "your token";
 string sonarqubeURL = "your sonarqube url";
