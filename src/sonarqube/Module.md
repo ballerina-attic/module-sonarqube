@@ -15,7 +15,7 @@ count. etc. Users can also use this connector to get multiple code-quality measu
 
 |                    |    Version     |  
 | ------------------ | -------------- |
-| Ballerina Language |   0.991.0      |
+| Ballerina Language |   1.0.0      |
 | SonarQube API      |   6.7.2        |
 
 
@@ -34,14 +34,22 @@ import wso2/sonarqube6;
 
 You can now enter the token in the HTTP client config:
 ```ballerina
+sonarqube6:SonarQubeBasicAuthProvider outboundBasicAuthProvider = new({
+    username: "9784bd93cd85c2242c0eae1c5b53f1c969dfef4b"
+});
+
+http:BasicAuthHandler outboundBasicAuthHandler = new(outboundBasicAuthProvider);
+
 sonarqube6:SonarQubeConfiguration sonarqubeConfig = {
-    clientConfig:{
-        url:sonarqubeURL,
-        auth:{
-            scheme:http:BASIC_AUTH,
-            config: {
-                username:token,
-                password:""
+    baseUrl: "https://sonarcloud.io",
+    clientConfig: {
+        auth: {
+            authHandler: outboundBasicAuthHandler
+        },
+        secureSocket: {
+            trustStore: {
+                path: "<path_to_bal_distribution>",
+                password: "ballerina"
             }
         }
     }

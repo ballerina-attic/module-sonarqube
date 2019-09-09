@@ -8,7 +8,7 @@ SonarQube connector provides a Ballerina API to access the [SonarQube REST API](
 
 | Ballerina Language Version       | API Version     |
 |:--------------------------------:|:---------------:|
-| 0.991.0                          | 6.7.2           |
+| 1.0.0                          | 6.7.2           |
 
 ## Getting started
 
@@ -30,7 +30,7 @@ SonarQube connector provides a Ballerina API to access the [SonarQube REST API](
 import ballerina/config;
 import ballerina/http;
 import ballerina/io;
-import wso2/sonarqube6;
+import wso2/sonarqube;
 
 string token = "your token";
 string sonarqubeURL = "your sonarqube url";
