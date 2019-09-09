@@ -15,23 +15,24 @@
 // specific language governing permissions and limitations
 // under the License.
 //
+// import ballerina/io;
 
 # Transforms JSON comment object into Comment.
 # + commentDetails - `json` comment object
 # + return - Comment type object.
 function convertJsonToComment(json commentDetails) returns Comment {
     Comment comment = {};
-    comment.text = commentDetails[HTML_TEXT].toString();
-    comment.key = commentDetails[KEY].toString();
-    comment.commenter = commentDetails[LOGIN].toString();
-    comment.createdDate = commentDetails[CREATED_DATE].toString();
+    comment.text = commentDetails.HTML_TEXT.toString();
+    comment.key = commentDetails.KEY.toString();
+    comment.commenter = commentDetails.LOGIN.toString();
+    comment.createdDate = commentDetails.CREATED_DATE.toString();
     return comment;
 }
 
 # Transforms JSON project object into Project.
 # + projectDetails - `json` project object
 # + return - Project type object.
-function convertJsonToProject(json projectDetails) returns Project {
+function convertJsonToProject(map<json> projectDetails) returns Project {
     Project project = {};
     project.name = projectDetails[NAME].toString();
     project.key = projectDetails[KEY].toString();
@@ -44,18 +45,18 @@ function convertJsonToProject(json projectDetails) returns Project {
 # + return - Issue type object.
 function convertJsonToIssue(json issueDetails) returns Issue {
     Issue issue = {};
-    issue.key = issueDetails[KEY].toString();
-    issue.severity = issueDetails[SEVERITY].toString();
-    issue.status = issueDetails[STATUS].toString();
-    issue.issueType = issueDetails[TYPE].toString();
-    issue.description = issueDetails[MESSAGE].toString();
-    issue.author = issueDetails[AUTHOR].toString();
-    issue.creationDate = issueDetails[CREATION_DATE].toString();
-    issue.assignee = issueDetails[ASSIGNEE].toString();
+    issue.key = issueDetails.KEY.toString();
+    issue.severity = issueDetails.SEVERITY.toString();
+    issue.status = issueDetails.STATUS.toString();
+    issue.issueType = issueDetails.TYPE.toString();
+    issue.description = issueDetails.MESSAGE.toString();
+    issue.author = issueDetails.AUTHOR.toString();
+    issue.creationDate = issueDetails.CREATION_DATE.toString();
+    issue.assignee = issueDetails.ASSIGNEE.toString();
     issue.position = {};
-    issue.position.startLine = issueDetails[ISSUE_RANGE][START_LINE].toString();
-    issue.position.endLine = issueDetails[ISSUE_RANGE][END_LINE].toString();
-    json[] tags = <json[]>issueDetails[TAGS];
+    issue.position.startLine = issueDetails.ISSUE_RANGE.START_LINE.toString();
+    issue.position.endLine = issueDetails.ISSUE_RANGE.END_LINE.toString();
+    json[] tags = <json[]>issueDetails.TAGS;
     int count = 0;
     if (tags.length() > 0) {
         string[] tagList = [];
@@ -66,7 +67,7 @@ function convertJsonToIssue(json issueDetails) returns Issue {
         issue.tags = tagList;
         count = 0;
     }
-    json[] transitions = <json[]>issueDetails[TRANSITIONS];
+    json[] transitions = <json[]>issueDetails.TRANSITIONS;
     if (transitions.length() > 0) {
         string[] workflowTransitions = [];
         foreach json transition in transitions {
@@ -76,7 +77,7 @@ function convertJsonToIssue(json issueDetails) returns Issue {
         issue.workflowTransitions = workflowTransitions;
         count = 0;
     }
-    json[] comments = <json[]>issueDetails[COMMENTS];
+    json[] comments = <json[]>issueDetails.COMMENTS;
     if (comments.length() > 0) {
         Comment[] commentList = [];
         foreach json comment in comments {

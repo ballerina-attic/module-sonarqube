@@ -81,5 +81,5 @@ public type Comment record {|
 # + baseUrl - The base url of your SonarQube server.
 public type SonarQubeConfiguration record {|
     string baseUrl = "";
-    http:ClientEndpointConfig clientConfig = {};
+    http:ClientConfiguration clientConfig = {};
 |};
