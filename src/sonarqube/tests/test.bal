@@ -19,9 +19,10 @@
 import ballerina/log;
 import ballerina/test;
 import ballerina/http;
+import ballerina/config;
 
 SonarQubeBasicAuthProvider outboundBasicAuthProvider = new({
-    username: "9784bd93cd85c2242c0eae1c5b53f1c969dfef4b"
+    username: config:getAsString("USER_TOKEN")
 });
 
 http:BasicAuthHandler outboundBasicAuthHandler = new(outboundBasicAuthProvider);
@@ -33,10 +34,10 @@ SonarQubeConfiguration sonarqubeConfig = {
             authHandler: outboundBasicAuthHandler
         },
         secureSocket: {
-        trustStore: {
-            path: "/usr/lib/ballerina/ballerina-1.0.0-rc1-SNAPSHOT/distributions/jballerina-1.0.0-rc1-SNAPSHOT/bre/security/ballerinaTruststore.p12",
-            password: "ballerina"
-        }
+            trustStore: {
+                path: config:getAsString("TRUSTSTORE_PATH"),
+                password: "ballerina"
+            }
         }
     }
 };
@@ -48,7 +49,7 @@ Client sonarqube = new(sonarqubeConfig);
 }
 function testGetProject() {
     log:printInfo("sonarqubeEndpoint -> getProject()");
-    var projectDetails = sonarqube->getProject("ScalablePress4j");
+    var projectDetails = sonarqube->getProject(config:getAsString("PROJECT_NAME"));
     if (projectDetails is Project) {
         boolean hasParameter = (projectDetails.name == "") ? false : true;
         test:assertEquals(hasParameter, true, msg = "Failed getProject()");
@@ -76,7 +77,7 @@ function testGetAllProjects() {
 }
 function testGetComplexity() {
     log:printInfo("sonarqubeEndpoint -> getComplexity(projectKey)");
-    var value = sonarqube->getComplexity("mailgun");
+    var value = sonarqube->getComplexity(config:getAsString("PROJECT_KEY"));
     if (value is int) {
         boolean hasParameter = (value >= 0) ? true : false;
         test:assertEquals(hasParameter, true, msg = "Failed getComplexity(projectKey)");
@@ -90,7 +91,7 @@ function testGetComplexity() {
 }
 function testGetDuplicatedCodeBlocksCount() {
     log:printInfo("sonarqubeEndpoint -> getDuplicatedCodeBlocksCount((projectKey)");
-    var value = sonarqube->getDuplicatedCodeBlocksCount("mailgun");
+    var value = sonarqube->getDuplicatedCodeBlocksCount(config:getAsString("PROJECT_KEY"));
     if (value is int) {
         boolean hasParameter = (value >= 0) ? true : false;
         test:assertEquals(hasParameter, true, msg = "Failed getDuplicatedCodeBlocksCount((projectKey)");
@@ -104,7 +105,7 @@ function testGetDuplicatedCodeBlocksCount() {
 }
 function testGetDuplicatedFilesCount() {
     log:printInfo("sonarqubeEndpoint -> getDuplicatedFilesCount(projectKey)");
-    var value = sonarqube->getDuplicatedFilesCount("mailgun");
+    var value = sonarqube->getDuplicatedFilesCount(config:getAsString("PROJECT_KEY"));
     if (value is int) {
         boolean hasParameter = (value >= 0) ? true : false;
         test:assertEquals(hasParameter, true, msg = "Failed getDuplicatedFilesCount(projectKey)");
@@ -118,7 +119,7 @@ function testGetDuplicatedFilesCount() {
 }
 function testGetDuplicatedLinesCount() {
     log:printInfo("sonarqubeEndpoint -> getDuplicatedLinesCount(projectKey)");
-    var value = sonarqube->getDuplicatedLinesCount("mailgun");
+    var value = sonarqube->getDuplicatedLinesCount(config:getAsString("PROJECT_KEY"));
     if (value is int) {
         boolean hasParameter = (value >= 0) ? true : false;
         test:assertEquals(hasParameter, true, msg = "Failed getDuplicatedLinesCount(projectKey)");
@@ -132,7 +133,7 @@ function testGetDuplicatedLinesCount() {
 }
 function testGetCoveredLinesCount() {
     log:printInfo("sonarqubeEndpoint -> getCoveredLinesCount(projectKey)");
-    var value = sonarqube->getCoveredLinesCount("mailgun");
+    var value = sonarqube->getCoveredLinesCount(config:getAsString("PROJECT_KEY"));
     if (value is int) {
         boolean hasParameter = (value >= 0) ? true : false;
         test:assertEquals(hasParameter, true, msg = "Failed getCoveredLinesCount(projectKey)");
@@ -146,7 +147,7 @@ function testGetCoveredLinesCount() {
 }
 function testGetBlockerIssuesCount() {
     log:printInfo("sonarqubeEndpoint -> getBlockerIssuesCount(projectKey)");
-    var value = sonarqube->getBlockerIssuesCount("mailgun");
+    var value = sonarqube->getBlockerIssuesCount(config:getAsString("PROJECT_KEY"));
     if (value is int) {
         boolean hasParameter = (value >= 0) ? true : false;
         test:assertEquals(hasParameter, true, msg = "Failed getBlockerIssuesCount(projectKey)");
@@ -160,7 +161,7 @@ function testGetBlockerIssuesCount() {
 }
 function testGetCriticalIssuesCount() {
     log:printInfo("sonarqubeEndpoint -> getCriticalIssuesCount(projectKey)");
-    var value = sonarqube->getCriticalIssuesCount("mailgun");
+    var value = sonarqube->getCriticalIssuesCount(config:getAsString("PROJECT_KEY"));
     if (value is int) {
         boolean hasParameter = (value >= 0) ? true : false;
         test:assertEquals(hasParameter, true, msg = "Failed getCriticalIssuesCount(projectKey)");
@@ -174,7 +175,7 @@ function testGetCriticalIssuesCount() {
 }
 function testGetMajorIssuesCount() {
     log:printInfo("sonarqubeEndpoint -> getMajorIssuesCount(projectKey)");
-    var value = sonarqube->getMajorIssuesCount("mailgun");
+    var value = sonarqube->getMajorIssuesCount(config:getAsString("PROJECT_KEY"));
     if (value is int) {
         boolean hasParameter = (value >= 0) ? true : false;
         test:assertEquals(hasParameter, true, msg = "Failed getMajorIssuesCount(projectKey)");
@@ -188,7 +189,7 @@ function testGetMajorIssuesCount() {
 }
 function testGetOpenIssuesCount() {
     log:printInfo("sonarqubeEndpoint -> getOpenIssuesCount(projectKey)");
-    var value = sonarqube->getOpenIssuesCount("mailgun");
+    var value = sonarqube->getOpenIssuesCount(config:getAsString("PROJECT_KEY"));
     if (value is int) {
         boolean hasParameter = (value >= 0) ? true : false;
         test:assertEquals(hasParameter, true, msg = "Failed getOpenIssuesCount(projectKey)");
@@ -202,7 +203,7 @@ function testGetOpenIssuesCount() {
 }
 function testGetConfirmedIssuesCount() {
     log:printInfo("sonarqubeEndpoint -> getConfirmedIssuesCount(projectKey)");
-    var value = sonarqube->getConfirmedIssuesCount("mailgun");
+    var value = sonarqube->getConfirmedIssuesCount(config:getAsString("PROJECT_KEY"));
     if (value is int) {
         boolean hasParameter = (value >= 0) ? true : false;
         test:assertEquals(hasParameter, true, msg = "Failed getConfirmedIssuesCount(projectKey)");
@@ -216,7 +217,7 @@ function testGetConfirmedIssuesCount() {
 }
 function testGetLinesOfCode() {
     log:printInfo("sonarqubeEndpoint -> getLinesOfCode(projectKey)");
-    var value = sonarqube->getLinesOfCode("mailgun");
+    var value = sonarqube->getLinesOfCode(config:getAsString("PROJECT_KEY"));
     if (value is int) {
         boolean hasParameter = (value > 0) ? true : false;
         test:assertEquals(hasParameter, true, msg = "Failed getLinesOfCode(projectKey)");
@@ -230,7 +231,7 @@ function testGetLinesOfCode() {
 }
 function testGetCodeSmellsCount() {
     log:printInfo("sonarqubeEndpoint -> getCodeSmellsCount(projectKey)");
-    var value = sonarqube->getCodeSmellsCount("mailgun");
+    var value = sonarqube->getCodeSmellsCount(config:getAsString("PROJECT_KEY"));
     if (value is int) {
         boolean hasParameter = (value >= 0) ? true : false;
         test:assertEquals(hasParameter, true, msg = "Failed getCodeSmellsCount(projectKey)");
@@ -245,7 +246,7 @@ function testGetCodeSmellsCount() {
 }
 function testGetVulnerabilitiesCount() {
     log:printInfo("sonarqubeEndpoint -> getVulnerabilitiesCount(projectKey)");
-    var value = sonarqube->getVulnerabilitiesCount("mailgun");
+    var value = sonarqube->getVulnerabilitiesCount(config:getAsString("PROJECT_KEY"));
     if (value is int) {
         boolean hasParameter = (value >= 0) ? true : false;
         test:assertEquals(hasParameter, true, msg = "Failed getVulnerabilitiesCount(projectKey)");
@@ -259,7 +260,7 @@ function testGetVulnerabilitiesCount() {
 }
 function testGetBugsCount() {
     log:printInfo("sonarqubeEndpoint -> getBugsCount(projectKey)");
-    var value = sonarqube->getBugsCount("mailgun");
+    var value = sonarqube->getBugsCount(config:getAsString("PROJECT_KEY"));
     if (value is int ) {
         boolean hasParameter = (value >= 0) ? true : false;
         test:assertEquals(hasParameter, true, msg = "Failed getBugsCount(projectKey)");
@@ -273,7 +274,7 @@ function testGetBugsCount() {
 }
 function testGetLineCoverage() {
     log:printInfo("sonarqubeEndpoint -> getLineCoverage(projectKey)");
-    var value = sonarqube->getLineCoverage("mailgun");
+    var value = sonarqube->getLineCoverage(config:getAsString("PROJECT_KEY"));
     if (value is string) {
         boolean hasCharacter = (value.indexOf("%") != -1) ? true : false;
         test:assertEquals(hasCharacter, true, msg = "Failed getLineCoverage(projectKey)");
@@ -287,7 +288,7 @@ function testGetLineCoverage() {
 }
 function testGetSQALERating() {
     log:printInfo("sonarqubeEndpoint -> getSQALERating(projectKey)");
-    var value = sonarqube->getSQALERating("mailgun");
+    var value = sonarqube->getSQALERating(config:getAsString("PROJECT_KEY"));
     if (value is string) {
         boolean hasCharacters = false;
         if (value == "A" || value == "B" || value == "C" || value == "D" || value == "E") {
@@ -304,7 +305,7 @@ function testGetSQALERating() {
 }
 function testGetTechnicalDebt() {
     log:printInfo("sonarqubeEndpoint -> getTechnicalDebt(projectKey)");
-    var value = sonarqube->getTechnicalDebt("mailgun");
+    var value = sonarqube->getTechnicalDebt(config:getAsString("PROJECT_KEY"));
     if (value is string ) {
         boolean notEmpty = (value != "") ? true : false;
         test:assertEquals(notEmpty, true, msg = "Failed getTechnicalDebt(projectKey)");
@@ -318,7 +319,7 @@ function testGetTechnicalDebt() {
 }
 function testGetTechnicalDebtRatio() {
     log:printInfo("sonarqubeEndpoint -> getTechnicalDebtRatio(projectKey)");
-    var value = sonarqube->getTechnicalDebtRatio("mailgun");
+    var value = sonarqube->getTechnicalDebtRatio(config:getAsString("PROJECT_KEY"));
     if (value is string) {
         boolean notEmpty = (value != "") ? true : false;
         test:assertEquals(notEmpty, true, msg = "Failed getTechnicalDebtRatio(projectKey)");
@@ -332,7 +333,7 @@ function testGetTechnicalDebtRatio() {
 }
 function testGetSecurityRating() {
     log:printInfo("sonarqubeEndpoint -> getSecurityRating(projectKey)");
-    var value = sonarqube->getSecurityRating("mailgun");
+    var value = sonarqube->getSecurityRating(config:getAsString("PROJECT_KEY"));
     if (value is string) {
         boolean hasCharacters = false;
         if (value == "A" || value == "B" || value == "C" || value == "D" || value == "E") {
@@ -349,7 +350,7 @@ function testGetSecurityRating() {
 }
 function testGetReliability() {
     log:printInfo("sonarqubeEndpoint -> getReliabilityRating(projectKey)");
-    var value = sonarqube->getReliabilityRating("mailgun");
+    var value = sonarqube->getReliabilityRating(config:getAsString("PROJECT_KEY"));
     if (value is string) {
         boolean hasCharacters = false;
         if (value == "A" || value == "B" || value == "C" || value == "D" || value == "E") {

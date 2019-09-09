@@ -15,7 +15,6 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-// import ballerina/io;
 
 # Transforms JSON comment object into Comment.
 # + commentDetails - `json` comment object

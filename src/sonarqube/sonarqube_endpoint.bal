@@ -33,7 +33,6 @@ public type Client client object {
     public string baseUrl;
 
     public function __init(SonarQubeConfiguration sonarqubeConfig) {
-        io:println(sonarqubeConfig.baseUrl);
         self.sonarQubeClient = new(sonarqubeConfig.baseUrl, config = sonarqubeConfig.clientConfig);
         self.baseUrl = sonarqubeConfig.baseUrl;
     }
