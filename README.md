@@ -35,25 +35,27 @@ import wso2/sonarqube;
 string token = "your token";
 string sonarqubeURL = "your sonarqube url";
 
-sonarqube6:SonarQubeConfiguration sonarqubeConfig = {
+sonarqube:SonarQubeBasicAuthProvider outboundBasicAuthProvider = new({
+    username: token
+});
+
+http:BasicAuthHandler outboundBasicAuthHandler = new(outboundBasicAuthProvider);
+
+sonarqube:SonarQubeConfiguration sonarqubeConfig = {
     baseUrl: sonarqubeURL,
     clientConfig: {
         auth: {
-            scheme: http:BASIC_AUTH,
-            config: {
-                username: token,
-                password: ""
-            }
+            authHandler: outboundBasicAuthHandler
         }
     }
 };
    
-sonarqube6:Client sonarqubeClient = new(sonarqubeConfig);
+sonarqube:Client sonarqubeClient = new(sonarqubeConfig);
 
 public function main() {
    var projectDetails = sonarqubeClient->getProject(config:getAsString(PROJECT_NAME));
-   if (projectDetails is sonarqube6:Project) {
-       io:println("Project Details: ", projectDetails)
+   if (projectDetails is sonarqube:Project) {
+       io:println("Project Details: ", projectDetails);
    } else {
        io:println("Error: ", projectDetails);
    }

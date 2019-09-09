@@ -6,7 +6,7 @@ The SonarQube connector allows you to work with projects and get important code-
 
 **SonarQube Project Operations**
 
-The `wso2/sonarqube6` module contains operations that get the details of SonarQube projects and their code-quality 
+The `wso2/sonarqube` module contains operations that get the details of SonarQube projects and their code-quality 
 measurements such as line coverage, branch coverage, complexities, technical debt, technical debt ratio, duplicated lines 
 count. etc. Users can also use this connector to get multiple code-quality measurements as a map by providing the required metric keys.
 
@@ -21,10 +21,13 @@ count. etc. Users can also use this connector to get multiple code-quality measu
 
 ## Sample
 
-First, import the `wso2/sonarqube6` module into the Ballerina project.
+First, import the `wso2/sonarqube` module into the Ballerina project.
     
 ```ballerina
-import wso2/sonarqube6;
+import wso2/sonarqube;
+import ballerina/config;
+import ballerina/io;
+
 ```
 
 **Obtaining Tokens to Run the Samples**
@@ -32,43 +35,37 @@ import wso2/sonarqube6;
 1. To generate a token, go to **User -> My Account -> Security** in the SonarQube server. Existing tokens are listed, each with a **Revoke** button.
 2. Click the **Generate** button at the bottom of the page.
 
-You can now enter the token in the HTTP client config:
+You can now enter the user token in the HTTP client config:
 ```ballerina
-sonarqube6:SonarQubeBasicAuthProvider outboundBasicAuthProvider = new({
-    username: "9784bd93cd85c2242c0eae1c5b53f1c969dfef4b"
+sonarqube:SonarQubeBasicAuthProvider outboundBasicAuthProvider = new({
+    username: config:getAsString("USER_TOKEN")
 });
 
 http:BasicAuthHandler outboundBasicAuthHandler = new(outboundBasicAuthProvider);
 
-sonarqube6:SonarQubeConfiguration sonarqubeConfig = {
-    baseUrl: "https://sonarcloud.io",
+sonarqube:SonarQubeConfiguration sonarqubeConfig = {
+    baseUrl: config:getAsString("SONAR_CLOUD_URL"),
     clientConfig: {
         auth: {
             authHandler: outboundBasicAuthHandler
-        },
-        secureSocket: {
-            trustStore: {
-                path: "<path_to_bal_distribution>",
-                password: "ballerina"
-            }
         }
     }
 };
    
-sonarqube6:Client sonarqubeClient = new(sonarqubeConfig);
+sonarqube:Client sonarqubeClient = new(sonarqubeConfig);
 ```
 
 The `getProject` remote function provides the details of a project in SonarQube server for the given project name.
 
 ```ballerina
-var projectDetails = sonarqubeClient->getProject(“project_name”);
+var projectDetails = sonarqubeClient->getProject(config:getAsString("PROJECT_NAME"));
 ```
 
 The response from `getProject` is either a `Project` if the request was successful or an `error` if unsuccessful.
 The `Project` is a type that holds the information of a project.
 
 ```ballerina
-if (projectDetails is sonarqube6:Project) {
+if (projectDetails is sonarqube:Project) {
    io:println("Project Details: ", projectDetails);
 } else {
    io:println("Error: ", <string> projectDetails.detail().message);
@@ -79,7 +76,7 @@ The `getLineCoverage` remote function provides the line coverage of a project in
 You can get the project key using the SonarQube server UI or the `getProject` function.
 
 ```ballerina
-var response = sonarqubeClient->getLineCoverage("project_key");
+var response = sonarqubeClient->getLineCoverage(config:getAsString("PROJECT_KEY"));
 ```
     
 The response from `getLineCoverage` is either a `string` if the request was successful or an `error` if unsuccessful.
@@ -97,7 +94,7 @@ The `getSecurityRating` remote function provides the security rating of a projec
 You can get the project key using the SonarQube server UI or the `getProject` function.
 
 ```ballerina
-var response = sonarqubeClient->getSecurityRating("project_key");
+var response = sonarqubeClient->getSecurityRating(config:getAsString("PROJECT_KEY"));
 ```
 
 The response from `getSecurityRating` is either a `string` (if the request was successful) or an `error` if unsuccessful.
@@ -108,5 +105,42 @@ if (response is string) {
    io:println("Security Rating: ", response)
 } else {
    io:println("Error: ", <string>response.detail().message);
+}
+```
+Following is a full sample code which can be executed to get project details.
+
+```ballerina
+import ballerina/http;
+import ballerina/io;
+import wso2/sonarqube;
+
+string token = "your token";
+string sonarqubeURL = "your sonarqube url";
+string projectName = "your project name"
+
+sonarqube:SonarQubeBasicAuthProvider outboundBasicAuthProvider = new({
+    username: token
+});
+
+http:BasicAuthHandler outboundBasicAuthHandler = new(outboundBasicAuthProvider);
+
+sonarqube:SonarQubeConfiguration sonarqubeConfig = {
+    baseUrl: sonarqubeURL,
+    clientConfig: {
+        auth: {
+            authHandler: outboundBasicAuthHandler
+        }
+    }
+};
+   
+sonarqube:Client sonarqubeClient = new(sonarqubeConfig);
+
+public function main() {
+   var projectDetails = sonarqubeClient->getProject(projectName);
+   if (projectDetails is sonarqube:Project) {
+       io:println("Project Details: ", projectDetails);
+   } else {
+       io:println("Error: ", projectDetails);
+   }
 }
 ```
